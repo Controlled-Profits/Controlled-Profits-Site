@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 export default class SignInBox extends Component {
-  constructor() {
+  constructor(props) {
     super(props);
 
     this.handleFirstnameChange = this.handleFirstnameChange.bind(this);
@@ -47,21 +47,22 @@ export default class SignInBox extends Component {
       <div>
         <h1>Login Information</h1>
         <form onSubmit={this.handleUserSubmit}>
+          <br/>
           <label>Firstname:</label>
           <input value={this.state.firstname} onChange={this.handleFirstnameChange} placeholder="firstname" />
-
+          <br/>
           <label>Lastname:</label>
           <input value={this.state.lastname} onChange={this.handleLastnameChange} placeholder="lastname"/>
-
+          <br/>
           <label>Email:</label>
           <input value={this.state.email} onChange={this.handleEmailChange} placeholder="email"/>
-
+          <br/>
           <label>Password:</label>
           <input value={this.state.password} onChange={this.handlePasswordChange} placeholder="password"/>
-
+          <br/>
           <label>Password Confirmation</label>
           <input value={this.state.password_confirmation} onChange={this.handlePasswordConfirmationChange} placeholder="password confirmation"/>
-
+          <br/>
           <button type="submint">submit</button>
         </form>
       </div>
