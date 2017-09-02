@@ -47,26 +47,32 @@ export default class NewUserSignIn extends Component {
 
 render(){
   return(
-    <div>
+    <div className="col-sm-10">
       <h1>Sign Up Information</h1>
       <form onSubmit={this.handleUserSubmit}>
-        <br/>
-        <label>Firstname:</label>
-        <input value={this.state.firstname} onChange={this.handleFirstnameChange} placeholder="firstname" />
-        <br/>
-        <label>Lastname:</label>
-        <input value={this.state.lastname} onChange={this.handleLastnameChange} placeholder="lastname"/>
-        <br/>
-        <label>Email:</label>
-        <input value={this.state.email} onChange={this.handleEmailChange} placeholder="email"/>
-        <br/>
-        <label>Password:</label>
-        <input value={this.state.password} onChange={this.handlePasswordChange} placeholder="password"/>
-        <br/>
-        <label>Password Confirmation</label>
-        <input value={this.state.password_confirmation} onChange={this.handlePasswordConfirmationChange} placeholder="password confirmation"/>
-        <br/>
-        <button type="submit">submit</button>
+
+        <div className="form-group">
+          <label>Firstname:</label>
+          <input className="form-control" value={this.state.firstname} onChange={this.handleFirstnameChange} placeholder="firstname" />
+        </div>
+        <div className="form-group">
+          <label>Lastname:</label>
+          <input className="form-control" value={this.state.lastname} onChange={this.handleLastnameChange} placeholder="lastname"/>
+        </div>
+        <div className="form-group">
+          <label>Email:</label>
+          <input className="form-control" value={this.state.email} onChange={this.handleEmailChange} placeholder="email"/>
+        </div>
+        <div className="form-group">
+          <label>Password:</label>
+          <input className="form-control" value={this.state.password} onChange={this.handlePasswordChange} placeholder="password"/>
+        </div>
+        <div className="form-group">
+          <label>Password Confirmation</label>
+          <input className="form-control" value={this.state.password_confirmation} onChange={this.handlePasswordConfirmationChange} placeholder="password confirmation"/>
+        </div>
+
+        <button className="btn btn-primary" type="submit">submit</button>
       </form>
     </div>
   )
