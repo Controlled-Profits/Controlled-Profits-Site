@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import superagent from 'superagent';
 
 export default class NewUserSignIn extends Component {
   constructor(props){
@@ -41,8 +42,15 @@ export default class NewUserSignIn extends Component {
     this.setState({password_confirmation: event.target.value});
   }
 
-  handleNewUserSubmit(){
-    console.log(this.state);
+  handleNewUserSubmit(event){
+    event.preventDefault();
+    superagent
+      .post('http://controlledprofits.herokuapp.com/auth/')
+      .send({firstname: this.state.firstname, lastname: this.state.lastname, email: this.state.email, password: this.state.password, password_confirmation: this.state.password_confirmation})
+      .end((err, res) => {
+        if(err) { this.setState({errorMessage: "Authentication Failed"}); return; }
+        console.log('res.body', res.body);
+      });
   }
 
 render(){
@@ -65,14 +73,14 @@ render(){
         </div>
         <div className="form-group">
           <label>Password:</label>
-          <input className="form-control" value={this.state.password} onChange={this.handlePasswordChange} placeholder="password"/>
+          <input className="form-control" type="password" value={this.state.password} onChange={this.handlePasswordChange} placeholder="password"/>
         </div>
         <div className="form-group">
           <label>Password Confirmation</label>
-          <input className="form-control" value={this.state.password_confirmation} onChange={this.handlePasswordConfirmationChange} placeholder="password confirmation"/>
+          <input className="form-control" type="password" value={this.state.password_confirmation} onChange={this.handlePasswordConfirmationChange} placeholder="password confirmation"/>
         </div>
 
-        <button className="btn btn-primary" type="submit">submit</button>
+        <button className="btn btn-primary" type="submit">Sign Up</button>
       </form>
     </div>
   )

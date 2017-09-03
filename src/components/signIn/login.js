@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import '../../styles/signIn.css';
+import superagent from 'superagent';
 
 export default class Login extends Component {
   constructor(props) {
@@ -26,12 +27,20 @@ export default class Login extends Component {
     //console.log(this.state.password);
   }
 
-  handleUserSubmit() {
-    console.log(this.state);
+  handleUserSubmit(event) {
+    event.preventDefault();
+    superagent
+      .post('http://controlledprofits.herokuapp.com/auth/sign_in/')
+      .send({email: this.state.email, password: this.state.password})
+      .end((err, res) => {
+        if(err) { this.setState({errorMessage: "Authentication Failed"}); return; }
+        console.log('res.body', res.body);
+      });
   }
 
 
   render(){
+    console.log("state:", this.state)
     return(
       <div className="col-sm-10" >
         <h1 className="login-header">Login Information</h1>
@@ -42,9 +51,9 @@ export default class Login extends Component {
           </div>
           <div className="form-group">
             <label>Password:</label>
-            <input className="form-control" value={this.state.password} onChange={this.handlePasswordChange} placeholder="password"/>
+            <input className="form-control" type="password" value={this.state.password} onChange={this.handlePasswordChange} placeholder="password"/>
           </div>
-          <button className="btn btn-primary" type="submint">submit</button>
+          <button className="btn btn-primary" type="submint">Login</button>
         </form>
       </div>
     )
