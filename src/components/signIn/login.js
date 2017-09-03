@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import '../../styles/signIn.css';
 import superagent from 'superagent';
 
@@ -35,6 +34,8 @@ export default class Login extends Component {
       .end((err, res) => {
         if(err) { this.setState({errorMessage: "Authentication Failed"}); return; }
         console.log('res.body', res.body);
+        var AccessToken = localStorage.getItem('Access-Token');
+        console.log(Headers.Access_Token);
       });
   }
 

@@ -1,14 +1,9 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import Login from './login.js';
 import NewUserSignIn from './newUserSignIn.js';
 import '../../styles/signIn.css';
 
 export default class SignInBox extends Component {
-  constructor() {
-    super();
-  }
-
   render(){
     return(
       <div className="container">
