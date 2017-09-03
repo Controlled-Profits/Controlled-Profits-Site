@@ -11,7 +11,8 @@
     "react-router": "^4.2.0",
     "react-scripts": "1.0.11",
     "redux": "^3.7.2",
-    "redux-auth": "0.0.5-beta5"
+    "redux-auth": "0.0.5-beta5",
+    "superagent": "^3.6.0"
   },
   "scripts": {
     "start": "react-scripts start",
