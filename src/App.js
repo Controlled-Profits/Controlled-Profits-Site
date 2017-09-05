@@ -30,12 +30,14 @@ class App extends Component {
 
 
   render() {
+    let match = this.props.match;
+
     return (
       <div>
         {this.state.authenticated === false ? (
           <SignInBox authenticateUser={this.handleUserAuthentication}/>
         ) : (
-          <Redirect to={{pathname: '/members/{this.state.lastname}'}} />
+          <MemberHomeBox/>
         )}
       </div>
     )
