@@ -37,7 +37,7 @@ class App extends Component {
         {this.state.authenticated === false ? (
           <SignInBox authenticateUser={this.handleUserAuthentication}/>
         ) : (
-          <MemberHomeBox/>
+          <Redirect to={{pathname: '/member/user'}}/>
         )}
       </div>
     )

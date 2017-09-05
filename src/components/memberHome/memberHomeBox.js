@@ -17,7 +17,7 @@ export default class MemberHomeBox extends Component {
       financialMarketingSalesDataInput: false,
       benchmarking: false,
       profitDriversAndPlanning: false,
-      currentBusinesses: [];
+      currentBusinesses: []
     }
   }
 
@@ -60,7 +60,7 @@ export default class MemberHomeBox extends Component {
   getCurrentComponent(){
 
     if(this.state.activeSearch === "MemberHome"){
-      return(<MemberHome props={this.state}/>);
+      return(<MemberHome props={this.state} getUserBusinesses={this.getUserBusinesses}/>);
     }
     else if(this.state.activeSearch === 'FinancialMarketingSalesDataInput'){
       return(<FinancialMarketingSalesDataInput props={this.state}/>);
@@ -73,6 +73,7 @@ export default class MemberHomeBox extends Component {
 
     return(
       <div>
+        <div className="user-name business-name header-container"></div>
         <button className="btn btn-primary" onClick={this.handleMemberHomeChange.bind(this)}>Member Home</button>
         <button className="btn btn-primary" onClick={this.handleFMSDIChange.bind(this)}>Financial/Marketing & Sales Data Input</button>
         <button className="btn btn-primary" onClick={this.handleBenchmarkingChange.bind(this)}>Benchmarking</button>

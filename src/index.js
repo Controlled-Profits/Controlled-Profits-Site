@@ -9,7 +9,7 @@ import registerServiceWorker from './registerServiceWorker';
 ReactDOM.render(
   <BrowserRouter>
     <Switch>
-      <Route path='/member/:user' component={MemberHomeBox}/>
+      <Route path='/member/user' component={MemberHomeBox}/>
       <Route exact path='/' component={App} />
     </Switch>
   </BrowserRouter> ,
