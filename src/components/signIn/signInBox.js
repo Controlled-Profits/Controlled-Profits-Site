@@ -11,10 +11,10 @@ export default class SignInBox extends Component {
         <h1 className="cp-login-header">Controlled Profits</h1>
         <div className="container">
           <div className="login-block container col-md-6">
-            <Login />
+            <Login authenticateUser={this.props.authenticateUser} />
           </div>
           <div className="signIn-block container col-md-6">
-            <NewUserSignIn />
+            <NewUserSignIn props={this.props}/>
           </div>
         </div>
       </div>

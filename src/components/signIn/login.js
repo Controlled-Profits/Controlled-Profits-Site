@@ -35,11 +35,12 @@ export default class Login extends Component {
         if(err) { this.setState({errorMessage: "Authentication Failed"}); return; }
         console.log('res.body', res.body);
         var headers = res.header;
-        var text = res.text;
-        console.log("headers:", headers);
-        console.log('text', text);
-        console.log(res.header.client);
-
+        console.log(headers);
+        localStorage.setItem('Access-Token', headers['access-token']);
+        localStorage.setItem('Client', headers['client']);
+        localStorage.setItem('Token-Type', headers['token-type']);
+        localStorage.setItem('Uid', headers['uid']);
+        this.props.authenticateUser(headers, this.state.email, res.body.lastname);
       });
   }
 
