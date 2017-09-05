@@ -1,20 +1,44 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { Redirect, BrowserRouter, Route, Switch } from 'react-router-dom';
+
+import MemberHomeBox from './components/memberHome/memberHomeBox.js';
+import SignInBox from './components/signIn/signInBox.js';
 
 class App extends Component {
+  constructor(){
+    super();
+
+    this.handleUserAuthentication = this.handleUserAuthentication.bind(this);
+
+    this.state= {
+      authenticated: false,
+      accessToken: '',
+      client: '',
+      tokenType: '',
+      uid: '',
+      lastname: ''
+    }
+  }
+
+  handleUserAuthentication(headers, userEmail, userLastname){
+    this.setState({accessToken: headers['access-token'], client: headers['client'], tokenType: headers['token-type'], uid: headers['uid'], lastname: userLastname});
+    if(this.state.accessToken.length > 7 && this.state.client.length > 7 && this.state.tokenType === "Bearer" && this.state.uid === userEmail){
+      this.setState({authenticated: true});
+    }
+  }
+
+
   render() {
     return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+      <div>
+        {this.state.authenticated === false ? (
+          <SignInBox authenticateUser={this.handleUserAuthentication}/>
+        ) : (
+          <Redirect to={{pathname: '/members/{this.state.lastname}'}} />
+        )}
       </div>
-    );
+    )
   }
 }
 
