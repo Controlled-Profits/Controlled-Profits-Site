@@ -36,11 +36,13 @@ export default class Login extends Component {
         console.log('res.body', res.body);
         var headers = res.header;
         console.log(headers);
+        localStorage.setItem('Current-UserFN', res.body.data.firstname);
+        localStorage.setItem('Current-UserLN', res.body.data.lastname);
         localStorage.setItem('Access-Token', headers['access-token']);
         localStorage.setItem('Client', headers['client']);
         localStorage.setItem('Token-Type', headers['token-type']);
         localStorage.setItem('Uid', headers['uid']);
-        this.props.authenticateUser(headers, this.state.email, res.body.data.lastname);
+        this.props.authenticateUser(headers, this.state.email, res.body.data.id);
       });
   }
 

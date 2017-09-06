@@ -1,0 +1,82 @@
+/*
+#5282BA;
+#F59550;
+*/
+
+
+.header-business-logo {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+.header-container {
+  flex-basis: 40%;
+  background-image: url('./images/3.png');
+  height: 125px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  margin: 20px;
+  margin-bottom: 0;
+
+}
+
+.button-nav {
+  width: 100%;
+  background-color:#5282BA;
+  margin-top: 0;
+  height: 50px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+.content-box {
+  width: 90%;
+  padding: 2%;
+}
+
+.nav-button {
+  font-size: 1.5em;
+  border-radius: 0;
+  background-color: #5282BA;
+}
+
+
+/*
+MemberHomeBox styling
+*/
+
+.memberHome-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap:
+}
+
+.title-content-container {
+  flex-basis: 85%;
+  height: 80px;
+  text-align: center;
+}
+
+.settings-container {
+  flex-basis: 15%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.biz-header {
+  height: 80px;
+  text-align: center;
+}
+
+/*
+Add Biz styling
+*/
+.form-control {
+  width: 100%;
+}
+.add-biz-container {
+  width: 100%;
+}

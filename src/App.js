@@ -6,8 +6,8 @@ import MemberHomeBox from './components/memberHome/memberHomeBox.js';
 import SignInBox from './components/signIn/signInBox.js';
 
 class App extends Component {
-  constructor(){
-    super();
+  constructor(props){
+    super(props);
 
     this.handleUserAuthentication = this.handleUserAuthentication.bind(this);
 
@@ -17,12 +17,12 @@ class App extends Component {
       client: '',
       tokenType: '',
       uid: '',
-      lastname: ''
+      id: ''
     }
   }
 
-  handleUserAuthentication(headers, userEmail, userLastname){
-    this.setState({accessToken: headers['access-token'], client: headers['client'], tokenType: headers['token-type'], uid: headers['uid'], lastname: userLastname});
+  handleUserAuthentication(headers, userEmail, userId){
+    this.setState({accessToken: headers['access-token'], client: headers['client'], tokenType: headers['token-type'], uid: headers['uid'], id: userId});
     if(this.state.accessToken.length > 7 && this.state.client.length > 7 && this.state.tokenType === "Bearer" && this.state.uid === userEmail){
       this.setState({authenticated: true});
     }
@@ -31,13 +31,12 @@ class App extends Component {
 
   render() {
     let match = this.props.match;
-
     return (
       <div>
         {this.state.authenticated === false ? (
           <SignInBox authenticateUser={this.handleUserAuthentication}/>
         ) : (
-          <Redirect to={{pathname: '/member/user'}}/>
+          <Redirect to={`/member/${this.state.id}/${this.state.uid}`} />
         )}
       </div>
     )
