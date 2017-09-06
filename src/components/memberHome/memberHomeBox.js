@@ -1,8 +1,12 @@
 import React, {Component} from 'react';
 import superagent from 'superagent';
+import {Redirect} from 'react-router-dom';
 
 import FinancialMarketingSalesDataInput from './businessFinancials.js';
 import MemberHome from './members.js';
+import ActiveBusiness from './activeBusiness.js';
+
+import '../../styles/memberDesktop.css';
 
 export default class MemberHomeBox extends Component {
   constructor(props){
@@ -10,6 +14,10 @@ export default class MemberHomeBox extends Component {
 
     this.getUserBusinesses = this.getUserBusinesses.bind(this);
     this.getCurrentComponent = this.getCurrentComponent.bind(this);
+    this.isAuthenticated = this.isAuthenticated.bind(this);
+    this.getCurrentActiveBusiness = this.getCurrentActiveBusiness.bind(this);
+    this.setActiveBusiness = this.setActiveBusiness.bind(this);
+
 
     this.state={
       activeSearch: 'MemberHome',
@@ -17,7 +25,9 @@ export default class MemberHomeBox extends Component {
       financialMarketingSalesDataInput: false,
       benchmarking: false,
       profitDriversAndPlanning: false,
-      currentBusinesses: []
+      currentBusinesses: [],
+      businessHolder: [],
+      activeBusiness: ''
     }
   }
 
@@ -32,10 +42,40 @@ export default class MemberHomeBox extends Component {
       .end((err, res) => {
         if(err) { this.setState({errorMessage: "Authentication Failed"}); return; }
         console.log(res.body);
-        this.setState({currentBusinesses: res.body.data});
+        this.setState({currentBusinesses: res.body});
+        console.log('currentBusiness:', this.state.currentBusinesses);
+        this.getCurrentActiveBusiness();
       });
   }
 
+  getCurrentActiveBusiness(){
+    let bizHolder = [];
+    if(this.state.currentBusinesses.data !== undefined){
+      let currentBusinesses = this.state.currentBusinesses.data.map((biz) =>{
+      let obj = {
+        bizName: biz.attributes.name,
+        bizId: biz.attributes.id,
+        active: false
+      }
+        bizHolder.push(obj);
+      })
+      this.setState({businessHolder: bizHolder});
+      console.log('biz holder:', this.state.businessHolder);
+    }
+  }
+
+  setActiveBusiness(obj){
+    let currentBizObject = this.state.businessHolder.find((item) =>{
+      if(item === obj){
+        item.active = !item.active;
+        console.log(item);
+      }
+      else{
+        item.active = false;
+      }
+    });
+    console.log('currentBiz: ', currentBizObject);
+  }
 
   handleMemberHomeChange(event){
     this.setState({memberHome: true,financialMarketingSalesDataInput: false, benchmarking: false, profitDriversAndPlanning: false, activeSearch: "MemberHome"});
@@ -60,28 +100,47 @@ export default class MemberHomeBox extends Component {
   getCurrentComponent(){
 
     if(this.state.activeSearch === "MemberHome"){
-      return(<MemberHome props={this.state} getUserBusinesses={this.getUserBusinesses}/>);
+      return(<MemberHome currentBusinesses={this.state.currentBusinesses} getUserBusinesses={this.getUserBusinesses}
+      />);
     }
     else if(this.state.activeSearch === 'FinancialMarketingSalesDataInput'){
       return(<FinancialMarketingSalesDataInput props={this.state}/>);
     }
-
   }
 
+  isAuthenticated(){
+    if(localStorage.getItem('Access-Token') === null){
+      return false;
+    }
+    else{
+      return localStorage.getItem('Access-Token').length > 7;
+    }
+  }
 
   render(){
-
     return(
       <div>
-        <div className="user-name business-name header-container"></div>
-        <button className="btn btn-primary" onClick={this.handleMemberHomeChange.bind(this)}>Member Home</button>
-        <button className="btn btn-primary" onClick={this.handleFMSDIChange.bind(this)}>Financial/Marketing & Sales Data Input</button>
-        <button className="btn btn-primary" onClick={this.handleBenchmarkingChange.bind(this)}>Benchmarking</button>
-        <button className="btn btn-primary" onClick={this.handlePDPChange.bind(this)}>Profit Drivers and Planning</button>
+        {!this.isAuthenticated() ? ( <Redirect to={{pathname: '/'}} /> ) : (
+        <div className="memberHomeBox-container">
+          <div className='header-business-logo'>
+            <div className="header-container"></div>
+            <div className="business-user-container">
+              <ActiveBusiness props={this.state.businessHolder}
+              setActiveBusiness={this.setActiveBusiness} />
+            </div>
+          </div>
+          <nav className="button-nav">
+            <button className="nav-button btn btn-primary" onClick={this.handleMemberHomeChange.bind(this)}>Member Home</button>
+            <button className="nav-button btn btn-primary" onClick={this.handleFMSDIChange.bind(this)}>Financial/Marketing & Sales Data Input</button>
+            <button className="nav-button btn btn-primary" onClick={this.handleBenchmarkingChange.bind(this)}>Benchmarking</button>
+            <button className="nav-button btn btn-primary" onClick={this.handlePDPChange.bind(this)}>Profit Drivers and Planning</button>
 
-        <div className="content-box">
-          {this.getCurrentComponent()}
+          </nav>
+          <div className="content-box">
+            {this.getCurrentComponent()}
+          </div>
         </div>
+        )}
       </div>
     )
   }

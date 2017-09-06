@@ -40,7 +40,7 @@ export default class Login extends Component {
         localStorage.setItem('Client', headers['client']);
         localStorage.setItem('Token-Type', headers['token-type']);
         localStorage.setItem('Uid', headers['uid']);
-        this.props.authenticateUser(headers, this.state.email, res.body.data.lastname);
+        this.props.authenticateUser(headers, this.state.email, res.body.data.id);
       });
   }
 

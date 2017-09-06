@@ -55,24 +55,23 @@ handleBuisnessBuild(event){
     .send({name: bname, naics: bnaics, sic: bsic, ein: bein})
     .end((err, res) => {
       if(err) { this.setState({errorMessage: "Authentication Failed"}); return; }
-
+      this.props.getUserBusinesses();
       this.setState({});
     });
 }
 
 
-
   render(){
-
     let businesses = '';
-    if(this.props.currentBusinesses === undefined){
+    if(this.props.currentBusinesses.data === undefined){
       businesses = '';
     }
     else{
-    businesses = this.props.currentBusinesses.map((biz) => {
+    businesses = this.props.currentBusinesses.data.map((biz) => {
+      console.log("Biz.data", biz.attributes.name);
       return(
-        <li>
-          {biz.name}
+        <li key={biz.id}>
+          {biz.attributes.name}
         </li>
       );
     })
