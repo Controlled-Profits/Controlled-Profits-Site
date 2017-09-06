@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import superagent from 'superagent';
+import '../../styles/memberDesktop.css';
 
-export default class MemberHome extends Component {
+export default class AddBusiness extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -62,31 +63,12 @@ handleBuisnessBuild(event){
 
 
   render(){
-    let businesses = '';
-    if(this.props.currentBusinesses.data === undefined){
-      businesses = '';
-    }
-    else{
-    businesses = this.props.currentBusinesses.data.map((biz) => {
-      console.log("Biz.data", biz.attributes.name);
-      return(
-        <li key={biz.id}>
-          {biz.attributes.name}
-        </li>
-      );
-    })
-  }
     return(
-      <div>
-        <h1>Member Home</h1>
-          <ul>
-            {businesses}
-          </ul>
         <div>
           <a className="adminAnchor btn btn-primary" href="#" onClick={this.handleNewBuisness.bind(this)}>Add A Business</a>
           {(this.state.addBusiness) ? (
-            <div className="container">
-            <form className="adminForm form-group col-md-6" onSubmit={this.handleBuisnessBuild.bind(this)}>
+            <div className="add-biz-container">
+            <form className="adminForm form-group" onSubmit={this.handleBuisnessBuild.bind(this)}>
               <label>Business Name:</label>
               <input className="form-control" value={this.state.name} onChange={this.handleNameChange.bind(this)}/>
               <label>NAICS Code:</label>
@@ -101,7 +83,6 @@ handleBuisnessBuild(event){
           </div>
           ) : null}
         </div>
-      </div>
     )
   }
 }
