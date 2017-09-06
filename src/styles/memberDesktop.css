@@ -1,0 +1,43 @@
+/*
+#5282BA;
+#F59550;
+*/
+
+
+.header-business-logo {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+.header-container {
+  flex-basis: 30%;
+  background-image: url('./images/3.png');
+  height: 125px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  margin: 20px;
+  margin-bottom: 0;
+
+}
+
+.button-nav {
+  width: 100%;
+  background-color:#5282BA;
+  margin-top: 0;
+  height: 50px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+.content-box {
+  width: 90%;
+  padding: 2%;
+}
+
+.nav-button {
+  font-size: 1.5em;
+  border-radius: 0;
+  background-color: #5282BA;
+}

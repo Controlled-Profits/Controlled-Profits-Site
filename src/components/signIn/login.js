@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import '../../styles/signIn.css';
 import superagent from 'superagent';
 
@@ -35,6 +34,13 @@ export default class Login extends Component {
       .end((err, res) => {
         if(err) { this.setState({errorMessage: "Authentication Failed"}); return; }
         console.log('res.body', res.body);
+        var headers = res.header;
+        console.log(headers);
+        localStorage.setItem('Access-Token', headers['access-token']);
+        localStorage.setItem('Client', headers['client']);
+        localStorage.setItem('Token-Type', headers['token-type']);
+        localStorage.setItem('Uid', headers['uid']);
+        this.props.authenticateUser(headers, this.state.email, res.body.data.id);
       });
   }
 
