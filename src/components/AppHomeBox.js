@@ -133,7 +133,7 @@ export default class AppHomeBox extends Component {
           </div>
           <nav className="button-nav">
             <button className="nav-button btn btn-primary" onClick={this.handleMemberHomeChange.bind(this)}>Member Home</button>
-            <button className="nav-button btn btn-primary" onClick={this.handleFMSDIChange.bind(this)}>Financial/Marketing & Sales Data Input</button>
+            <button className="nav-button btn btn-primary" onClick={this.handleFMSDIChange.bind(this)}>Financials and Data</button>
             <button className="nav-button btn btn-primary" onClick={this.handleBenchmarkingChange.bind(this)}>Benchmarking</button>
             <button className="nav-button btn btn-primary" onClick={this.handlePDPChange.bind(this)}>Profit Drivers and Planning</button>
 

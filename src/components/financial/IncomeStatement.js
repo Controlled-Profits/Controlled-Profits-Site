@@ -1,10 +1,13 @@
 import React, {Component} from 'react';
 
+import finacialMarketingAndSalesDataInputArray from './financialData.js';
+
 export default class IncomeStatement extends Component{
   constructor(props){
     super(props);
     this.state = {
-      active: false
+      active: false,
+      inputBlock: []
     }
   }
 
@@ -12,16 +15,17 @@ export default class IncomeStatement extends Component{
     this.setState({active: !this.state.active});
   }
 
+  componentDidMount(){
+    let results = finacialMarketingAndSalesDataInputArray;
+    console.log(results);
+  }
+
   render(){
+
     return(
       <div className="input-block-container">
-        <button onClick={this.handleIncomeStatementClick.bind(this)}><h2 className="income-statement-header">Income Statement Data Input</h2></button>
 
-        <div className="input-group">
-          <span className="input-group-addon">$</span>
-          <input type="text" className="form-control" aria-label="Amount (to the nearest dollar)" />
-          <span className="input-group-addon">.00</span>
-        </div>
+
       </div>
     )
   }
