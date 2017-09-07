@@ -9,10 +9,6 @@ export default class FinancialMarketingSalesDataInput extends Component {
     super(props);
   }
 
-  componentDidMount(){
-    
-  }
-
 
   render(){
     return(
