@@ -3,6 +3,13 @@ import React, {Component} from 'react';
 export default class IncomeStatement extends Component{
   constructor(props){
     super(props);
+    this.state = {
+      active: false
+    }
+  }
+
+  handleIncomeStatementClick() {
+    this.setState({active: !this.state.active});
   }
 
   render(){

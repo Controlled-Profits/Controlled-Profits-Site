@@ -10,10 +10,25 @@ import '../../styles/memberDesktop.css';
 export default class MemberHomeBox extends Component {
   constructor(props){
     super(props);
+
+    this.handleActiveBusinessChange = this.handleActiveBusinessChange.bind(this);
+
     this.state = {
       firstname: localStorage.getItem('Current-UserFN'),
       lastname: localStorage.getItem('Current-UserLN'),
       activeBiz: 'Your Biz'
+    }
+  }
+
+  handleActiveBusinessChange(string){
+    this.setState({activeBiz:string});
+  }
+
+  componentDidMount(){
+    if(this.props.businessHolder.length === 1){
+      let business = this.props.businessHolder[0].bizName
+      this.handleActiveBusinessChange(business);
+      this.props.setActiveBusiness(business);
     }
   }
 
@@ -29,8 +44,14 @@ export default class MemberHomeBox extends Component {
             <h1>{this.state.activeBiz}</h1>
             <hr/>
           </div>
-          <AddBusiness/>
-          <ActiveBusiness/>
+          <div className="options-container">
+            <AddBusiness/>
+            <ActiveBusiness
+            handleActiveBusinessChange={this.handleActiveBusinessChange}
+            businessHolder={this.props.businessHolder}
+            currentBusinesses={this.props.currentBusinesses} getUserBusinesses={this.props.getUserBusinesses}
+            setActiveBusiness={this.props.setActiveBusiness} />
+          </div>
         </div>
       </div>
     )
