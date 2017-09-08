@@ -25,6 +25,7 @@
  * }
  * 
  *
+ * Note: Not even sure if this code runs yet, just a theory
  */
 
 import superagent from 'superagent';
@@ -32,10 +33,12 @@ import superagent from 'superagent';
 export default class DataParser {
   constructor(apiUrl, accessToken, client, uid) {
     this.apiUrl = apiUrl;
-    this.accessToken = accessToken,
-    this.client = client
-    this.uid = uid
+    this.accessToken = accessToken;
+    this.client = client;
+    this.uid = uid;
   }
+
+  //needs validateUser()
 
   // Returns user data as object if credentials are valid
   // Will add an api route for this - OP
