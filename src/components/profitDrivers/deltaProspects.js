@@ -92,8 +92,7 @@ export default class DeltaProspects extends Component {
 
   componentDidMount() {
     //Could probably call for just a section and certain date here, just add the arguments
-    //business_id = this.props.activeBizId?
-    this.getDataEntries(2);
+    this.getDataEntries(this.props.businessHolder[0]['bizId']);
   }
 
   render(){

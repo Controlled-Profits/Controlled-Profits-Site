@@ -113,7 +113,7 @@ export default class AppHomeBox extends Component {
       return(<FinancialMarketingSalesDataInput props={this.state}/>);
     } 
     else if (this.state.activeSearch === 'ProfitDriversAndPlanning') {
-      return(<ProfitDrivers props={this.state}/>);
+      return(<ProfitDrivers businessHolder={this.state.businessHolder}/>);
     }
   }
 
