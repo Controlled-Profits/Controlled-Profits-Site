@@ -29,7 +29,7 @@
 
 import superagent from 'superagent';
 
-class DataParser {
+export default class DataParser {
   constructor(apiUrl, accessToken, client, uid) {
     this.apiUrl = apiUrl;
     this.accessToken = accessToken,
