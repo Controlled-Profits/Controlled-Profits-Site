@@ -1,0 +1,13 @@
+.financial-title{
+  min-width: 25vw;
+  text-align: left;
+  background-color: #def6fc;
+  border: lightblue;
+}
+
+.financial-input {
+  max-width: 55vw;
+  margin-top: 2px;
+  margin-bottom: 2px;
+
+}
