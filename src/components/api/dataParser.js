@@ -46,7 +46,7 @@ export default class DataParser {
     return new Promise(function(resolve, reject) {
       superagent
       .get(this.apiUrl + 'profile')
-      .set({"Access-Token": accessToken, "Client": client, "Token-Type": tokenType, "Uid": uid})
+      .set({"Access-Token": this.accessToken, "Client": this.client, "Token-Type": this.tokenType, "Uid": this.uid})
       .end((err, res) => {
         if(err) { reject(err) }
         else {
@@ -61,7 +61,7 @@ export default class DataParser {
     return new Promise(function(resolve, reject) {
       superagent
       .get(this.apiUrl + 'businesses')
-      .set({"Access-Token": accessToken, "Client": client, "Token-Type": tokenType, "Uid": uid})
+      .set({"Access-Token": this.accessToken, "Client": this.client, "Token-Type": this.tokenType, "Uid": this.uid})
       .end((err, res) => {
         if(err) { reject(err) }
         else {
@@ -76,7 +76,7 @@ export default class DataParser {
     return new Promise(function(resolve, reject) {
       superagent
       .get(this.apiUrl + `businesses/${businessId}`)
-      .set({"Access-Token": accessToken, "Client": client, "Token-Type": tokenType, "Uid": uid})
+      .set({"Access-Token": this.accessToken, "Client": this.client, "Token-Type": this.tokenType, "Uid": this.uid})
       .end((err, res) => {
         if(err) { reject(err) }
         else {
@@ -109,7 +109,7 @@ export default class DataParser {
 
       superagent
       .get(url)
-      .set({"Access-Token": accessToken, "Client": client, "Token-Type": tokenType, "Uid": uid})
+      .set({"Access-Token": this.accessToken, "Client": this.client, "Token-Type": this.tokenType, "Uid": this.uid})
       .end((err, res) => {
         if(err) { reject(err) }
         else {
