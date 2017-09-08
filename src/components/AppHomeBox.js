@@ -4,6 +4,7 @@ import {Redirect} from 'react-router-dom';
 
 import FinancialMarketingSalesDataInput from './financial/businessFinancials.js';
 import MemberHomeBox from './memberHome/memberHomeBox.js';
+import ProfitDrivers from './profitDrivers/profitDriversContainer.js';
 
 import '../styles/memberDesktop.css';
 
@@ -102,13 +103,17 @@ export default class AppHomeBox extends Component {
   getCurrentComponent(){
 
     if(this.state.activeSearch === "MemberHome"){
-      return(<MemberHomeBox
+      return(
+      <MemberHomeBox
         businessHolder={this.state.businessHolder} currentBusinesses={this.state.currentBusinesses} getUserBusinesses={this.getUserBusinesses}
         setActiveBusiness={this.setActiveBusiness}
       />);
     }
     else if(this.state.activeSearch === 'FinancialMarketingSalesDataInput'){
       return(<FinancialMarketingSalesDataInput props={this.state}/>);
+    } 
+    else if (this.state.activeSearch === 'ProfitDriversAndPlanning') {
+      return(<ProfitDrivers businessHolder={this.state.businessHolder}/>);
     }
   }
 
