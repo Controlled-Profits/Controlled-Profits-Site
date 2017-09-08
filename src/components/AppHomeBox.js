@@ -4,6 +4,7 @@ import {Redirect} from 'react-router-dom';
 
 import FinancialMarketingSalesDataInput from './financial/businessFinancials.js';
 import MemberHomeBox from './memberHome/memberHomeBox.js';
+import ProfitDrivers from './profitDrivers/profitDriversContainer.js';
 
 import '../styles/memberDesktop.css';
 
@@ -26,7 +27,8 @@ export default class AppHomeBox extends Component {
       profitDriversAndPlanning: false,
       currentBusinesses: [],
       businessHolder: [],
-      activeBusiness: ''
+      activeBusiness: '',
+      activeBizId:''
     }
   }
 
@@ -45,6 +47,7 @@ export default class AppHomeBox extends Component {
         console.log('currentBusiness:', this.state.currentBusinesses);
         this.getCurrentActiveBusiness();
       });
+
   }
 
   getCurrentActiveBusiness(){
@@ -53,7 +56,7 @@ export default class AppHomeBox extends Component {
       let currentBusinesses = this.state.currentBusinesses.data.map((biz) =>{
       let obj = {
         bizName: biz.attributes.name,
-        bizId: biz.attributes.id,
+        bizId: biz.id,
         active: false
       }
         bizHolder.push(obj);
@@ -63,17 +66,18 @@ export default class AppHomeBox extends Component {
     }
   }
 
-  setActiveBusiness(obj){
+  setActiveBusiness(string){
     let currentBizObject = this.state.businessHolder.find((item) =>{
-      if(item === obj){
-        item.active = !item.active;
-        console.log(item);
+      if(item.bizName === string){
+        item.active = true;
+        return item;
       }
       else{
         item.active = false;
       }
     });
-    console.log('currentBiz: ', currentBizObject);
+    localStorage.setItem("bId",currentBizObject.bizId);
+    localStorage.setItem("bName",currentBizObject.bizName);
   }
 
   handleMemberHomeChange(event){
@@ -99,12 +103,17 @@ export default class AppHomeBox extends Component {
   getCurrentComponent(){
 
     if(this.state.activeSearch === "MemberHome"){
-      return(<MemberHomeBox
-        props={this.state} currentBusinesses={this.state.currentBusinesses} getUserBusinesses={this.getUserBusinesses}
+      return(
+      <MemberHomeBox
+        businessHolder={this.state.businessHolder} currentBusinesses={this.state.currentBusinesses} getUserBusinesses={this.getUserBusinesses}
+        setActiveBusiness={this.setActiveBusiness}
       />);
     }
     else if(this.state.activeSearch === 'FinancialMarketingSalesDataInput'){
       return(<FinancialMarketingSalesDataInput props={this.state}/>);
+    } 
+    else if (this.state.activeSearch === 'ProfitDriversAndPlanning') {
+      return(<ProfitDrivers businessHolder={this.state.businessHolder}/>);
     }
   }
 
@@ -129,7 +138,7 @@ export default class AppHomeBox extends Component {
           </div>
           <nav className="button-nav">
             <button className="nav-button btn btn-primary" onClick={this.handleMemberHomeChange.bind(this)}>Member Home</button>
-            <button className="nav-button btn btn-primary" onClick={this.handleFMSDIChange.bind(this)}>Financial/Marketing & Sales Data Input</button>
+            <button className="nav-button btn btn-primary" onClick={this.handleFMSDIChange.bind(this)}>Financials and Data</button>
             <button className="nav-button btn btn-primary" onClick={this.handleBenchmarkingChange.bind(this)}>Benchmarking</button>
             <button className="nav-button btn btn-primary" onClick={this.handlePDPChange.bind(this)}>Profit Drivers and Planning</button>
 
