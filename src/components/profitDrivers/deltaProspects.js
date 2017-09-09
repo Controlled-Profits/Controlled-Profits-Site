@@ -27,7 +27,7 @@ export default class DeltaProspects extends Component {
     this.dp = new DataParser('http://controlledprofits.herokuapp.com/v1/', accessToken, client, uid);
   }
 
-  //Refactor into Business data api file ideally - * DONE
+  //Refactor into Business data api file ideally - * pretty much done
   getDataEntries(businessId, entryType=null, section=null, startDate=null, endDate=null) {
 
     this.dp.getBusinessDataEntries(businessId, entryType, section, startDate, endDate)
@@ -89,14 +89,23 @@ export default class DeltaProspects extends Component {
   }
 
   componentDidMount() {
+
     //Could probably call for just a section and certain date here, just add the arguments
-    this.getDataEntries(this.props.businessHolder[0]['bizId']);
+    this.dp.getUser()
+      .then(function(obj) {
+        console.log(obj)
+        this.getDataEntries(obj.activeBusinessId);
+      }.bind(this))
+
+      .catch(function(err) {
+        console.log(err);
+        this.setState({dataEntries: []});
+      }.bind(this));
   }
 
   render(){
     return(
       <div className="delta-prospects-container">
-
         <div className="panel panel-default">
           <div className="panel-heading">
             <h3 className="panel-title">Delta Prospects</h3>

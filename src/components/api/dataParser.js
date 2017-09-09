@@ -49,12 +49,14 @@ export default class DataParser {
       .end((err, res) => {
         if(err) { reject(err) }
         else {
+          console.log(res.body.data);
           resolve({
-            id: res.body.data['attributes']['id'],
+            id: res.body.data['id'],
             firstName: res.body.data['attributes']['firstname'],
             lastName: res.body.data['attributes']['lastname'],
             email: res.body.data['attributes']['email'],
-            tier: res.body.data['attributes']['tier']
+            tier: res.body.data['attributes']['tier'],
+            activeBusinessId: res.body.data['attributes']['active-business-id']
           });
         }
       });
@@ -159,11 +161,9 @@ export default class DataParser {
               businessId: entry['business_id']
             }
 
-            for(var sKey in sectionNames) {
-              if(entry.hasOwnProperty(sKey)) {
+            for(var sKey in sectionNames)
+              if(entry.hasOwnProperty(sKey))
                 entryData[sKey] = entry[sKey];
-              }
-            }
 
             dataEntries.push(entryData);
           }
@@ -190,6 +190,7 @@ export default class DataParser {
       .end((err, res) => {
         if(err) { reject(err) }
         else {
+          //TODO: Deserialize data
           resolve(res.body);
         }
       });
@@ -209,19 +210,16 @@ export default class DataParser {
     if(!dataObj) return result;
 
     let driverKeys = ['prospects', 'conversions', 'volume', 'price', 'productivity', 'efficiency', 'frequency'];
-    for(var dkey in driverKeys) {
-      if(dataObj.hasOwnProperty(dkey)) {
+    
+    for(var dkey in driverKeys)
+      if(dataObj.hasOwnProperty(dkey))
         result['data']['profit_drivers'][dkey] = dataObj[dkey];
-      }
-    }
-
-    result['data']['entryDate'] = dataObj['entry_date'];
 
     return result;
   }
 
   // POSTs profit driver data for business as JSON
-  // Returns {message: [message]} on success, superagent err on failure
+  // Resolves {message: [message]} on success, superagent err on failure
   sendProfitDriverData(businessId, dataObj) {
     return new Promise(function(resolve, reject) {
       let reqBody = this.serializeProfitDriverData(dataObj);
@@ -238,6 +236,40 @@ export default class DataParser {
             result = {
               message: res.body.data['meta']
             }
+
+          resolve(result);
+        }
+      });
+    }.bind(this));
+  }
+
+  // Updates a user's personal info 
+  updateUserData(firstName=null, lastName=null, activeBusinessId=null) {
+    return new Promise(function(resolve, reject) {
+      let reqBody = {};
+      
+      if(firstName && firstName.length) reqBody['firstname'] = firstName;
+      if(lastName && lastName.length) reqBody['lastname'] = lastName;
+      if(activeBusinessId) reqBody['active_business_id'] = activeBusinessId;
+
+      superagent
+      .put(this.apiUrl + `profile`)
+      .set({"Content-Type": "application/json", "Access-Token": this.accessToken, "Client": this.client, "Token-Type": this.tokenType, "Uid": this.uid})
+      .send(reqBody)
+      .end((err, res) => {
+        if(err || !res.ok) { reject(err) }
+        else {
+          let result = {};
+          if(res.body && res.body.data) {
+            result = {
+              id: res.body.data['id'],
+              firstName: res.body.data['attributes']['firstname'],
+              lastName: res.body.data['attributes']['lastname'],
+              email: res.body.data['attributes']['email'],
+              tier: res.body.data['attributes']['tier'],
+              activeBusinessId: res.body.data['attributes']['active-business-id']
+            }
+          }
 
           resolve(result);
         }
