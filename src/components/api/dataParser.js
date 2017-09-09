@@ -58,7 +58,7 @@ export default class DataParser {
           });
         }
       });
-    });
+    }.bind(this));
   }
 
   // Returns all a user's businesses as an array of objects
@@ -86,7 +86,7 @@ export default class DataParser {
           resolve(businesses);
         }
       });
-    });
+    }.bind(this));
   }
 
   // Returns a single business' data as an object
@@ -112,7 +112,7 @@ export default class DataParser {
           });
         }
       });
-    });
+    }.bind(this));
   }
 
   // Returns all of the data entered for a business as an array of objects
@@ -146,6 +146,7 @@ export default class DataParser {
           // * Could be refactored into serializers file 
           let sectionNames = ['income_statement', 'balance_sheet', 'sales_and_marketing', 'financial_roi'];
           let dataEntries = [];
+          
           if(!res.body || !res.body.data) resolve(dataEntries);
           
           let entries = res.body.data;
@@ -170,27 +171,29 @@ export default class DataParser {
           resolve(dataEntries);
         }
       });
-    });
+    }.bind(this));
   }
   
   // Returns all of the entered profit driver sensitivities for the current month
   // as an object. Alternatively, a date range can be specified.
   // * API not yet set up to return data as an array if multiple found in date range - OP
   getProfitDriverData(businessId, startDate=null, endDate=null) {
-    url = this.apiUrl + `businesses/${businessId}/profit_drivers/`;
+    return new Promise(function(resolve, reject) {
+      let url = this.apiUrl + `businesses/${businessId}/profit_drivers/`;
 
-    if (startDate && endDate && startDate.length && endDate.length)
-      url += `?start_date=${startDate}&end_date=${endDate}`;
+      if (startDate && endDate && startDate.length && endDate.length)
+        url += `?start_date=${startDate}&end_date=${endDate}`;
 
-    superagent
-    .get(url)
-    .set({"Access-Token": this.accessToken, "Client": this.client, "Token-Type": this.tokenType, "Uid": this.uid})
-    .end((err, res) => {
-      if(err) { reject(err) }
-      else {
-        resolve(res.body);
-      }
-    });
+      superagent
+      .get(url)
+      .set({"Access-Token": this.accessToken, "Client": this.client, "Token-Type": this.tokenType, "Uid": this.uid})
+      .end((err, res) => {
+        if(err) { reject(err) }
+        else {
+          resolve(res.body);
+        }
+      });
+    }.bind(this));
   }
   
   // Returns proper json array format given profit driver data object
@@ -220,23 +223,26 @@ export default class DataParser {
   // POSTs profit driver data for business as JSON
   // Returns {message: [message]} on success, superagent err on failure
   sendProfitDriverData(businessId, dataObj) {
-    let reqBody = this.serializeProfitDriverData(dataObj);
+    return new Promise(function(resolve, reject) {
+      let reqBody = this.serializeProfitDriverData(dataObj);
 
-    superagent
-    .post(this.apiUrl + `businesses/${businessId}/profit_drivers/`)
-    .set({"Content-Type": "application/json", "Access-Token": this.accessToken, "Client": this.client, "Token-Type": this.tokenType, "Uid": this.uid})
-    .send(reqBody)
-    .end((err, res) => {
-      if(err || !res.ok) { reject(err) }
-      else {
-        let result = {};
-        if(res.body && res.body.data && res.body.data['meta']) 
-          result = {
-            message: res.body.data['meta']
-          }
+      superagent
+      .post(this.apiUrl + `businesses/${businessId}/profit_drivers/`)
+      .set({"Content-Type": "application/json", "Access-Token": this.accessToken, "Client": this.client, "Token-Type": this.tokenType, "Uid": this.uid})
+      .send(reqBody)
+      .end((err, res) => {
+        if(err || !res.ok) { reject(err) }
+        else {
+          let result = {};
+          if(res.body && res.body.data && res.body.data['meta']) 
+            result = {
+              message: res.body.data['meta']
+            }
 
-        resolve(result);
-      }
-    });
+          resolve(result);
+        }
+      });
+    }.bind(this));
   }
+
 }
