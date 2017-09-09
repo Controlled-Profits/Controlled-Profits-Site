@@ -1,17 +1,30 @@
 import React, {Component} from 'react';
-import {finacialMarketingAndSalesDataInputArray} from 'financialData.js';
+import '../../styles/financials.css';
 
 export default class FinancialInput extends Component{
   constructor(props){
     super(props);
+    this.state = {
+      currentValue: '',
+      title: '',
+      postVal: ''
+    }
+  }
+
+  handleCurrentValueChange(event){
+    this.setState({currentValue: event.target.value});
+  }
+
+  componentDidMount(){
+      this.setState({title: this.props.title});
   }
 
   render(){
     return(
-      <div className="input-group col-md-6">
-        <label>{this.props.title}</label>
+      <div className="input-group financial-input">
+        <label className="input-group-addon financial-title">{this.state.title}</label>
         <span className="input-group-addon">$</span>
-        <input type="text" className="form-control" onChange={this.props.handleInputChange} value={this.props.currentValue}/>
+        <input type="text" className="form-control" onChange={this.handleCurrentValueChange.bind(this)} value={this.state.currentValue} placeholder={this.props.currentValue}/>
       </div>
     )
   }

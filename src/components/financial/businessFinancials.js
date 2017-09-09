@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 
-import BalanceSheet from './BalanceSheet.js';
 import IncomeStatement from './IncomeStatement.js';
 
 
