@@ -27,7 +27,7 @@ export default class DeltaProspects extends Component {
     this.dp = new DataParser('http://controlledprofits.herokuapp.com/v1/', accessToken, client, uid);
   }
 
-  //Refactor into Business data api file ideally
+  //Refactor into Business data api file ideally - * DONE
   getDataEntries(businessId, entryType=null, section=null, startDate=null, endDate=null) {
 
     this.dp.getBusinessDataEntries(businessId, entryType, section, startDate, endDate)
