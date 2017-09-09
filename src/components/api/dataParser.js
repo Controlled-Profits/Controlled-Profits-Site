@@ -7,12 +7,12 @@
  * 
  * // Store in state so that user data does not need to be passed along components, 
  * // only the parser. This way data is up to date whenever it is grabbed.
- * this.setState({dataParser: dataParser.new(this.props.apiUrl, this.props.accessToken, client, uid)})
+ * this.setState({dataParser: new DataParser(this.props.apiUrl, this.props.accessToken, client, uid)})
  * 
  * ...
  * 
  * someComponentAction() {
- *  this.props.dataParser.getBusinessDataEntries(businessId: this.props.activeBizId, entry_type='actual', [...])
+ *  this.props.dataParser.getBusinessDataEntries(this.props.activeBizId, entryType='actual', [...])
  *    .then(function(data) { // Pay attention to return type of data, 
  *                           // some functions return arrays and some return objects
  *                           // as necessary
@@ -41,7 +41,7 @@ export default class DataParser {
   //needs validateUser()
 
   // Returns user data as object if credentials are valid
-  // Will add an api route for this - OP
+  // * Will add an api route for this - OP
   getUser() {
     return new Promise(function(resolve, reject) {
       superagent
@@ -120,8 +120,44 @@ export default class DataParser {
   }
   
   // Returns all of the entered profit driver sensitivities for the current month
-  // as an object. Alternatively, a date range can be specified
+  // as an object. Alternatively, a date range can be specified.
+  // * API not yet set up to return data as an array if multiple found in date range - OP
   getProfitDriverData(businessId, startDate=null, endDate=null) {
+    url = this.apiUrl + `businesses/${businessId}/profit_drivers/`;
 
+    if (startDate && endDate && startDate.length && endDate.length)
+      url += `?start_date=${startDate}&end_date=${endDate}`;
+
+    superagent
+    .get(url)
+    .set({"Access-Token": this.accessToken, "Client": this.client, "Token-Type": this.tokenType, "Uid": this.uid})
+    .end((err, res) => {
+      if(err) { reject(err) }
+      else {
+        resolve(res.body);
+      }
+    });
+  }
+  
+  // Returns proper json array format given profit driver data object
+  // May move to a file for api serializers
+  serializeProfitDriverData(dataObj) {
+    
+  }
+
+  // POSTs profit driver data for business as JSON
+  saveProfitDriverData(businessId, dataObj) {
+
+
+    superagent
+    .post(this.apiUrl + `/businesses/${businessId}`)
+    .set({"Content-Type": "application/json", "Access-Token": this.accessToken, "Client": this.client, "Token-Type": this.tokenType, "Uid": this.uid})
+    .send(dataObj)
+    .end((err, res) => {
+      if(err || !res.ok) { reject(err) }
+      else {
+        resolve(res.body);
+      }
+    });
   }
 }
