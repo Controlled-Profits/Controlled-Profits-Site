@@ -39,6 +39,7 @@ export default class DeltaProspects extends Component {
     .end((err, res) => {
       if(err) { this.setState({errorMessage: "Authentication Failed"}); return "Something went wrong."; }
       else {
+        console.log("response:", res.body)
         this.setState({dataEntries: res.body});
       }
     });
