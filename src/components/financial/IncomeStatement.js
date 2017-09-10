@@ -1,43 +1,38 @@
 import React, {Component} from 'react';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
+// import {selectUser} from '../actions/index.js';
 import InputBlock from './inputBlock.js';
 
-import finacialMarketingAndSalesDataInputArray from './financialData';
+class IncomeStatement extends Component{
 
-export default class IncomeStatement extends Component{
-  constructor(props){
-    super(props);
-    this.state = {
-      active: false,
-      incomeBlock: []
-    }
-  }
-
-  handleIncomeStatementClick() {
-    this.setState({active: !this.state.active});
-  }
-
-  componentDidMount(){
-    let results = finacialMarketingAndSalesDataInputArray;
-    console.log(results);
-    let incomeStatement = results.finacialMarketingAndSalesDataInputArray.map((input) => {
-      console.log("input block component: ",input.sectionSubHeader);
+  buildIncomeStatement(){
+    return this.props.incomeStatement.map((sectionHeader) =>{
+      console.log(sectionHeader.sectionHeader);
       return(
-        <div className='income-stat-input'>
-          <h1>{input.sectionHeader}</h1>
-          <InputBlock inputBlock={input.sectionSubHeader}/>
+        <div className='income-statement-block'>
+          <h1 key={sectionHeader.id}>{sectionHeader.sectionHeader}</h1>
+          <InputBlock inputBlock={sectionHeader.sectionSubHeader}/>
         </div>
-
-      )
-    })
-    this.setState({incomeBlock: incomeStatement});
+      );
+    });
   }
 
   render(){
 
     return(
       <div className="input-block-container">
-        {this.state.incomeBlock}
+        {this.buildIncomeStatement()}
       </div>
     )
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    incomeStatement: state.incomeStatement
+  };
+}
+
+
+export default connect(mapStateToProps)(IncomeStatement);
