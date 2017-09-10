@@ -18,13 +18,15 @@ export default class DeltaProspects extends Component {
     this.init();
   }
 
+  // Ideally this would run in the AppHomeBox, and then every app that inherits it
+  // could just run dp's functions without having to put in four different credentials every time.
   init() {
     let accessToken = localStorage.getItem('Access-Token');
     let client = localStorage.getItem('Client');
     let tokenType = localStorage.getItem('Token-Type');
     let uid = localStorage.getItem('Uid');
 
-    this.dp = new DataParser('http://controlledprofits.herokuapp.com/v1/', accessToken, client, uid);
+    this.dp = new DataParser('http://controlledprofits.herokuapp.com/', accessToken, client, uid);
   }
 
   //Refactor into Business data api file ideally - * pretty much done
@@ -93,13 +95,11 @@ export default class DeltaProspects extends Component {
     //Could probably call for just a section and certain date here, just add the arguments
     this.dp.getUser()
       .then(function(obj) {
-        console.log(obj)
         this.getDataEntries(obj.activeBusinessId);
       }.bind(this))
 
       .catch(function(err) {
-        console.log(err);
-        this.setState({dataEntries: []});
+        this.setState({dataEntries: [], errorMessage: err});
       }.bind(this));
   }
 
