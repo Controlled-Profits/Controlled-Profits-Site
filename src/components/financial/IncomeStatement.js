@@ -1,14 +1,14 @@
 import React, {Component} from 'react';
+import InputBlock from './inputBlock.js';
 
 import finacialMarketingAndSalesDataInputArray from './financialData';
-import FinancialInput from './inputFinance.js';
 
 export default class IncomeStatement extends Component{
   constructor(props){
     super(props);
     this.state = {
       active: false,
-      inputBlock: []
+      incomeBlock: []
     }
   }
 
@@ -20,35 +20,23 @@ export default class IncomeStatement extends Component{
     let results = finacialMarketingAndSalesDataInputArray;
     console.log(results);
     let incomeStatement = results.finacialMarketingAndSalesDataInputArray.map((input) => {
-      let subHeaderCard = input.sectionSubHeader.map((subSection) => {
-        let fieldCard = subSection.fields.map((subFields) => {
-          return(
-            <FinancialInput title={subFields.title} currentValue={subFields.value}/>
-          )
-        })
-        return(
-          <div>
-            <h4>{subSection.header}</h4>
-              {fieldCard}
-          </div>
-        )
-      })
+      console.log("input block component: ",input.sectionSubHeader);
       return(
         <div className='income-stat-input'>
-          <h2>{input.sectionHeader}</h2>
-            {subHeaderCard}
+          <h1>{input.sectionHeader}</h1>
+          <InputBlock inputBlock={input.sectionSubHeader}/>
         </div>
 
       )
     })
-    this.setState({inputBlock: incomeStatement});
+    this.setState({incomeBlock: incomeStatement});
   }
 
   render(){
 
     return(
       <div className="input-block-container">
-        {this.state.inputBlock}
+        {this.state.incomeBlock}
       </div>
     )
   }
