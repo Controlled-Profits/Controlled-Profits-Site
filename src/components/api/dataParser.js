@@ -47,7 +47,6 @@ export default class DataParser {
       .end((err, res) => {
         if(err || !res.ok) { reject(err) }
         else {
-          console.log(res.body.data);
           resolve({
             id: res.body.data['id'],
             firstName: res.body.data['firstname'],
@@ -277,7 +276,5 @@ export default class DataParser {
       });
     }.bind(this));
   }
-
-
-
+  
 }
