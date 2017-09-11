@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import FinancialInput from './inputFinance.js';
+import FinancialInput from './financial-input.js';
+import PercentInput from './percent-input.js';
 
 export default class SubHeaderInputBlock extends Component{
   constructor(props){
@@ -13,12 +14,22 @@ export default class SubHeaderInputBlock extends Component{
     let subHeaderRes = this.props.subHeaderInput;
     console.log('subHeaderRes:', subHeaderRes);
     let subHeaderResCards = subHeaderRes.map((field)=> {
-      return(
-        <div>
-        <FinancialInput title={field.title} currentValue={field.value}/>
-        </div>
-      )
-    });
+      console.log(field.type);
+      if(field.type === 'percentage'){
+        return(
+          <div>
+            <PercentInput title={field.title} currentValue={field.value} id={field.id}/>
+          </div>
+        )
+      }
+      else{
+        return(
+          <div>
+            <FinancialInput title={field.title} currentValue={field.value} id={field.id}/>
+          </div>
+        )
+      }
+      });
     this.setState({subSectionInput: subHeaderResCards});
   }
 

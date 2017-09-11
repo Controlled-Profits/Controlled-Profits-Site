@@ -1,4 +1,7 @@
 import React, {Component} from 'react';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
+// import {selectUser} from '../actions/index.js';
 import SubHeaderInputBlock from './subHeaderInputBlock.js';
 
 export default class InputBlock extends Component{
@@ -8,6 +11,7 @@ export default class InputBlock extends Component{
       inputBlock: []
     }
   }
+
 
   componentDidMount(){
     let results = this.props.inputBlock;
