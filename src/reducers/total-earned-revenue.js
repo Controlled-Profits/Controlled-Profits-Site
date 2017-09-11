@@ -6,13 +6,13 @@ export default function() {
       type: 'input',
       value: 0,
       role: 'sum'
-    },
-    {
-      id:2,
-      title: 'Total Sales Revenue',
-      type: 'output',
-      value: 0,
-      role: 'calculated'
     }
+    // {
+    //   id:2,
+    //   title: 'Total Sales Revenue',
+    //   type: 'output',
+    //   value: 0,
+    //   role: 'calculated'
+    // }
   ]
 }

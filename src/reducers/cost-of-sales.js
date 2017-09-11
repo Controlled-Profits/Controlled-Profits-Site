@@ -27,29 +27,29 @@ export default function() {
       type: 'input',
       value: 0,
       role: 'sum'
-    },
-    {
-      id: 114,
-      title: "Variable Profit Improvement Expenses",
-      type: 'output',
-      value: 0,
-      role: 'sum'
-    },
-    {
-      id: 115,
-      title: "Subtotal Cost of Sales",
-      type: 'output',
-      value: 0,
-      role: 'calculated',
-      formula: ""
-    },
-    {
-      id: 116,
-      title: "Gross Contribution Profit",
-      type: 'output',
-      value: 0,
-      role: 'calculated',
-      formula: ''
     }
+    // {
+    //   id: 114,
+    //   title: "Variable Profit Improvement Expenses",
+    //   type: 'output',
+    //   value: 0,
+    //   role: 'sum'
+    // },
+    // {
+    //   id: 115,
+    //   title: "Subtotal Cost of Sales",
+    //   type: 'output',
+    //   value: 0,
+    //   role: 'calculated',
+    //   formula: ""
+    // },
+    // {
+    //   id: 116,
+    //   title: "Gross Contribution Profit",
+    //   type: 'output',
+    //   value: 0,
+    //   role: 'calculated',
+    //   formula: ''
+    // }
   ]
 }
