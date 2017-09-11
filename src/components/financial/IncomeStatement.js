@@ -6,33 +6,14 @@ import InputBlock from './inputBlock.js';
 
 class IncomeStatement extends Component{
 
-  buildIncomeStatement(){
-    return this.props.incomeStatement.map((sectionHeader) =>{
-      console.log(sectionHeader.sectionHeader);
-      return(
-        <div className='income-statement-block'>
-          <h1 key={sectionHeader.id}>{sectionHeader.sectionHeader}</h1>
-          <InputBlock inputBlock={sectionHeader.sectionSubHeader}/>
-        </div>
-      );
-    });
-  }
-
   render(){
 
     return(
-      <div className="input-block-container">
-        {this.buildIncomeStatement()}
+      <div className="header-container">
+        <h1 className="section-header">{this.props.sectionHeader}</h1>
       </div>
     )
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    incomeStatement: state.incomeStatement
-  };
-}
-
-
-export default connect(mapStateToProps)(IncomeStatement);
+export default IncomeStatement;

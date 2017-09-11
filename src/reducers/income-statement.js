@@ -1,5 +1,5 @@
 export default function() {
-  return [{
+  return {
     id:1,
     sectionHeader: 'Income Statement',
     sectionSubHeader: [
@@ -269,5 +269,5 @@ export default function() {
         ]
       }
       ]
-    }]
+    }
 }

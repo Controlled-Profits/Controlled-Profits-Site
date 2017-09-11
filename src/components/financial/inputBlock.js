@@ -12,7 +12,6 @@ export default class InputBlock extends Component{
     }
   }
 
-  buildInput
 
   componentDidMount(){
     let results = this.props.inputBlock;
@@ -36,11 +35,3 @@ export default class InputBlock extends Component{
     )
   }
 }
-
-function mapStateToProps(state) {
-  return {
-    incomeStatementSubSectionHeaders: state.incomeStatement.SubSectionHeaders
-  };
-}
-
-export default connect(mapStateToProps)(InputBlock);

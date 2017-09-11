@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import FinancialInput from './inputFinance.js';
+import FinancialInput from './financial-input.js';
 
 export default class SubHeaderInputBlock extends Component{
   constructor(props){
@@ -15,7 +15,7 @@ export default class SubHeaderInputBlock extends Component{
     let subHeaderResCards = subHeaderRes.map((field)=> {
       return(
         <div>
-        <FinancialInput title={field.title} currentValue={field.value}/>
+          <FinancialInput title={field.title} currentValue={field.value} id={field.id}/>
         </div>
       )
     });
