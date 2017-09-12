@@ -161,9 +161,11 @@ export default class DataParser {
               businessId: entry['business_id']
             }
 
-            for(var sKey in sectionNames)
-              if(entry.hasOwnProperty(sKey))
-                entryData[sKey] = entry[sKey];
+            for(var sKey in sectionNames) {
+              let key = sectionNames[sKey];
+              if(entry.hasOwnProperty(key)) 
+                entryData[key] = entry[key];
+            }
 
             dataEntries.push(entryData);
           }
@@ -276,5 +278,5 @@ export default class DataParser {
       });
     }.bind(this));
   }
-  
+
 }
