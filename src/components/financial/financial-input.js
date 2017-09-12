@@ -2,23 +2,6 @@ import React, {Component} from 'react';
 import '../../styles/financials.css';
 
 export default class FinancialInput extends Component{
-  constructor(props){
-    super(props);
-    this.state = {
-      currentValue: '',
-      title: '',
-      postVal: ''
-    }
-  }
-
-  handleCurrentValueChange(event){
-    this.setState({currentValue: event.target.value});
-  }
-
-  componentDidMount(){
-      this.setState({title: this.props.title});
-  }
-
   render(){
     return(
       <div className="input-group financial-input" key={this.props.id}>

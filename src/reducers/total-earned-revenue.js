@@ -3,6 +3,7 @@ export default function() {
     {
       id: 1,
       title: 'Total Earned Revenue (Cash & Credit)',
+      name: 'totEarnedRevenue',
       type: 'input',
       value: 0,
       role: 'sum'

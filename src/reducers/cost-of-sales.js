@@ -3,6 +3,7 @@ export default function() {
     {
       id: 110,
       title: 'Cost of Goods Sold (materials, storae, packaging)',
+      name: 'costOfGoodsSold',
       type: 'input',
       value: 0,
       role: 'sum'
@@ -10,6 +11,7 @@ export default function() {
     {
       id: 111,
       title: "Marketing",
+      name: 'marketing',
       type: 'input',
       value: 0,
       role: 'sum'
@@ -17,6 +19,7 @@ export default function() {
     {
       id: 112,
       title: "Direct Labor",
+      name: 'directLabor',
       type: 'input',
       value: 0,
       role: 'sum'
@@ -24,6 +27,7 @@ export default function() {
     {
       id: 113,
       title: "Distribution",
+      name: 'distribution',
       type: 'input',
       value: 0,
       role: 'sum'

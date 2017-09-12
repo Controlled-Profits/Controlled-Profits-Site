@@ -1,4 +1,5 @@
 import {combineReducers} from 'redux';
+import {reducer as formReducer} from 'redux-form';
 import IncomeStatement from './income-statement.js';
 import TotalEarnedRevenue from './total-earned-revenue.js';
 import CostOfSales from './cost-of-sales.js';
@@ -12,6 +13,7 @@ import SalesAndMarketing from './sales-and-marketing.js';
 import FinancialRatesOfInterest from './financial-rates-of-interest.js';
 
 const allReducers = combineReducers({
+  form: formReducer,
   incomeStatement: IncomeStatement,
   totalEarnedRevenue: TotalEarnedRevenue,
   costOfSales: CostOfSales,
