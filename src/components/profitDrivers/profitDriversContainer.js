@@ -28,9 +28,9 @@ export default class ProfitDrivers extends Component {
   }
 
   handleTargetDateChange(date) {
-    //Probably will need to recalculate 
+    //Automatically sets to end of chosen month
     this.setState({
-      targetDate: date 
+      targetDate: date.add('months', 1).date(0)
     });
   }
 
@@ -38,23 +38,191 @@ export default class ProfitDrivers extends Component {
   render() {
     return(
       <div className="container container-fluid">
-      <div className="delta-prospects-container">
         <div className="panel panel-default">
           <div className="panel-heading">
             <h3 className="panel-title">Profit Driver Inputs</h3>
           </div>
           <div className="panel-body">
-        <span>
-          <strong>Start Date:</strong><br />
-          <input value={this.state.startDate.format("MM[/]DD[/]YYYY")} disabled/><br /><br />
-          <strong>End Date:</strong><DatePicker 
-            selected={this.state.targetDate}
-            onChange={this.handleTargetDateChange}
-          />
-        </span>
+            <div className="row">
+              <div className="col-md-2 col-xs-2">
+                <strong>Start Date:</strong><br />
+                <input value={this.state.startDate.format("MM[/]DD[/]YYYY")} disabled/><br /><br />
+                <strong>End Date:</strong><DatePicker 
+                  selected={this.state.targetDate}
+                  onChange={this.handleTargetDateChange}
+                />
+              </div>
+              <div className="col-md-10 col-xs-10">
+                <table className="driver-input-table">
+                  <thead>
+                    <tr>
+                      <th>Driver Name</th>
+                      <th>Percent</th>
+                      <th>Variable Cost</th>
+                      <th>Fixed Cost</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Prospects</td>
+                      <td>
+                        {/* This can pretty easily be changed to a slider later */}
+                        <div className="input-group">
+                          <input id="pct_prospects" type="text" className="form-control" placeholder="1.0"/>
+                          <span className="input-group-addon">%</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="input-group">
+                          <span className="input-group-addon">$</span>
+                          <input id="var_cost_prospects" type="text" className="form-control" placeholder="100.00"/>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="input-group">
+                          <span className="input-group-addon">$</span>
+                          <input id="fixed_cost_prospects" type="text" className="form-control" placeholder="100.00"/>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Conversions</td>
+                      <td>
+                        {/* This can pretty easily be changed to a slider later */}
+                        <div className="input-group">
+                          <input id="pct_conversions" type="text" className="form-control" placeholder="15.0"/>
+                          <span className="input-group-addon">%</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="input-group">
+                          <span className="input-group-addon">$</span>
+                          <input id="var_cost_conversions" type="text" className="form-control" placeholder="100.00"/>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="input-group">
+                          <span className="input-group-addon">$</span>
+                          <input id="fixed_cost_conversions" type="text" className="form-control" placeholder="100.00"/>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Volume</td>
+                      <td>
+                        {/* This can pretty easily be changed to a slider later */}
+                        <div className="input-group">
+                          <input id="pct_volume" type="text" className="form-control" placeholder="5.0"/>
+                          <span className="input-group-addon">%</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="input-group">
+                          <span className="input-group-addon">$</span>
+                          <input id="var_cost_volume" type="text" className="form-control" placeholder="100.00"/>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="input-group">
+                          <span className="input-group-addon">$</span>
+                          <input id="fixed_cost_volume" type="text" className="form-control" placeholder="100.00"/>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Price</td>
+                      <td>
+                        {/* This can pretty easily be changed to a slider later */}
+                        <div className="input-group">
+                          <input id="pct_price" type="text" className="form-control" placeholder="3.0"/>
+                          <span className="input-group-addon">%</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="input-group">
+                          <span className="input-group-addon">$</span>
+                          <input id="var_cost_price" type="text" className="form-control" placeholder="100.00"/>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="input-group">
+                          <span className="input-group-addon">$</span>
+                          <input id="fixed_cost_price" type="text" className="form-control" placeholder="100.00"/>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Productivity</td>
+                      <td>
+                        {/* This can pretty easily be changed to a slider later */}
+                        <div className="input-group">
+                          <input id="pct_productivity" type="text" className="form-control" placeholder="1.0"/>
+                          <span className="input-group-addon">%</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="input-group">
+                          <span className="input-group-addon">$</span>
+                          <input id="var_cost_productivity" type="text" className="form-control" placeholder="100.00"/>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="input-group">
+                          <span className="input-group-addon">$</span>
+                          <input id="fixed_cost_productivity" type="text" className="form-control" placeholder="100.00"/>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Efficiency</td>
+                      <td>
+                        {/* This can pretty easily be changed to a slider later */}
+                        <div className="input-group">
+                          <input id="pct_efficiency" type="text" className="form-control" placeholder="1.0"/>
+                          <span className="input-group-addon">%</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="input-group">
+                          <span className="input-group-addon">$</span>
+                          <input id="var_cost_efficiency" type="text" className="form-control" placeholder="100.00"/>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="input-group">
+                          <span className="input-group-addon">$</span>
+                          <input id="fixed_cost_efficiency" type="text" className="form-control" placeholder="100.00"/>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Frequency</td>
+                      <td>
+                        {/* This can pretty easily be changed to a slider later */}
+                        <div className="input-group">
+                          <input id="pct_frequency" type="text" className="form-control" placeholder="7.0"/>
+                          <span className="input-group-addon">%</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="input-group">
+                          <span className="input-group-addon">$</span>
+                          <input id="var_cost_frequency" type="text" className="form-control" placeholder="100.00"/>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="input-group">
+                          <span className="input-group-addon">$</span>
+                          <input id="fixed_cost_frequency" type="text" className="form-control" placeholder="100.00"/>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
         <Tabs defaultActiveKey={1} id="driverTabs">
           <Tab eventKey={1} title="Delta Prospects">
             <DeltaProspects businessHolder={this.props.businessHolder} />
