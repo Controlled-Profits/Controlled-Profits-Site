@@ -120,50 +120,12 @@ handleInputFormSubmit(event,dispatch) {
             </div>
             <hr/>
           </div>
-          <button type='submint' className="btn btn-primary btn-lrg">Submit</button>
+          <button type='submit' className="btn btn-primary btn-lrg">Submit</button>
         </form>
       </div>
     )
   }
 }
-
-// const mapStateToProps = (state) => {
-//   return{
-//     incomeStatement: state.incomeStatement,
-//     totalEarnedRevenue: state.totalEarnedRevenue,
-//     costOfSales: state.costOfSales,
-//     fixedExpenses: state.fixedExpenses,
-//     currentAssets: state.currentAssets,
-//     fixedAndLongTermAssets: state.fixedAndLongTermAssets,
-//     currentLiabilities: state.currentLiabilities,
-//     longTermDebt: state.longTermDebt,
-//     ownersEquity: state.ownersEquity,
-//     salesAndMarketing: state.salesAndMarketing,
-//     financialRatesOfInterest: state.financialRatesOfInterest
-//   };
-// }
-//
-//
-//
-// FinancialMarketingSalesDataInput = reduxForm({
-//   form: 'inputFinancialData',
-// })(FinancialMarketingSalesDataInput)
-//
-// FinancialMarketingSalesDataInput = connect(
-//   state => ({
-//     incomeStatement: state.incomeStatement.data,
-//     totalEarnedRevenue: state.totalEarnedRevenue,
-//     costOfSales: state.costOfSales,
-//     fixedExpenses: state.fixedExpenses,
-//     currentAssets: state.currentAssets,
-//     fixedAndLongTermAssets: state.fixedAndLongTermAssets,
-//     currentLiabilities: state.currentLiabilities,
-//     longTermDebt: state.longTermDebt,
-//     ownersEquity: state.ownersEquity,
-//     salesAndMarketing: state.salesAndMarketing,
-//     financialRatesOfInterest: state.financialRatesOfInterest
-//   })
-// )
 
 export default reduxForm({
   form: 'finaForm',

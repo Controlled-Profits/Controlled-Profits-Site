@@ -12,6 +12,22 @@ import OwnersEquity from './owners-equity.js';
 import SalesAndMarketing from './sales-and-marketing.js';
 import FinancialRatesOfInterest from './financial-rates-of-interest.js';
 
+function mainReducer(state = {
+  headers: [],
+  loadingFormHeaders: false,
+  addingFormInput: false,
+}, action) {
+  switch (action.type) {
+    case 'REQUEST_FORM_HEADERS':
+      return Object.assign({}, state, {
+        loadingFormHeaders: true,
+      });
+
+  default:
+    return state;
+  }
+}
+
 const allReducers = combineReducers({
   form: formReducer,
   incomeStatement: IncomeStatement,
