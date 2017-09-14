@@ -66,45 +66,48 @@ export default class DeltaProspects extends Component {
     let dataActual = this.state.dataActual,
         dataAdjusted = this.state.dataAdjusted;
 
+    console.log(dataActual);
+    console.log(dataAdjusted);
+
     if(dataActual && dataAdjusted && Object.keys(dataActual).length) {
 
+    trows.push( 
+      <tr key="row_prospects">
+        <td><strong>Current Prospects/Leads</strong></td>
+        <td>{dataActual['sales_and_marketing']['prospects']}</td>
+        <td>{dataAdjusted['sales_and_marketing']['prospects']}</td>
+        <td></td>
+        <td></td>
+      </tr>);
+  
+      trows.push(
+      <tr key="row_revenues">
+        <td><strong>Sales Revenues</strong></td>
+        <td>{parseFloat(dataActual['income_statement']['cash_collections'])+parseFloat(dataActual['income_statement']['period_sales'])}</td>
+        <td>{parseFloat(dataAdjusted['income_statement']['cash_collections'])+parseFloat(dataAdjusted['income_statement']['period_sales'])}</td>
+        <td></td>
+        <td></td>
+      </tr>);
+  
+      trows.push(
+        <tr key="row_profit">
+          <td><strong>Profit (Net Income)</strong></td>
+          <td></td>
+          <td>{dataAdjusted['sales_and_marketing']['prospects']}</td>
+          <td></td>
+          <td></td>
+        </tr>);
+  
+      trows.push(
+        <tr key="row_annualized">
+          <td><strong>Annualized</strong></td>
+          <td></td>
+          <td>{dataAdjusted['sales_and_marketing']['prospects']}</td>
+          <td></td>
+          <td></td>
+        </tr>);
     }
 
-    trows.push( 
-    <tr key="row_prospects">
-      <td><strong>Current Prospects/Leads</strong></td>
-      <td>{dataActual['sales_and_marketing']['prospects']}</td>
-      <td>{dataAdjusted['sales_and_marketing']['prospects']}</td>
-      <td></td>
-      <td></td>
-    </tr>);
-
-    trows.push(
-    <tr key="row_revenues">
-      <td><strong>Revenues</strong></td>
-      <td></td>
-      <td>{dataAdjusted['sales_and_marketing']['prospects']}</td>
-      <td></td>
-      <td></td>
-    </tr>);
-
-    trows.push(
-      <tr key="row_profit">
-        <td><strong>Profit (Net Income)</strong></td>
-        <td></td>
-        <td>{dataAdjusted['sales_and_marketing']['prospects']}</td>
-        <td></td>
-        <td></td>
-      </tr>);
-
-    trows.push(
-      <tr key="row_annualized">
-        <td><strong>Annualized</strong></td>
-        <td></td>
-        <td>{dataAdjusted['sales_and_marketing']['prospects']}</td>
-        <td></td>
-        <td></td>
-      </tr>);
 
     trows = <tbody>{trows}</tbody>
 
@@ -146,7 +149,7 @@ export default class DeltaProspects extends Component {
       <div className="delta-prospects-container">
         <div className="panel panel-default">
           <div className="panel-heading">
-            <h3 className="panel-title">Delta Prospects</h3>
+            <h3 className="panel-title">Driver Impact Summary</h3>
           </div>
           <div className="panel-body">
             {this.getTableDisplay()}
