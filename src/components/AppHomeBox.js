@@ -5,6 +5,7 @@ import {Redirect} from 'react-router-dom';
 import FinancialMarketingSalesDataInput from './financial/businessFinancials.js';
 import MemberHomeBox from './memberHome/memberHomeBox.js';
 import ProfitDrivers from './profitDrivers/profitDriversContainer.js';
+import FormInput from './financial/form-input.js';
 
 import '../styles/memberDesktop.css';
 
@@ -110,8 +111,8 @@ export default class AppHomeBox extends Component {
       />);
     }
     else if(this.state.activeSearch === 'FinancialMarketingSalesDataInput'){
-      return(<FinancialMarketingSalesDataInput props={this.state}/>);
-    } 
+      return(<FormInput props={this.state}/>);
+    }
     else if (this.state.activeSearch === 'ProfitDriversAndPlanning') {
       return(<ProfitDrivers businessHolder={this.state.businessHolder}/>);
     }
