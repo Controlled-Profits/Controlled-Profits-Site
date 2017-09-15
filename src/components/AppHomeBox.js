@@ -1,12 +1,14 @@
 import React, {Component} from 'react';
 import superagent from 'superagent';
 import {Redirect} from 'react-router-dom';
+import DataParser from  './api/dataParser.js';
 
 import FinancialMarketingSalesDataInput from './financial/businessFinancials.js';
 import MemberHomeBox from './memberHome/memberHomeBox.js';
 import ProfitDrivers from './profitDrivers/profitDriversContainer.js';
 import FormInput from './financial/form-input.js';
 import TempForm from './financial/temp-form.js';
+import SummaryBox from './summary/summary-box.js';
 
 import '../styles/memberDesktop.css';
 
@@ -32,6 +34,17 @@ export default class AppHomeBox extends Component {
       activeBusiness: '',
       activeBizId:''
     }
+
+    this.init()
+  }
+
+  init() {
+    let accessToken = localStorage.getItem('Access-Token');
+    let client = localStorage.getItem('Client');
+    let tokenType = localStorage.getItem('Token-Type');
+    let uid = localStorage.getItem('Uid');
+
+    this.dp = new DataParser('http://controlledprofits.herokuapp.com/', accessToken, client, uid);
   }
 
   getUserBusinesses(){
@@ -113,6 +126,9 @@ export default class AppHomeBox extends Component {
     }
     else if(this.state.activeSearch === 'FinancialMarketingSalesDataInput'){
       return(<TempForm/>);
+    }
+    else if(this.state.activeSearch === 'Summary'){
+      return(<SummaryBox/>)
     }
     else if (this.state.activeSearch === 'ProfitDriversAndPlanning') {
       return(<ProfitDrivers businessHolder={this.state.businessHolder}/>);
