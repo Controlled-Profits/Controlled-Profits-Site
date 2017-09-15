@@ -1,0 +1,21 @@
+#driverTabs .tab-content {
+  padding : 10px 15px;
+  border-left: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  border-radius: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.driver-input-table {
+  width: 100%;
+}
+
+.driver-input-table th {
+  text-align: center;
+}
+
+.driver-input-table td {
+  padding: 5px 10px;
+}
