@@ -31,10 +31,11 @@
 import superagent from 'superagent';
 
 export default class DataParser {
-  constructor(apiUrl, accessToken, client, uid) {
+  constructor(apiUrl, accessToken, client, uid, tokenType) {
     this.apiUrl = apiUrl;
     this.accessToken = accessToken;
     this.client = client;
+    this.tokenType = tokenType
     this.uid = uid;
   }
 
