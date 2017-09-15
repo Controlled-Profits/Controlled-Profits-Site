@@ -21,7 +21,7 @@ export default function() {
     {
       id: 4,
       title: 'Deferred Revenue',
-      name: 'deferedRevenue',
+      name: 'deferredRevenue',
       value: 0
     },
     {
@@ -33,7 +33,7 @@ export default function() {
     {
       id: 6,
       title: 'Current Part, Long Term Debt',
-      name: 'currentAndLongTermDebt',
+      name: 'currentPartLongTermDebt',
       value: 0
     },
     {

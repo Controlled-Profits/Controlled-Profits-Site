@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import { Redirect, BrowserRouter, Route, Switch } from 'react-router-dom';
 import {Provider} from 'react-redux';
 import {createStore} from 'redux';
-import allReducers from './reducers/index.js';
+import allReducers from './reducers/reducer.js';
 import AppHomeBox from './components/AppHomeBox.js';
 import './index.css';
 import App from './App';

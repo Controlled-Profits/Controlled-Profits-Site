@@ -23,6 +23,7 @@ class App extends Component {
 
   handleUserAuthentication(headers, userEmail, userId){
     this.setState({accessToken: headers['access-token'], client: headers['client'], tokenType: headers['token-type'], uid: headers['uid'], id: userId});
+    console.log('state', this.state);
     if(this.state.accessToken.length > 7 && this.state.client.length > 7 && this.state.tokenType === "Bearer" && this.state.uid === userEmail){
       this.setState({authenticated: true});
     }
