@@ -131,7 +131,6 @@ export default class DeltaProspects extends Component {
   }
 
   componentDidMount() {
-
     //Could probably call for just a section and certain date here, just add the arguments
     this.dp.getUser()
       .then(function(obj) {
