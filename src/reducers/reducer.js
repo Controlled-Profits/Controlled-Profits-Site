@@ -22,6 +22,9 @@ function mainReducer(state = {
       return Object.assign({}, state, {
         loadingFormHeaders: true,
       });
+    case 'SUBMIT_INPUT_FORM':
+      console.log("your in the reducer",state.formData)
+      return state.formData;
 
   default:
     return state;
@@ -29,6 +32,7 @@ function mainReducer(state = {
 }
 
 const allReducers = combineReducers({
+  main: mainReducer,
   form: formReducer,
   incomeStatement: IncomeStatement,
   totalEarnedRevenue: TotalEarnedRevenue,

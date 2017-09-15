@@ -1,5 +1,4 @@
-export function () {
-  return[
+let Fields = [
     {
       totalEarnedRevenue: [
         {
@@ -189,4 +188,3 @@ export function () {
       ]
     }
   ]
-}
