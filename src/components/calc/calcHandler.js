@@ -19,7 +19,7 @@ export default class CalcHandler {
     let subtotalCOS = 0;
 
     for(var i = 0; i < subtotalCOSItems.length; i++) {
-      subtotalCOS += parseFloat(subtotalCOSItems[i]).toPrecision(7);
+      subtotalCOS += parseFloat(subtotalCOSItems[i]);
     }
 
     console.log(`current subtotal cos = ${subtotalCOS}`);
@@ -28,9 +28,9 @@ export default class CalcHandler {
 
   getTargetCOS(targetGTU, VPIE) {
     let subtotalCOS = this.getCurrentCOS() - parseFloat(this.financialData['income_statement']['cogs']);
-    targetCOGs = 
-      (parseFloat(this.financialData['income_statement']).toPrecision(7) 
-      * parseFloat(targetGTU)).toPrecision(7);
+    let targetCOGs = 
+      (parseFloat(this.financialData['income_statement']['cogs'])
+      * parseFloat(targetGTU));
 
     subtotalCOS += targetCOGs + VPIE;
 
@@ -57,7 +57,7 @@ export default class CalcHandler {
 
     let fixedExpenses = 0;
     for(var i = 0; i < fixedExpensesItems.length; i++) {
-      fixedExpenses += parseFloat(fixedExpensesItems[i]).toPrecision(7);
+      fixedExpenses += parseFloat(fixedExpensesItems[i]);
     }
 
     console.log(`current fixed expenses = ${fixedExpenses}`);
@@ -114,7 +114,7 @@ export default class CalcHandler {
     let netIncome = opProfit - dep_and_amort - taxes;
 
     console.log(`current net income = ${netIncome}`);
-    return netIncome;
+    return netIncome.toFixed(2);
   }
 
   getTargetNetIncome(driverName, percent, VPIE, FPIE) {
@@ -124,14 +124,20 @@ export default class CalcHandler {
       
       switch(driverName) {
         case 'prospects':
-          let targetGTU = parseFloat(this.financialData['sales_and_marketing']['grand_total_units']) * percent;
+          let targetGTU = parseFloat(this.financialData['sales_and_marketing']['grand_total_units']) * (1+percent);
           let targetCOS = this.getTargetCOS(targetGTU, VPIE);
           let targetFixedExpenses = this.getTargetFixedExpenses(FPIE)
           let targetOpProfit = this.getOperatingProfit(this.getTargetEBITDA(targetCOS, targetFixedExpenses));
           let taxes = (parseFloat(this.financialData['income_statement']['tax_rate']) 
-          * targetOpProfit).toPrecision(7);
+          * targetOpProfit);
 
-          let netIcome = targetOpProfit - dep_and_amort - taxes;
+          console.log(`targetGTU = ${targetGTU}`);
+          console.log(`targetCOS = ${targetCOS}`);
+          console.log(`targetFE = ${targetFixedExpenses}`);
+          console.log(`targetOpProfit = ${targetOpProfit}`);
+          console.log(`targetTaxes = ${taxes}`);
+
+          let netIncome = targetOpProfit - dep_and_amort - taxes;
           console.log(`calculated target net income for prospects = ${netIncome}`);
           return netIncome.toFixed(2);
         case 'conversions':
@@ -143,17 +149,6 @@ export default class CalcHandler {
         default:
           return 0.00;
       }
-      
-      let opProfit = this.getOperatingProfit(this.getCurrentEBITDA());
-  
-      console.log(`current op profit = ${opProfit}`);
-  
-      let taxes = (parseFloat(this.financialData['income_statement']['tax_rate']) 
-                    * opProfit).toPrecision(7);
-      let netIncome = opProfit - dep_and_amort - taxes;
-  
-      console.log(`current net income = ${netIncome}`);
-      return netIncome;
   }
 
   getTargetIncrease(driverName, percent) {

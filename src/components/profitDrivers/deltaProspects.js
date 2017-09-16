@@ -43,8 +43,8 @@ export default class DeltaProspects extends Component {
       trows.push(
         <tr key="row_profit">
           <td><strong>Profit (Net Income)</strong></td>
-          <td></td>
-          <td></td>
+          <td>${this.props.calcHandler.getCurrentNetIncome()}</td>
+          <td>${this.props.calcHandler.getTargetNetIncome('prospects', this.props.pctProspects, this.props.vcProspects, this.props.fcProspects)}</td>
           <td></td>
           <td></td>
         </tr>);

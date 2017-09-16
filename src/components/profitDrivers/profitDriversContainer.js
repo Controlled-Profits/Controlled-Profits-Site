@@ -21,6 +21,8 @@ export default class ProfitDrivers extends Component {
 
     this.handleTargetDateChange = this.handleTargetDateChange.bind(this);
     this.handleProspectsPercentChange = this.handleProspectsPercentChange.bind(this);
+    this.handleProspectsVarCostChange = this.handleProspectsVarCostChange.bind(this);
+    this.handleProspectsFixedCostChange = this.handleProspectsFixedCostChange.bind(this);
 
     //Get last day in month, convert to appropriate string format
     let today = new Date();
@@ -34,13 +36,34 @@ export default class ProfitDrivers extends Component {
       dataAdjusted: {},
       startDate: moment(endOfMonthStr),
       targetDate: moment(nextMonthStr),
+      //Driver percent change, var cost, fixed cost:
       pctProspects: 0.00,
+      vcProspects: 0.00,
+      fcProspects: 0.00,
+      //
       pctConversions: 0.00,
+      vcConversions: 0.00,
+      fcConversions: 0.00,
+      //
       pctVolume: 0.00,
+      vcVolume: 0.00,
+      fcVolume: 0.00,
+      //
       pctPrice: 0.00,
+      vcPrice: 0.00,
+      fcPrice: 0.00,
+      //
       pctProductivity: 0.00,
+      vcProductivity: 0.00,
+      fcProductivity: 0.00,
+      //
       pctEfficiency: 0.00,
-      pctFrequency: 0.00
+      vcEfficiency: 0.00,
+      fcEfficiency: 0.00,
+      //
+      pctFrequency: 0.00,
+      vcFrequency: 0.00,
+      fcFrequency: 0.00
     }
 
     //Remove once dp is universally integrated and passed by props
@@ -104,6 +127,7 @@ export default class ProfitDrivers extends Component {
     });
   }
 
+  // Prospects input handlers
   handleProspectsPercentChange(event) {
     event.preventDefault();
     let pct = parseFloat(event.target.value);
@@ -112,6 +136,28 @@ export default class ProfitDrivers extends Component {
         pctProspects: pct/100
       });
       event.target.value = pct.toFixed(1)
+    }
+  }
+
+  handleProspectsVarCostChange(event) {
+    event.preventDefault();
+    let vc = parseFloat(event.target.value);
+    if(!isNaN(vc)) {
+      this.setState({
+        vcProspects: vc
+      });
+      event.target.value = vc.toFixed(2);
+    }
+  }
+
+  handleProspectsFixedCostChange(event) {
+    event.preventDefault();
+    let fc = parseFloat(event.target.value);
+    if(!isNaN(fc)) {
+      this.setState({
+        fcProspects: fc
+      });
+      event.target.value = fc.toFixed(2);
     }
   }
 
@@ -149,20 +195,26 @@ export default class ProfitDrivers extends Component {
                       <td>
                         {/* This can pretty easily be changed to a slider later */}
                         <div className="input-group">
-                          <input id="pct_prospects" type="number" className="form-control" placeholder="1.0" onChange={this.handleProspectsPercentChange}/>
+                          <input id="pct_prospects" type="number" className="form-control" placeholder="1.0" 
+                            onChange={this.handleProspectsPercentChange} 
+                          />
                           <span className="input-group-addon">%</span>
                         </div>
                       </td>
                       <td>
                         <div className="input-group">
                           <span className="input-group-addon">$</span>
-                          <input id="var_cost_prospects" type="number" className="form-control" placeholder="100.00"/>
+                          <input id="var_cost_prospects" type="number" className="form-control" placeholder="100.00"
+                            onChange={this.handleProspectsVarCostChange}
+                          />
                         </div>
                       </td>
                       <td>
                         <div className="input-group">
                           <span className="input-group-addon">$</span>
-                          <input id="fixed_cost_prospects" type="number" className="form-control" placeholder="100.00"/>
+                          <input id="fixed_cost_prospects" type="number" className="form-control" placeholder="100.00"
+                            onChange={this.handleProspectsVarCostChange}
+                          />
                         </div>
                       </td>
                     </tr>
@@ -306,7 +358,10 @@ export default class ProfitDrivers extends Component {
         </div>
         <Tabs defaultActiveKey={1} id="driverTabs">
           <Tab eventKey={1} title="Delta Prospects">
-            <DeltaProspects pctProspects={this.state.pctProspects} 
+            <DeltaProspects 
+              pctProspects={this.state.pctProspects} 
+              vcProspects={this.state.vcProspects}
+              fcProspects={this.state.fcProspects}
               calcHandler={this.state.calcHandler}
               dataActual={this.state.dataActual} 
               dataAdjusted={this.state.dataAdjusted}
