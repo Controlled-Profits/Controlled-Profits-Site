@@ -1,81 +1,32 @@
 import React, {Component} from 'react';
 import superagent from 'superagent';
-import DataParser from '../api/dataParser.js';
 
 
 export default class DeltaProspects extends Component {
   constructor(props){
     super(props);
 
-    this.getDataActual = this.getDataActual.bind(this);
-    this.getDataAdjusted = this.getDataAdjusted.bind(this);
     this.getTableDisplay = this.getTableDisplay.bind(this);
-    this.dp = null;
-
-    this.state = {
-      dataActual: {},
-      dataAdjusted: {}
-    }
-
-    this.init();
-  }
-
-  // Ideally this would run in the AppHomeBox, and then every app that inherits it
-  // could just run dp's functions without having to put in four different credentials every time.
-  init() {
-    let accessToken = localStorage.getItem('Access-Token');
-    let client = localStorage.getItem('Client');
-    let tokenType = localStorage.getItem('Token-Type');
-    let uid = localStorage.getItem('Uid');
-
-    this.dp = new DataParser('http://controlledprofits.herokuapp.com/', accessToken, client, uid);
-  }
-
-  getDataActual(businessId) {
-    this.dp.getBusinessDataEntries(businessId, 'actual')
-      .then(function(objArray) {
-        this.setState({dataActual: objArray[0]});
-      }.bind(this))
-
-      .catch((err) => {
-        console.log(err);
-      })
-  }
-
-  getDataAdjusted(businessId) {
-    this.dp.getBusinessDataEntries(businessId, 'adjusted') 
-      .then(function(objArray) {
-        if(objArray.length)
-          this.setState({dataAdjusted: objArray[0]});
-        else 
-          //If there is no stored adjusted data, initially set adjusted data to equal current
-          this.setState({dataAdjusted: this.state.dataActual})
-      }.bind(this))
-
-      .catch(function(err) {
-        console.log(err);
-      })
   }
 
   //Build table from result, data will be displayed and manipulated by graphs later
   getTableDisplay() {
-
     let trows = [];
     
-    
-    let dataActual = this.state.dataActual,
-        dataAdjusted = this.state.dataAdjusted;
+    let dataActual = this.props.dataActual,
+        dataAdjusted = this.props.dataAdjusted;
 
-    console.log(dataActual);
-    console.log(dataAdjusted);
 
-    if(dataActual && dataAdjusted && Object.keys(dataActual).length) {
+    if(dataActual && dataAdjusted && this.props.calcHandler && Object.keys(dataActual).length) {
+      console.log(dataActual);
+      console.log(dataAdjusted);
+      console.log(this.props.pctProspects)
 
-    trows.push( 
+      trows.push( 
       <tr key="row_prospects">
         <td><strong>Current Prospects/Leads</strong></td>
         <td>{dataActual['sales_and_marketing']['prospects']}</td>
-        <td>{dataAdjusted['sales_and_marketing']['prospects']}</td>
+        <td>{this.props.calcHandler.getTargetIncrease('prospects', this.props.pctProspects)}</td>
         <td></td>
         <td></td>
       </tr>);
@@ -83,8 +34,8 @@ export default class DeltaProspects extends Component {
       trows.push(
       <tr key="row_revenues">
         <td><strong>Sales Revenues</strong></td>
-        <td>{parseFloat(dataActual['income_statement']['cash_collections'])+parseFloat(dataActual['income_statement']['period_sales'])}</td>
-        <td>{parseFloat(dataAdjusted['income_statement']['cash_collections'])+parseFloat(dataAdjusted['income_statement']['period_sales'])}</td>
+        <td>${parseFloat(dataActual['income_statement']['total_revenues']).toFixed(2)}</td>
+        <td>${this.props.calcHandler.getTargetRevenue('prospects', this.props.pctProspects)}</td>
         <td></td>
         <td></td>
       </tr>);
@@ -93,7 +44,7 @@ export default class DeltaProspects extends Component {
         <tr key="row_profit">
           <td><strong>Profit (Net Income)</strong></td>
           <td></td>
-          <td>{dataAdjusted['sales_and_marketing']['prospects']}</td>
+          <td></td>
           <td></td>
           <td></td>
         </tr>);
@@ -102,7 +53,7 @@ export default class DeltaProspects extends Component {
         <tr key="row_annualized">
           <td><strong>Annualized</strong></td>
           <td></td>
-          <td>{dataAdjusted['sales_and_marketing']['prospects']}</td>
+          <td></td>
           <td></td>
           <td></td>
         </tr>);
@@ -128,19 +79,6 @@ export default class DeltaProspects extends Component {
         </table>
       </div>
     )
-  }
-
-  componentDidMount() {
-    //Could probably call for just a section and certain date here, just add the arguments
-    this.dp.getUser()
-      .then(function(obj) {
-        this.getDataActual(obj.activeBusinessId);
-        this.getDataAdjusted(obj.activeBusinessId);
-      }.bind(this))
-
-      .catch(function(err) {
-        this.setState({dataEntries: [], errorMessage: err});
-      }.bind(this));
   }
 
   render(){

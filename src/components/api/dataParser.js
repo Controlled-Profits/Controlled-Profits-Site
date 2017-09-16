@@ -148,7 +148,6 @@ export default class DataParser {
           let dataEntries = [];
           
           if(!res.body || !res.body.data) resolve(dataEntries);
-          
           let entries = res.body.data;
 
           // Roll response objects into a better packaged JS object,
