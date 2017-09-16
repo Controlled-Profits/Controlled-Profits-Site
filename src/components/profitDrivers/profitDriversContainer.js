@@ -129,35 +129,29 @@ export default class ProfitDrivers extends Component {
 
   // Prospects input handlers
   handleProspectsPercentChange(event) {
-    event.preventDefault();
     let pct = parseFloat(event.target.value);
     if (!isNaN(pct)) {
       this.setState({
         pctProspects: pct/100
       });
-      event.target.value = pct.toFixed(1)
     }
   }
 
   handleProspectsVarCostChange(event) {
-    event.preventDefault();
     let vc = parseFloat(event.target.value);
     if(!isNaN(vc)) {
       this.setState({
         vcProspects: vc
       });
-      event.target.value = vc.toFixed(2);
     }
   }
 
   handleProspectsFixedCostChange(event) {
-    event.preventDefault();
     let fc = parseFloat(event.target.value);
     if(!isNaN(fc)) {
       this.setState({
         fcProspects: fc
       });
-      event.target.value = fc.toFixed(2);
     }
   }
 
@@ -213,7 +207,7 @@ export default class ProfitDrivers extends Component {
                         <div className="input-group">
                           <span className="input-group-addon">$</span>
                           <input id="fixed_cost_prospects" type="number" className="form-control" placeholder="100.00"
-                            onChange={this.handleProspectsVarCostChange}
+                            onChange={this.handleProspectsFixedCostChange}
                           />
                         </div>
                       </td>
