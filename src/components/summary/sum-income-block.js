@@ -68,7 +68,7 @@ export default class IncomeStatementSummary extends Component {
 
     let ebitda = this.inputCalcHandler(fpie, this.ch.getCurrentEBITDA(), this.ch.getTargetEBITDA());
 
-    let operatingProfit = this.ch.getOperatingProfit(ebitda);
+    let operatingProfit = this.ch.getNetOperatingProfit(ebitda);
     let donations = this.inputNormalizer(this.props.isData.donations);
     console.log("data: ", this.props.data);
 
