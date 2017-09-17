@@ -1,9 +1,15 @@
 import React, {Component} from 'react';
+import CalcHandler from '../calc/calcHandler';
 
 export default class IncomeStatementSummary extends Component {
   constructor(props){
     super(props);
 
+    this.startCalcHandler();
+  }
+
+  startCalcHandler(){
+    this.ch = new CalcHandler(this.props.data);
   }
 
   subtractTwoVar(a, b){
@@ -27,46 +33,51 @@ export default class IncomeStatementSummary extends Component {
     return xx.toFixed(2);
   }
 
-  sumFiveVar(a, b, c, d, e){
-    if(a === null){
-      a = 0;
+  inputCalcHandler(x, currentFunction, targetFunction){
+    let storage = 0;
+    if(x != 0.00){
+      storage = targetFunction;
     }
-    if(b === null){
-      b = 0;
+    else{
+      storage = currentFunction;
     }
-    if(c === null){
-      c = 0;
-    }
-    if(d === null){
-      d = 0;
-    }
-    if(e === null){
-      e = 0;
-    }
-    let aa = parseFloat(a);
-    console.log(aa);
-    let bb = parseFloat(b);
-    console.log(bb);
-    let cc = parseFloat(c);
-    console.log(cc);
-    let dd = parseFloat(d);
-    console.log(dd);
-    let ee = parseFloat(e);
-    console.log(ee);
+    return storage;
+  }
 
-    let sum = aa + bb + cc + dd + ee;
-    console.log(sum);
-    return sum.toFixed(2);
+  getTaxableIncome(opProfit, dona, dAndA){
+    return opProfit - dona - dAndA;
+  }
+
+  percentNormalizer(input){
+    let percent = input.split('.');
+    return percent[1] + '%';
+  }
+
+  getTaxes(tR, taxableInc){
+    return tR * taxableInc;
   }
 
   render(){
     let vpie = this.inputNormalizer(this.props.isData.vpie);
+    let totalCogs = this.inputCalcHandler(vpie, this.ch.getCurrentCOS(), this.ch.getTargetCOS())
 
     let fpie = this.inputNormalizer(this.props.isData.fpie);
+    let fixedExpenses = this.inputCalcHandler(fpie, this.ch.getCurrentFixedExpenses(), this.ch.getTargetFixedExpenses());
 
-    let subCostofSales = this.sumFiveVar(this.props.isData.cogs, this.props.isData.marketing, this.props.isData.direct_labor, this.props.isData.distribution, vpie);
+    let grossContributionProfit = this.subtractTwoVar(this.props.isData.total_revenues, totalCogs);
 
-    let grossContributionProfit = this.subtractTwoVar(this.props.isData.total_revenues, subCostofSales);
+    let ebitda = this.inputCalcHandler(fpie, this.ch.getCurrentEBITDA(), this.ch.getTargetEBITDA());
+
+    let operatingProfit = this.ch.getOperatingProfit(ebitda);
+    let donations = this.inputNormalizer(this.props.isData.donations);
+    console.log("data: ", this.props.data);
+
+    let taxableIncome = this.getTaxableIncome(operatingProfit, donations, this.props.isData.depreciation_and_amortization )
+
+    let taxRate = this.percentNormalizer(this.props.isData.tax_rate);
+    let taxesInc = this.getTaxes(this.props.isData.tax_rate, taxableIncome);
+    let netOperatingProfit = this.subtractTwoVar(taxableIncome, taxesInc);
+    let additionToRetainedEarnings = this.subtractTwoVar(netOperatingProfit, this.props.isData.dividends);
 
     return(
       <div>
@@ -77,15 +88,9 @@ export default class IncomeStatementSummary extends Component {
               <td>Total Earned Revenues</td>
               <td>{this.props.isData.total_revenues}</td>
             </tr>
-          </tbody>
-        </table>
-        <table className="table table-striped">
-          <thead>
             <tr>
               <th>Cost of Sales (COS)</th>
             </tr>
-          </thead>
-          <tbody>
             <tr>
               <td>COGs (Materials, Storage, Packaging)</td>
               <td>{this.props.isData.cogs}</td>
@@ -106,21 +111,17 @@ export default class IncomeStatementSummary extends Component {
               <td>Variable Profit Improvement Expenses</td>
               <td>{vpie}</td>
             </tr>
-            <br></br>
             <tr>
               <th>Subtotal Cost of Sales</th>
-              <td>{subCostofSales}</td>
+              <td>{totalCogs}</td>
             </tr>
-            <br/>
             <tr>
               <th>Gross Contribution Profit</th>
-              <td>{grossContributionProfit}</td>
+              <th>{grossContributionProfit}</th>
             </tr>
-            <br></br>
             <tr>
               <th>Fixed Expenses</th>
             </tr>
-            <br/>
             <tr>
               <td>Salaries (Including Payroll Taxes)</td>
               <td>{this.props.isData.salaries}</td>
@@ -177,10 +178,60 @@ export default class IncomeStatementSummary extends Component {
               <td>Fixed Profit Improvement Expenses</td>
               <td>{fpie}</td>
             </tr>
+            <tr>
+              <th>Fixed Expenses</th>
+              <td>{fixedExpenses.toFixed(2)}</td>
+            </tr>
+            <tr>
+              <th>Earnings Before Interest, Taxes, Depreciation & Amortization</th>
+              <td>{ebitda.toFixed(2)}</td>
+            </tr>
+            <tr>
+              <td>Interest Paid</td>
+              <td>{this.props.isData.interest_paid}</td>
+            </tr>
+            <tr>
+              <th>Operating Profit</th>
+              <td>{operatingProfit.toFixed(2)}</td>
+            </tr>
+            <tr>
+              <td>Earnings Before Taxes, Depreciation & Amortization</td>
+              <td>{operatingProfit.toFixed(2)}</td>
+            </tr>
+            <tr>
+              <td>Donations</td>
+              <td>{donations}</td>
+            </tr>
+            <tr>
+              <td>Depreciation & Amortization</td>
+              <td>{this.inputNormalizer(this.props.isData.depreciation_and_amortization)}</td>
+            </tr>
+            <tr>
+              <th>Taxable Income</th>
+              <td>{this.inputNormalizer(taxableIncome)}</td>
+            </tr>
+            <tr>
+              <td>Tax Rate</td>
+              <td>{this.percentNormalizer(this.props.isData.tax_rate)}</td>
+            </tr>
+            <tr>
+              <td>Taxes</td>
+              <td>{this.inputNormalizer(taxesInc)}</td>
+            </tr>
+            <tr>
+              <th>Net Operating Income</th>
+              <th>{this.inputNormalizer(netOperatingProfit)}</th>
+            </tr>
+            <tr>
+              <th>Dividends / Profits</th>
+              <th>{this.inputNormalizer(this.props.isData.dividends)}</th>
+            </tr>
+            <tr>
+              <td>Addition to Retained Earnings</td>
+              <td>{this.inputNormalizer(additionToRetainedEarnings)}</td>
+            </tr>
           </tbody>
         </table>
-
-
       </div>
     )
   }

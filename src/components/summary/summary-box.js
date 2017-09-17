@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import IncomeStatementSummary from './sum-income-block.js';
+import BalanceSheetSummary from './balance-sheet-block.js';
 
 export default class SummaryBox extends Component {
   constructor(props){
@@ -37,7 +38,8 @@ export default class SummaryBox extends Component {
       <div>
         {this.state.data.length != 0 ?(
           <div>
-            <IncomeStatementSummary isData={this.state.data.income_statement}/>
+            <IncomeStatementSummary isData={this.state.data.income_statement} data={this.state.data}/>
+            <BalanceSheetSummary bData={this.state.data.balance_sheet} data={this.state.data}/>
           </div>
       ) : (
         <div>
