@@ -184,9 +184,9 @@ export default class ProfitDrivers extends Component {
             </div>
             <div className="row">
               <div className="col-md-2 col-xs-2">
-                <div className="driver-tip-container">
-                  <br /><br /><br />
-                  <p id="driver-tip">
+                <div className="well driver-tip-container">
+                  <h4 id="driver-tip-heading">Hint</h4>
+                  <p id="driver-tip-body">
                     Hover over any of the field titles on the right to
                     read about their usage.
                   </p>
@@ -207,7 +207,7 @@ export default class ProfitDrivers extends Component {
                       <td>Prospects</td>
                       <td>
                         {/* This can pretty easily be changed to a slider later */}
-                        <div className="input-group">
+                        <div className="input-group input-group-sm">
                           <input id="pct_prospects" type="number" className="form-control" placeholder="1.0" 
                             onChange={this.handleProspectsPercentChange} 
                           />
@@ -215,7 +215,7 @@ export default class ProfitDrivers extends Component {
                         </div>
                       </td>
                       <td>
-                        <div className="input-group">
+                        <div className="input-group input-group-sm">
                           <span className="input-group-addon">$</span>
                           <input id="var_cost_prospects" type="number" className="form-control" placeholder="100.00"
                             onChange={this.handleProspectsVarCostChange}
@@ -223,7 +223,7 @@ export default class ProfitDrivers extends Component {
                         </div>
                       </td>
                       <td>
-                        <div className="input-group">
+                        <div className="input-group input-group-sm">
                           <span className="input-group-addon">$</span>
                           <input id="fixed_cost_prospects" type="number" className="form-control" placeholder="100.00"
                             onChange={this.handleProspectsFixedCostChange}
@@ -235,19 +235,19 @@ export default class ProfitDrivers extends Component {
                       <td>Conversions</td>
                       <td>
                         {/* This can pretty easily be changed to a slider later */}
-                        <div className="input-group">
+                        <div className="input-group input-group-sm">
                           <input id="pct_conversions" type="number" className="form-control" placeholder="15.0"/>
                           <span className="input-group-addon">%</span>
                         </div>
                       </td>
                       <td>
-                        <div className="input-group">
+                        <div className="input-group input-group-sm">
                           <span className="input-group-addon">$</span>
                           <input id="var_cost_conversions" type="number" className="form-control" placeholder="100.00"/>
                         </div>
                       </td>
                       <td>
-                        <div className="input-group">
+                        <div className="input-group input-group-sm">
                           <span className="input-group-addon">$</span>
                           <input id="fixed_cost_conversions" type="number" className="form-control" placeholder="100.00"/>
                         </div>
@@ -257,19 +257,19 @@ export default class ProfitDrivers extends Component {
                       <td>Volume</td>
                       <td>
                         {/* This can pretty easily be changed to a slider later */}
-                        <div className="input-group">
+                        <div className="input-group input-group-sm">
                           <input id="pct_volume" type="number" className="form-control" placeholder="5.0"/>
                           <span className="input-group-addon">%</span>
                         </div>
                       </td>
                       <td>
-                        <div className="input-group">
+                        <div className="input-group input-group-sm">
                           <span className="input-group-addon">$</span>
                           <input id="var_cost_volume" type="number" className="form-control" placeholder="100.00"/>
                         </div>
                       </td>
                       <td>
-                        <div className="input-group">
+                        <div className="input-group input-group-sm">
                           <span className="input-group-addon">$</span>
                           <input id="fixed_cost_volume" type="number" className="form-control" placeholder="100.00"/>
                         </div>
@@ -279,19 +279,19 @@ export default class ProfitDrivers extends Component {
                       <td>Price</td>
                       <td>
                         {/* This can pretty easily be changed to a slider later */}
-                        <div className="input-group">
+                        <div className="input-group input-group-sm">
                           <input id="pct_price" type="number" className="form-control" placeholder="3.0"/>
                           <span className="input-group-addon">%</span>
                         </div>
                       </td>
                       <td>
-                        <div className="input-group">
+                        <div className="input-group input-group-sm">
                           <span className="input-group-addon">$</span>
                           <input id="var_cost_price" type="number" className="form-control" placeholder="100.00"/>
                         </div>
                       </td>
                       <td>
-                        <div className="input-group">
+                        <div className="input-group input-group-sm">
                           <span className="input-group-addon">$</span>
                           <input id="fixed_cost_price" type="number" className="form-control" placeholder="100.00"/>
                         </div>
@@ -301,19 +301,19 @@ export default class ProfitDrivers extends Component {
                       <td>Productivity</td>
                       <td>
                         {/* This can pretty easily be changed to a slider later */}
-                        <div className="input-group">
+                        <div className="input-group input-group-sm">
                           <input id="pct_productivity" type="number" className="form-control" placeholder="1.0"/>
                           <span className="input-group-addon">%</span>
                         </div>
                       </td>
                       <td>
-                        <div className="input-group">
+                        <div className="input-group input-group-sm">
                           <span className="input-group-addon">$</span>
                           <input id="var_cost_productivity" type="number" className="form-control" placeholder="100.00"/>
                         </div>
                       </td>
                       <td>
-                        <div className="input-group">
+                        <div className="input-group input-group-sm">
                           <span className="input-group-addon">$</span>
                           <input id="fixed_cost_productivity" type="number" className="form-control" placeholder="100.00"/>
                         </div>
@@ -323,19 +323,19 @@ export default class ProfitDrivers extends Component {
                       <td>Efficiency</td>
                       <td>
                         {/* This can pretty easily be changed to a slider later */}
-                        <div className="input-group">
+                        <div className="input-group input-group-sm">
                           <input id="pct_efficiency" type="number" className="form-control" placeholder="1.0"/>
                           <span className="input-group-addon">%</span>
                         </div>
                       </td>
                       <td>
-                        <div className="input-group">
+                        <div className="input-group input-group-sm">
                           <span className="input-group-addon">$</span>
                           <input id="var_cost_efficiency" type="number" className="form-control" placeholder="100.00"/>
                         </div>
                       </td>
                       <td>
-                        <div className="input-group">
+                        <div className="input-group input-group-sm">
                           <span className="input-group-addon">$</span>
                           <input id="fixed_cost_efficiency" type="number" className="form-control" placeholder="100.00"/>
                         </div>
@@ -345,19 +345,19 @@ export default class ProfitDrivers extends Component {
                       <td>Frequency</td>
                       <td>
                         {/* This can pretty easily be changed to a slider later */}
-                        <div className="input-group">
+                        <div className="input-group input-group-sm">
                           <input id="pct_frequency" type="number" className="form-control" placeholder="7.0"/>
                           <span className="input-group-addon">%</span>
                         </div>
                       </td>
                       <td>
-                        <div className="input-group">
+                        <div className="input-group input-group-sm">
                           <span className="input-group-addon">$</span>
                           <input id="var_cost_frequency" type="number" className="form-control" placeholder="100.00"/>
                         </div>
                       </td>
                       <td>
-                        <div className="input-group">
+                        <div className="input-group input-group-sm">
                           <span className="input-group-addon">$</span>
                           <input id="fixed_cost_frequency" type="number" className="form-control" placeholder="100.00"/>
                         </div>
