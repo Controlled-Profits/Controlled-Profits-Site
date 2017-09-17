@@ -5,6 +5,7 @@ import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import CalcHandler from '../calc/calcHandler';
 import DeltaProspects from './deltaProspects.js';
+import TotalProfitImpact from '../totalProfitImpact/totalProfitImpactContainer.js';
 
 
 
@@ -168,7 +169,7 @@ export default class ProfitDrivers extends Component {
               <div className="col-md-2 col-xs-2">
                 <strong>Start Date:</strong><br />
                 <input value={this.state.startDate.format("MM[/]DD[/]YYYY")} disabled/><br /><br />
-                <strong>End Date:</strong><DatePicker 
+                <strong>Target Date:</strong><DatePicker 
                   selected={this.state.targetDate}
                   onChange={this.handleTargetDateChange}
                 />
@@ -176,13 +177,27 @@ export default class ProfitDrivers extends Component {
               <div className="col-md-10 col-xs-10">
                 <h4 className="text-center">Total Profit Impact</h4>
                 <div className="well tpi-graph-container">
-
+                  <TotalProfitImpact />
                 </div>
-                <table className="driver-input-table">
+                
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-md-2 col-xs-2">
+                <div className="driver-tip-container">
+                  <br /><br /><br />
+                  <p id="driver-tip">
+                    Hover over any of the field titles on the right to
+                    read about their usage.
+                  </p>
+                </div>
+              </div>
+              <div className="col-md-10 col-xs-10">
+              <table className="driver-input-table">
                   <thead>
                     <tr>
                       <th></th>
-                      <th>Percent</th>
+                      <th>Percent Improvement</th>
                       <th>Variable Cost</th>
                       <th>Fixed Cost</th>
                     </tr>

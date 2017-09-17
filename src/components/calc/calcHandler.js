@@ -32,6 +32,7 @@ export default class CalcHandler {
     let subtotalCOS = this.getCurrentCOS() - oldCOGs,
         currentGTU = parseFloat(this.financialData['sales_and_marketing']['grand_total_units']);
 
+    //This may be wrong but appears to have the same value as original calc, double check w/ actual data
     let targetCOGs = parseFloat(currentGTU / targetGTU) * oldCOGs;
 
     subtotalCOS += targetCOGs + VPIE;
@@ -107,8 +108,6 @@ export default class CalcHandler {
     //Assumes donations included in dep and amort entry
     let dep_and_amort = parseFloat(this.financialData['income_statement']['depreciation_and_amortization']);
     let opProfit = this.getNetOperatingProfit(this.getCurrentEBITDA());
-
-    console.log(`current op profit = ${opProfit}`);
 
     let taxes = (parseFloat(this.financialData['income_statement']['tax_rate']) 
                   * opProfit).toPrecision(7);
