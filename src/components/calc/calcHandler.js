@@ -27,10 +27,13 @@ export default class CalcHandler {
   }
 
   getTargetCOS(targetGTU, VPIE) {
-    let subtotalCOS = this.getCurrentCOS() - parseFloat(this.financialData['income_statement']['cogs']);
-    let targetCOGs = 
-      (parseFloat(this.financialData['income_statement']['cogs'])
-      * parseFloat(targetGTU));
+    let oldCOGs = parseFloat(this.financialData['income_statement']['cogs']);
+    console.log(oldCOGs);
+    let subtotalCOS = this.getCurrentCOS() - oldCOGs,
+        currentGTU = parseFloat(this.financialData['sales_and_marketing']['grand_total_units']);
+        console.log(targetGTU);
+
+    let targetCOGs = parseFloat(currentGTU / targetGTU) * oldCOGs;
 
     subtotalCOS += targetCOGs + VPIE;
 
@@ -89,7 +92,7 @@ export default class CalcHandler {
     return targetEBITDA;
   }
 
-  getOperatingProfit(EBITDA) {
+  getNetOperatingProfit(EBITDA) {
     let interestPaid = parseFloat(this.financialData['income_statement']['interest_paid']);
 
     let opProfit = EBITDA - interestPaid;
@@ -104,7 +107,7 @@ export default class CalcHandler {
   getCurrentNetIncome() {
     //Assumes donations included in dep and amort entry
     let dep_and_amort = parseFloat(this.financialData['income_statement']['depreciation_and_amortization']);
-    let opProfit = this.getOperatingProfit(this.getCurrentEBITDA());
+    let opProfit = this.getNetOperatingProfit(this.getCurrentEBITDA());
 
     console.log(`current op profit = ${opProfit}`);
 
@@ -127,9 +130,8 @@ export default class CalcHandler {
           let targetGTU = parseFloat(this.financialData['sales_and_marketing']['grand_total_units']) * (1+percent);
           let targetCOS = this.getTargetCOS(targetGTU, VPIE);
           let targetFixedExpenses = this.getTargetFixedExpenses(FPIE)
-          let targetOpProfit = this.getOperatingProfit(this.getTargetEBITDA(targetCOS, targetFixedExpenses));
-          let taxes = (parseFloat(this.financialData['income_statement']['tax_rate']) 
-          * targetOpProfit);
+          let targetOpProfit = this.getNetOperatingProfit(this.getTargetEBITDA(targetCOS, targetFixedExpenses));
+          let taxes = parseFloat(this.financialData['income_statement']['tax_rate']) * targetOpProfit;
 
           console.log(`targetGTU = ${targetGTU}`);
           console.log(`targetCOS = ${targetCOS}`);
@@ -150,6 +152,7 @@ export default class CalcHandler {
           return 0.00;
       }
   }
+
 
   getTargetIncrease(driverName, percent) {
     if(isNaN(percent)) return 0.00
