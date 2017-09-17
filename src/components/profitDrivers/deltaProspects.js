@@ -20,42 +20,74 @@ export default class DeltaProspects extends Component {
     if(dataActual && dataAdjusted && this.props.calcHandler && Object.keys(dataActual).length) {
       console.log(dataActual);
       console.log(dataAdjusted);
-      console.log(this.props.pctProspects)
+      
+      let periodData = {
+        currentProspects: dataActual['sales_and_marketing']['prospects'],
+        targetProspects: this.props.calcHandler.getTargetIncrease('prospects', this.props.pctProspects),
+        currentRevenues: parseFloat(dataActual['income_statement']['total_revenues']).toFixed(2),
+        targetRevenues: this.props.calcHandler.getTargetRevenue('prospects', this.props.pctProspects),
+        currentIncome: this.props.calcHandler.getCurrentNetIncome(),
+        targetIncome: this.props.calcHandler.getTargetNetIncome('prospects', this.props.pctProspects, this.props.vcProspects, this.props.fcProspects)
+      } 
+
+      let annualizedData = {
+        currentIncome: (periodData.currentIncome*12).toFixed(2),
+        targetIncome: (periodData.targetIncome*12).toFixed(2)
+      }
+
+      let varianceData = {
+        prospects: {
+          impact: periodData.targetProspects - periodData.currentProspects,
+          pct: ((periodData.targetProspects/periodData.currentProspects-1)*100).toFixed(2)
+        },
+        revenues: {
+          impact: periodData.targetRevenues - periodData.currentRevenues,
+          pct: ((periodData.targetRevenues/periodData.currentRevenues-1)*100).toFixed(2)
+        },
+        incomes: {
+          impact: periodData.targetIncome - periodData.currentIncome,
+          pct: ((periodData.targetIncome/periodData.currentIncome-1)*100).toFixed(2)
+        },
+        annualized: {
+          impact: annualizedData.targetIncome - annualizedData.currentIncome,
+          pct: ((annualizedData.targetIncome/annualizedData.currentIncome-1)*100).toFixed(2)
+        }
+      }
 
       trows.push( 
       <tr key="row_prospects">
         <td><strong>Current Prospects/Leads</strong></td>
-        <td>{dataActual['sales_and_marketing']['prospects']}</td>
-        <td>{this.props.calcHandler.getTargetIncrease('prospects', this.props.pctProspects)}</td>
-        <td></td>
-        <td></td>
+        <td>{periodData.currentProspects}</td>
+        <td>{periodData.targetProspects}</td>
+        <td>{varianceData.prospects.impact}</td>
+        <td>{varianceData.prospects.pct}</td>
       </tr>);
   
       trows.push(
       <tr key="row_revenues">
         <td><strong>Sales Revenues</strong></td>
-        <td>${parseFloat(dataActual['income_statement']['total_revenues']).toFixed(2)}</td>
-        <td>${this.props.calcHandler.getTargetRevenue('prospects', this.props.pctProspects)}</td>
-        <td></td>
-        <td></td>
+        <td>${periodData.currentRevenues}</td>
+        <td>${periodData.targetRevenues}</td>
+        <td>{varianceData.revenues.impact}</td>
+        <td>{varianceData.revenues.pct}</td>
       </tr>);
   
       trows.push(
         <tr key="row_profit">
           <td><strong>Profit (Net Income)</strong></td>
-          <td>${this.props.calcHandler.getCurrentNetIncome()}</td>
-          <td>${this.props.calcHandler.getTargetNetIncome('prospects', this.props.pctProspects, this.props.vcProspects, this.props.fcProspects)}</td>
-          <td></td>
-          <td></td>
+          <td>${periodData.currentIncome}</td>
+          <td>${periodData.targetIncome}</td>
+          <td>{varianceData.incomes.impact}</td>
+          <td>{varianceData.incomes.pct}</td>
         </tr>);
   
       trows.push(
         <tr key="row_annualized">
           <td><strong>Annualized</strong></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>${annualizedData.currentIncome}</td>
+          <td>${annualizedData.targetIncome}</td>
+          <td>{varianceData.annualized.impact}</td>
+          <td>{varianceData.annualized.pct}</td>
         </tr>);
     }
 
@@ -64,7 +96,6 @@ export default class DeltaProspects extends Component {
 
     return(
       <div>
-        <h4>Current</h4>
         <table className="table table-striped">
           <thead>
             <tr>
