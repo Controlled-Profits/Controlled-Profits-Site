@@ -174,10 +174,14 @@ export default class ProfitDrivers extends Component {
                 />
               </div>
               <div className="col-md-10 col-xs-10">
+                <h4 className="text-center">Total Profit Impact</h4>
+                <div className="well tpi-graph-container">
+
+                </div>
                 <table className="driver-input-table">
                   <thead>
                     <tr>
-                      <th>Driver Name</th>
+                      <th></th>
                       <th>Percent</th>
                       <th>Variable Cost</th>
                       <th>Fixed Cost</th>
@@ -351,7 +355,7 @@ export default class ProfitDrivers extends Component {
           </div>
         </div>
         <Tabs defaultActiveKey={1} id="driverTabs">
-          <Tab eventKey={1} title="Delta Prospects">
+          <Tab eventKey={1} title="Prospects Impact">
             <DeltaProspects 
               pctProspects={this.state.pctProspects} 
               vcProspects={this.state.vcProspects}
@@ -361,22 +365,22 @@ export default class ProfitDrivers extends Component {
               dataAdjusted={this.state.dataAdjusted}
             />
           </Tab>
-          <Tab eventKey={2} title="Delta Conversions">
+          <Tab eventKey={2} title="Conversions Impact">
             Tab 2 content
           </Tab>
-          <Tab eventKey={3} title="Delta Volume">
+          <Tab eventKey={3} title="Volume Impact">
             Tab 3 content
           </Tab>
-          <Tab eventKey={4} title="Delta Price">
+          <Tab eventKey={4} title="Price Impact">
             Tab 3 content
           </Tab>
-          <Tab eventKey={5} title="Delta Productivity">
+          <Tab eventKey={5} title="Productivity Impact">
             Tab 1 content
           </Tab>
-          <Tab eventKey={6} title="Delta Efficiency">
+          <Tab eventKey={6} title="Efficiency Impact">
             Tab 2 content
           </Tab>
-          <Tab eventKey={7} title="Delta Frequency">
+          <Tab eventKey={7} title="Frequency Impact">
             Tab 3 content
           </Tab>
         </Tabs>

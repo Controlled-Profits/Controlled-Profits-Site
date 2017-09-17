@@ -1,5 +1,6 @@
 export default class CalcHandler {
   constructor(financialData) {
+    //This may break things fantastically, not sure of a gentler way to handle programmer error
     if(!financialData) return null;
 
     this.financialData = financialData;
@@ -28,10 +29,8 @@ export default class CalcHandler {
 
   getTargetCOS(targetGTU, VPIE) {
     let oldCOGs = parseFloat(this.financialData['income_statement']['cogs']);
-    console.log(oldCOGs);
     let subtotalCOS = this.getCurrentCOS() - oldCOGs,
         currentGTU = parseFloat(this.financialData['sales_and_marketing']['grand_total_units']);
-        console.log(targetGTU);
 
     let targetCOGs = parseFloat(currentGTU / targetGTU) * oldCOGs;
 
@@ -132,12 +131,6 @@ export default class CalcHandler {
           let targetFixedExpenses = this.getTargetFixedExpenses(FPIE)
           let targetOpProfit = this.getNetOperatingProfit(this.getTargetEBITDA(targetCOS, targetFixedExpenses));
           let taxes = parseFloat(this.financialData['income_statement']['tax_rate']) * targetOpProfit;
-
-          console.log(`targetGTU = ${targetGTU}`);
-          console.log(`targetCOS = ${targetCOS}`);
-          console.log(`targetFE = ${targetFixedExpenses}`);
-          console.log(`targetOpProfit = ${targetOpProfit}`);
-          console.log(`targetTaxes = ${taxes}`);
 
           let netIncome = targetOpProfit - dep_and_amort - taxes;
           console.log(`calculated target net income for prospects = ${netIncome}`);
