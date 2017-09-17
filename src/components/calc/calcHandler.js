@@ -1,5 +1,6 @@
 export default class CalcHandler {
   constructor(financialData) {
+    //This may break things fantastically, not sure of a gentler way to handle programmer error
     if(!financialData) return null;
 
     this.financialData = financialData;
@@ -28,11 +29,10 @@ export default class CalcHandler {
 
   getTargetCOS(targetGTU, VPIE) {
     let oldCOGs = parseFloat(this.financialData['income_statement']['cogs']);
-    console.log(oldCOGs);
     let subtotalCOS = this.getCurrentCOS() - oldCOGs,
         currentGTU = parseFloat(this.financialData['sales_and_marketing']['grand_total_units']);
-        console.log(targetGTU);
 
+    //This may be wrong but appears to have the same value as original calc, double check w/ actual data
     let targetCOGs = parseFloat(currentGTU / targetGTU) * oldCOGs;
 
     subtotalCOS += targetCOGs + VPIE;
@@ -109,8 +109,6 @@ export default class CalcHandler {
     let dep_and_amort = parseFloat(this.financialData['income_statement']['depreciation_and_amortization']);
     let opProfit = this.getNetOperatingProfit(this.getCurrentEBITDA());
 
-    console.log(`current op profit = ${opProfit}`);
-
     let taxes = (parseFloat(this.financialData['income_statement']['tax_rate']) 
                   * opProfit).toPrecision(7);
 
@@ -132,12 +130,6 @@ export default class CalcHandler {
           let targetFixedExpenses = this.getTargetFixedExpenses(FPIE)
           let targetOpProfit = this.getNetOperatingProfit(this.getTargetEBITDA(targetCOS, targetFixedExpenses));
           let taxes = parseFloat(this.financialData['income_statement']['tax_rate']) * targetOpProfit;
-
-          console.log(`targetGTU = ${targetGTU}`);
-          console.log(`targetCOS = ${targetCOS}`);
-          console.log(`targetFE = ${targetFixedExpenses}`);
-          console.log(`targetOpProfit = ${targetOpProfit}`);
-          console.log(`targetTaxes = ${taxes}`);
 
           let netIncome = targetOpProfit - dep_and_amort - taxes;
           console.log(`calculated target net income for prospects = ${netIncome}`);

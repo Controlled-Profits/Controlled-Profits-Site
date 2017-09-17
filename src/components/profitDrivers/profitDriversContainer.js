@@ -5,6 +5,7 @@ import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import CalcHandler from '../calc/calcHandler';
 import DeltaProspects from './deltaProspects.js';
+import TotalProfitImpact from '../totalProfitImpact/totalProfitImpactContainer.js';
 
 
 
@@ -168,17 +169,35 @@ export default class ProfitDrivers extends Component {
               <div className="col-md-2 col-xs-2">
                 <strong>Start Date:</strong><br />
                 <input value={this.state.startDate.format("MM[/]DD[/]YYYY")} disabled/><br /><br />
-                <strong>End Date:</strong><DatePicker 
+                <strong>Target Date:</strong><DatePicker 
                   selected={this.state.targetDate}
                   onChange={this.handleTargetDateChange}
                 />
               </div>
               <div className="col-md-10 col-xs-10">
-                <table className="driver-input-table">
+                <h4 className="text-center">Total Profit Impact</h4>
+                <div className="well tpi-graph-container">
+                  <TotalProfitImpact />
+                </div>
+                
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-md-2 col-xs-2">
+                <div className="driver-tip-container">
+                  <br /><br /><br />
+                  <p id="driver-tip">
+                    Hover over any of the field titles on the right to
+                    read about their usage.
+                  </p>
+                </div>
+              </div>
+              <div className="col-md-10 col-xs-10">
+              <table className="driver-input-table">
                   <thead>
                     <tr>
-                      <th>Driver Name</th>
-                      <th>Percent</th>
+                      <th></th>
+                      <th>Percent Improvement</th>
                       <th>Variable Cost</th>
                       <th>Fixed Cost</th>
                     </tr>
@@ -351,7 +370,7 @@ export default class ProfitDrivers extends Component {
           </div>
         </div>
         <Tabs defaultActiveKey={1} id="driverTabs">
-          <Tab eventKey={1} title="Delta Prospects">
+          <Tab eventKey={1} title="Prospects Impact">
             <DeltaProspects 
               pctProspects={this.state.pctProspects} 
               vcProspects={this.state.vcProspects}
@@ -361,22 +380,22 @@ export default class ProfitDrivers extends Component {
               dataAdjusted={this.state.dataAdjusted}
             />
           </Tab>
-          <Tab eventKey={2} title="Delta Conversions">
+          <Tab eventKey={2} title="Conversions Impact">
             Tab 2 content
           </Tab>
-          <Tab eventKey={3} title="Delta Volume">
+          <Tab eventKey={3} title="Volume Impact">
             Tab 3 content
           </Tab>
-          <Tab eventKey={4} title="Delta Price">
+          <Tab eventKey={4} title="Price Impact">
             Tab 3 content
           </Tab>
-          <Tab eventKey={5} title="Delta Productivity">
+          <Tab eventKey={5} title="Productivity Impact">
             Tab 1 content
           </Tab>
-          <Tab eventKey={6} title="Delta Efficiency">
+          <Tab eventKey={6} title="Efficiency Impact">
             Tab 2 content
           </Tab>
-          <Tab eventKey={7} title="Delta Frequency">
+          <Tab eventKey={7} title="Frequency Impact">
             Tab 3 content
           </Tab>
         </Tabs>
