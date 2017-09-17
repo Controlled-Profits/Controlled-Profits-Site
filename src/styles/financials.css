@@ -1,0 +1,20 @@
+
+.financial-input {
+  max-width: 45vw;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+.input-group-addon {
+  background-color: lightgreen;
+  border: none;
+}
+
+.financial-title{
+  min-width: 30vw;
+  font-size: 1.25em;
+  text-align: left;
+  background-color: white;
+  border: white;
+  border-bottom: 1px solid lightgrey;
+}
