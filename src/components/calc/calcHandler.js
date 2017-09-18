@@ -198,6 +198,15 @@ export default class CalcHandler {
           return netIncome.toFixed(2);
         case 'price':
         case 'productivity':
+          let targetGTU = parseFloat(this.financialData['sales_and_marketing']['grand_total_units']) * (1-percent);
+          let targetCOS = this.getTargetCOS(targetGTU, VPIE);
+          let targetFixedExpenses = this.getTargetFixedExpenses(FPIE)
+          let targetOpProfit = this.getNetOperatingProfit(this.getTargetEBITDA(targetRevenues, targetCOS, targetFixedExpenses));
+          let taxes = parseFloat(this.financialData['income_statement']['tax_rate']) * targetOpProfit;
+
+          let netIncome = targetOpProfit - dep_and_amort - taxes;
+        console.log(`calculated target net income for ${driverName} = ${netIncome}`);
+        return netIncome.toFixed(2);
         case 'efficiency':
         case 'frequency':
         default:
