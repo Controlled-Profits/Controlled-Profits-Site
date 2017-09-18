@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
+import {Nav, NavItem} from 'react-bootstrap';
 import TPIGraph from './tpiGraph.js'
 
+import '../../styles/totalProfitImpact.css';
 
 // The number of data points for the chart.
 const numDataPoints = 50;
@@ -18,6 +20,7 @@ export default class TotalProfitImpact extends Component {
     super(props);
 
     this.randomizeData = this.randomizeData.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
 
     this.styles = {
       width   : 900,
@@ -40,10 +43,21 @@ export default class TotalProfitImpact extends Component {
     this.setState({ data: randomDataSet() });
   }
 
+  // Handle nav pill click and change graph type
+  handleSelect() {
+    //
+  }
+
   render() {
     console.log('dataSet: ', this.state.data);
     return(
       <div ref="tpicontainer" id="tpi-container">
+        <div id="graph-nav-container">
+          <Nav bsStyle="pills" activeKey={1} onSelect={this.handleSelect}>
+            <NavItem eventKey={1} href="#">Monthly</NavItem>
+            <NavItem eventKey={2} title="Item">Annualized</NavItem>
+          </Nav>
+        </div>
         <TPIGraph {...this.state} {...this.styles}/>
       </div>
     )

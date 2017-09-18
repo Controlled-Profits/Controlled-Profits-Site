@@ -1,3 +1,6 @@
+// React d3 implementation adapted from example at:
+// https://github.com/freddyrangel/playing-with-react-and-d3
+
 import React, {Component} from 'react';
 import * as d3 from 'd3';
 import DataCircles from './dataCircles.js';
