@@ -16,8 +16,6 @@ export default class DataCircles extends Component {
         r: 2,
         key: index
       };
-      console.log(circleProps);
-      console.log(coords, index);
       return <circle {...circleProps} />;
     };
   }

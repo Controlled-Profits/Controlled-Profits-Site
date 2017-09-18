@@ -26,13 +26,14 @@ export default class DeltaProspects extends Component {
         targetProspects: this.props.calcHandler.getTargetIncrease('prospects', this.props.pctProspects),
         currentRevenues: parseFloat(dataActual['income_statement']['total_revenues']).toFixed(2),
         targetRevenues: this.props.calcHandler.getTargetRevenue('prospects', this.props.pctProspects),
-        currentIncome: this.props.calcHandler.getCurrentNetIncome(),
-        targetIncome: this.props.calcHandler.getTargetNetIncome('prospects', this.props.pctProspects, this.props.vcProspects, this.props.fcProspects)
-      } 
+        currentIncome: this.props.calcHandler.getCurrentNetIncome()
+      }
+
+      let targetIncome = this.props.calcHandler.getTargetNetIncome('prospects', this.props.pctProspects, periodData.targetRevenues, this.props.vcProspects, this.props.fcProspects)
 
       let annualizedData = {
         currentIncome: (periodData.currentIncome*12).toFixed(2),
-        targetIncome: (periodData.targetIncome*12).toFixed(2)
+        targetIncome: (targetIncome*12).toFixed(2)
       }
 
       let varianceData = {
@@ -45,14 +46,16 @@ export default class DeltaProspects extends Component {
           pct: ((periodData.targetRevenues/periodData.currentRevenues-1)*100).toFixed(2)
         },
         incomes: {
-          impact: periodData.targetIncome - periodData.currentIncome,
-          pct: ((periodData.targetIncome/periodData.currentIncome-1)*100).toFixed(2)
+          impact: targetIncome - periodData.currentIncome,
+          pct: ((targetIncome/periodData.currentIncome-1)*100).toFixed(2)
         },
         annualized: {
           impact: annualizedData.targetIncome - annualizedData.currentIncome,
           pct: ((annualizedData.targetIncome/annualizedData.currentIncome-1)*100).toFixed(2)
         }
       }
+
+      
 
       trows.push( 
       <tr key="row_prospects">
@@ -76,7 +79,7 @@ export default class DeltaProspects extends Component {
         <tr key="row_profit">
           <td><strong>Profit (Net Income)</strong></td>
           <td>${periodData.currentIncome}</td>
-          <td>${periodData.targetIncome}</td>
+          <td>${targetIncome}</td>
           <td>{varianceData.incomes.impact}</td>
           <td>{varianceData.incomes.pct}</td>
         </tr>);

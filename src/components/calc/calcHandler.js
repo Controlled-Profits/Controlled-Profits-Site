@@ -71,8 +71,6 @@ export default class CalcHandler {
     return this.getCurrentFixedExpenses() + FPIE;
   }
 
-
-
   // Earnings before interest, taxes, depreciation and amortization
   getCurrentEBITDA() {
     let totalRevenues = parseFloat(this.financialData['income_statement']['total_revenues']);
@@ -83,10 +81,9 @@ export default class CalcHandler {
     return currentEBITDA;
   }
 
-  getTargetEBITDA(targetCOS, targetFixedExpenses) {
-    let totalRevenues = parseFloat(this.financialData['income_statement']['total_revenues']);
+  getTargetEBITDA(targetRevenues, targetCOS, targetFixedExpenses) {
     
-    let targetEBITDA = totalRevenues - targetCOS - targetFixedExpenses;
+    let targetEBITDA = targetRevenues - targetCOS - targetFixedExpenses;
     
     console.log(`target EBITDA = ${targetEBITDA}`)
     return targetEBITDA;
@@ -99,6 +96,60 @@ export default class CalcHandler {
 
     console.log(`calculated op profit from EBITDA(${EBITDA}) = ${opProfit}`);
     return opProfit;
+  }
+
+  /* Mid-level sales & marketing metrics and financial ratios calculations */
+
+  getConversionRate(numSales, prospects) {
+    return numSales / prospects;
+  }
+
+  getCostPerLead(marketing, prospects) {
+    return marketing / prospects;
+  }
+
+  getCostPerConversion(numSales, marketing) {
+    return numSales / marketing;
+  }
+
+  getAvgPricePerUnit(totalRevenues, GTU) {
+    return totalRevenues / GTU;
+  }
+
+  getVariableCostPerUnit(COS, GTU) {
+    return COS / GTU;
+  }
+
+  getFixedCostPerUnit(fixedExpenses, GTU) {
+    return fixedExpenses / GTU;
+  }
+
+  getVolume(GTU, numSales) {
+    return GTU / numSales;
+  }
+
+  getAvgDollarPerReceipt(totalRevenues, numSales) {
+    return totalRevenues / numSales;
+  }
+
+  // Avg price per unit, var cost per unit
+  getUnitsBreakEvenPt(fixedExpenses, avgPPU, vcPU) {
+    return fixedExpenses / (avgPPU - vcPU)
+  }
+
+  getSalesBreakEvenPt(fixedExpenses, contributionMargin) {
+    return fixedExpenses / contributionMargin;
+  }
+
+  getCurrentConversionRate() {
+    let numSales = parseFloat(this.financialData['sales_and_marketing']['number_of_sales']);
+    let prospects = parseFloat(this.financialData['sales_and_marketing']['prospects']);
+    let currentConvRate = this.getConversionRate(numSales, prospects);
+    return currentConvRate;
+  }
+
+  getTargetConversionRate(percent) {
+    return this.getCurrentConversionRate() * (1+percent);
   }
 
 
@@ -118,23 +169,23 @@ export default class CalcHandler {
     return netIncome.toFixed(2);
   }
 
-  getTargetNetIncome(driverName, percent, VPIE, FPIE) {
+  getTargetNetIncome(driverName, percent, targetRevenues, VPIE, FPIE) {
       if(isNaN(percent)) return 0.00
       //Assumes donations included in dep and amort entry
       let dep_and_amort = parseFloat(this.financialData['income_statement']['depreciation_and_amortization']);
       
       switch(driverName) {
         case 'prospects':
+        case 'conversions':
           let targetGTU = parseFloat(this.financialData['sales_and_marketing']['grand_total_units']) * (1+percent);
           let targetCOS = this.getTargetCOS(targetGTU, VPIE);
           let targetFixedExpenses = this.getTargetFixedExpenses(FPIE)
-          let targetOpProfit = this.getNetOperatingProfit(this.getTargetEBITDA(targetCOS, targetFixedExpenses));
+          let targetOpProfit = this.getNetOperatingProfit(this.getTargetEBITDA(targetRevenues, targetCOS, targetFixedExpenses));
           let taxes = parseFloat(this.financialData['income_statement']['tax_rate']) * targetOpProfit;
 
           let netIncome = targetOpProfit - dep_and_amort - taxes;
-          console.log(`calculated target net income for prospects = ${netIncome}`);
+          console.log(`calculated target net income for ${driverName} = ${netIncome}`);
           return netIncome.toFixed(2);
-        case 'conversions':
         case 'volume':
         case 'price':
         case 'productivity':
@@ -151,9 +202,9 @@ export default class CalcHandler {
 
     switch(driverName) {
       case 'prospects':
+      case 'conversions':
         let prospects = this.financialData['sales_and_marketing']['prospects'];
         return (parseInt(prospects) + (percent*prospects)).toFixed(1);
-      case 'conversions':
       case 'volume':
       case 'price':
       case 'productivity':
@@ -167,12 +218,19 @@ export default class CalcHandler {
   getTargetRevenue(driverName, percent) {
     if(isNaN(percent)) return 0.00
 
+    let totalRevenues = parseFloat(this.financialData['income_statement']['total_revenues'])
+
     switch(driverName) {
       case 'prospects':
-        let gtu = parseFloat(this.financialData['sales_and_marketing']['grand_total_units']),
-        totalRevenues = parseFloat(this.financialData['income_statement']['total_revenues']);
+        let gtu = parseFloat(this.financialData['sales_and_marketing']['grand_total_units']);
         return parseFloat((gtu*(1+percent)).toPrecision(7) * (totalRevenues/gtu).toPrecision(7)).toFixed(2);
       case 'conversions':
+
+        let targetConvRate = this.getTargetConversionRate(percent);
+        let numSales = parseFloat(this.financialData['sales_and_marketing']['number_of_sales']);
+        let prospects = parseFloat(this.financialData['sales_and_marketing']['prospects']);
+        return targetConvRate * prospects 
+                * this.getAvgDollarPerReceipt(totalRevenues, numSales);
       case 'volume':
       case 'price':
       case 'productivity':
