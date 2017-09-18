@@ -184,6 +184,7 @@ export default class ProfitDrivers extends Component {
             </div>
             <div className="row">
               <div className="col-md-2 col-xs-2">
+                {/* TODO: convert to component updated on label hover */}
                 <div className="well driver-tip-container">
                   <h4 id="driver-tip-heading">Hint</h4>
                   <p id="driver-tip-body">
