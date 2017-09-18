@@ -43,11 +43,11 @@ export default class RatesOfInterestSummary extends Component {
     return(
       <div>
         <h1 className="section-title">Financial Rates of Interest</h1>
-        <table className='table table-striped'>
+        <table border="0" cellpadding="0" cellspacing="0"  className='table-summary roi-table'>
           <thead>
             <tr>
-              <th>Financial Rates of Interest</th>
-              <th>{date}</th>
+              <th className="table-header">Financial Rates of Interest</th>
+              <th> </th>
             </tr>
           </thead>
           <tbody>
