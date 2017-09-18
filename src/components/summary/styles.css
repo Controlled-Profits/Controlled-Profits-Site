@@ -1,0 +1,53 @@
+td {
+  padding: 0;
+  margin: 0;
+}
+
+th {
+  padding: 0;
+  margin: 0;
+}
+
+.summary-container {
+  min-width: 40vw;
+}
+
+.table-summary {
+  width: 40vw;
+  text-align: left;
+  text-decoration: none;
+  table-layout: auto;
+}
+/**
+.roi-table {
+  width: 670px;
+  text-align: left;
+}
+
+.income-table {
+  width: 707px;
+  text-align: left;
+}
+
+.sales-table {
+  width: 807px;
+  text-align: left;
+}*/
+
+/*.bal-table {
+  width: 780px;
+  text-align: left;
+}*/
+
+tr {
+  height: 20px;
+}
+
+thead {
+  background-color: lightgrey;
+  min-width: 807px;
+}
+
+.amount-output {
+  text-align: right;
+}

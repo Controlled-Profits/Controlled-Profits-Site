@@ -3,6 +3,7 @@ import IncomeStatementSummary from './sum-income-block.js';
 import BalanceSheetSummary from './balance-sheet-block.js';
 import SalesAndMarketingSummary from './sales-and-marketing-block.js';
 import RatesOfInterestSummary from './rates-of-interest-block.js';
+import './styles.css';
 
 export default class SummaryBox extends Component {
   constructor(props){
@@ -39,8 +40,7 @@ export default class SummaryBox extends Component {
     return(
       <div>
         {this.state.data.length != 0 ?(
-          <div>
-
+          <div className="summary-container">
               <IncomeStatementSummary isData={this.state.data.income_statement} data={this.state.data}/>
               <BalanceSheetSummary bData={this.state.data.balance_sheet} data={this.state.data}/>
               <SalesAndMarketingSummary sData={this.state.data.sales_and_marketing} data={this.state.data} />

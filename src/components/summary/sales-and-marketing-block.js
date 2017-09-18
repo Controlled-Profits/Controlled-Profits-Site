@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import CalcHandler from '../calc/calcHandler';
+import './styles.css';
 
 export default class SalesAndMarketingSummary extends Component {
   constructor(props){
@@ -33,29 +34,29 @@ export default class SalesAndMarketingSummary extends Component {
     return(
       <div>
         <h1>Sales & Marketing</h1>
-        <table className="table table-striped">
+        <table className="table-summary sales-table">
           <thead>
             <tr>
               <th>Sales & Marketing Data Input</th>
-              <th>{date}</th>
+              <th className="amount-output">{date}</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td>Prospects / Leads</td>
-              <td>{this.inputNormalizer(this.props.sData.prospects)}</td>
+              <td className="amount-output">{this.inputNormalizer(this.props.sData.prospects)}</td>
             </tr>
             <tr>
               <td>Numer of Sales (Receipts)</td>
-              <td>{this.inputNormalizer(this.props.sData.number_of_sales)}</td>
+              <td className="amount-output">{this.inputNormalizer(this.props.sData.number_of_sales)}</td>
             </tr>
             <tr>
               <td>Marketing Spend (Direct-from P&L)</td>
-              <td>{this.inputNormalizer(this.props.sData.marketing_spend)}</td>
+              <td className="amount-output">{this.inputNormalizer(this.props.sData.marketing_spend)}</td>
             </tr>
             <tr>
               <td>Grand Total Units (Input)</td>
-              <td>{this.inputNormalizer(this.props.sData.grand_total_units)}</td>
+              <td className="amount-output">{this.inputNormalizer(this.props.sData.grand_total_units)}</td>
             </tr>
           </tbody>
         </table>
