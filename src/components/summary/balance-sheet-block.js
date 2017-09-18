@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import CalcHandler from '../calc/calcHandler';
+import './styles.css';
 
 export default class BalanceSheetSummary extends Component {
   constructor(props){
@@ -150,91 +151,91 @@ export default class BalanceSheetSummary extends Component {
     return(
       <div>
         <h1>Balance Sheet</h1>
-        <table className="table table-striped">
+        <table className="table-summary bal-table">
           <thead>
             <tr>
               <th scope="row">Assets</th>
-              <th>{this.dateFormatter(this.props.data.entryDate)}</th>
+              <th className="amount-output">{this.dateFormatter(this.props.data.entryDate)}</th>
             </tr>
             <tr>
               <th>Current Assets</th>
-              <th> </th>
+              <th className="amount-output"> </th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td scope="row">Cash</td>
-              <td>{this.inputNormalizer(this.props.bData.cash)}</td>
+              <td className="amount-output">{this.inputNormalizer(this.props.bData.cash)}</td>
             </tr>
             <tr>
               <td scope="row">Accounts Receivable</td>
-              <td>{this.inputNormalizer(this.props.bData.accounts_receivable)}</td>
+              <td className="amount-output">{this.inputNormalizer(this.props.bData.accounts_receivable)}</td>
             </tr>
             <tr>
               <td scope="row">Inventory</td>
-              <td>{this.inputNormalizer(this.props.bData.inventory)}</td>
+              <td className="amount-output">{this.inputNormalizer(this.props.bData.inventory)}</td>
             </tr>
             <tr>
               <td scope="row">Prepaid Expenses</td>
-              <td>{this.inputNormalizer(this.props.bData.prepaid_expenses)}</td>
+              <td className="amount-output">{this.inputNormalizer(this.props.bData.prepaid_expenses)}</td>
             </tr>
             <tr>
               <td scope="row">Other Current Assets</td>
-              <td>{this.inputNormalizer(this.props.bData.other_current_assets)}</td>
+              <td className="amount-output">{this.inputNormalizer(this.props.bData.other_current_assets)}</td>
             </tr>
             <tr>
               <th scope="row">Total Current Assets</th>
-              <th>{this.inputNormalizer(this.getTotalCurrentAssets())}</th>
+              <th className="amount-output">{this.inputNormalizer(this.getTotalCurrentAssets())}</th>
             </tr>
             <tr>
               <td>  </td>
-              <td>  </td>
+              <td className="amount-output">  </td>
             </tr>
             <tr>
               <td>  </td>
-              <td>  </td>
+              <td className="amount-output">  </td>
             </tr>
           </tbody>
           <thead>
             <tr>
               <th scope="row">Fixed Assets = Long Term Assets</th>
-              <th>  </th>
+              <th className="amount-output">  </th>
             </tr>
           </thead>
           <tbody>
               <tr>
               <td scope="row">Property, Plant & Equipment</td>
-              <td>{this.inputNormalizer(this.props.bData.ppe)}</td>
+              <td className="amount-output">{this.inputNormalizer(this.props.bData.ppe)}</td>
             </tr>
             <tr>
               <td scope="row">Furniture & Fixtures</td>
-              <td>{this.inputNormalizer(this.props.bData.furniture_and_fixtures)}</td>
+              <td className="amount-output">{this.inputNormalizer(this.props.bData.furniture_and_fixtures)}</td>
             </tr>
             <tr>
               <td scope="row">Leasehold Improvements</td>
-              <td>{this.inputNormalizer(this.props.bData.leasehold_improvements)}</td>
+              <td className="amount-output">{this.inputNormalizer(this.props.bData.leasehold_improvements)}</td>
             </tr>
             <tr>
               <td scope="row">Land & Building</td>
-              <td>{this.inputNormalizer(this.props.bData.land_and_buildings)}</td>
+              <td className="amount-output">{this.inputNormalizer(this.props.bData.land_and_buildings)}</td>
             </tr>
             <tr>
               <td scope="row">Other Fixed Assets</td>
-              <td>{this.inputNormalizer(this.props.bData.other_fixed_assets)}</td>
+              <td className="amount-output">{this.inputNormalizer(this.props.bData.other_fixed_assets)}</td>
             </tr>
             <tr>
               <td scope="row">Accumulated Depreciation</td>
-              <td>{this.inputNormalizer(this.props.bData.accumulated_depreciation)}</td>
+              <td className="amount-output">{this.inputNormalizer(this.props.bData.accumulated_depreciation)}</td>
             </tr>
             <tr>
               <td scope="row">Goodwill</td>
-              <td>{this.inputNormalizer(this.props.bData.goodwill)}</td>
+              <td className="amount-output">{this.inputNormalizer(this.props.bData.goodwill)}</td>
             </tr>
             <tr>
             </tr>
             <tr>
               <th scope="row">Total Fixed (Long Term) Assets</th>
-              <th>{this.inputNormalizer(this.getTotalFixedLTAssets())}</th>
+              <th className="amount-output">{this.inputNormalizer(this.getTotalFixedLTAssets())}</th>
             </tr>
             <tr>
               <td>    </td>
@@ -242,7 +243,7 @@ export default class BalanceSheetSummary extends Component {
             </tr>
             <tr>
               <th>Total Assets</th>
-              <th>{this.inputNormalizer(this.getTotalFixedLTAssets() + this.getTotalCurrentAssets())}</th>
+              <th className="amount-output">{this.inputNormalizer(this.getTotalFixedLTAssets() + this.getTotalCurrentAssets())}</th>
             </tr>
             <tr>
               <td> </td>
@@ -266,35 +267,35 @@ export default class BalanceSheetSummary extends Component {
           <tbody>
             <tr>
               <td>Accounts Payable</td>
-              <td>{this.inputNormalizer(this.props.bData.accounts_payable)}</td>
+              <td className="amount-output">{this.inputNormalizer(this.props.bData.accounts_payable)}</td>
             </tr>
             <tr>
               <td>Interest Payable</td>
-              <td>{this.inputNormalizer(this.props.bData.interest_payable)}</td>
+              <td className="amount-output">{this.inputNormalizer(this.props.bData.interest_payable)}</td>
             </tr>
             <tr>
               <td>Taxes Payable</td>
-              <td>{this.inputNormalizer(this.props.bData.taxes_payable)}</td>
+              <td className="amount-output">{this.inputNormalizer(this.props.bData.taxes_payable)}</td>
             </tr>
             <tr>
               <td>Deferred Revenue</td>
-              <td>{this.inputNormalizer(this.props.bData.deferred_revenue)}</td>
+              <td className="amount-output">{this.inputNormalizer(this.props.bData.deferred_revenue)}</td>
             </tr>
             <tr>
               <td>Short Term Notes (due within 12 months)</td>
-              <td>{this.inputNormalizer(this.props.bData.short_term_notes)}</td>
+              <td className="amount-output">{this.inputNormalizer(this.props.bData.short_term_notes)}</td>
             </tr>
             <tr>
               <td>Current Part, Long Term Debt</td>
-              <td>{this.inputNormalizer(this.props.bData.current_debt)}</td>
+              <td className="amount-output">{this.inputNormalizer(this.props.bData.current_debt)}</td>
             </tr>
             <tr>
               <td>Other Current Liabilities</td>
-              <td>{this.inputNormalizer(this.props.bData.other_current_liabilities)}</td>
+              <td className="amount-output">{this.inputNormalizer(this.props.bData.other_current_liabilities)}</td>
             </tr>
             <tr>
               <th>Total Current Liabilities</th>
-              <th>{this.inputNormalizer(this.getTotalCurrentLiabilities())}</th>
+              <th className="amount-output">{this.inputNormalizer(this.getTotalCurrentLiabilities())}</th>
             </tr>
             <tr>
               <td> </td>
@@ -314,19 +315,19 @@ export default class BalanceSheetSummary extends Component {
           <tbody>
             <tr>
               <td>Bank Loans Payable</td>
-              <td>{this.inputNormalizer(this.props.bData.bank_loans_payable)}</td>
+              <td className="amount-output">{this.inputNormalizer(this.props.bData.bank_loans_payable)}</td>
             </tr>
             <tr>
               <td>Notes Payable to Stockholders</td>
-              <td>{this.inputNormalizer(this.props.bData.notes_payable_to_stockholders)}</td>
+              <td className="amount-output">{this.inputNormalizer(this.props.bData.notes_payable_to_stockholders)}</td>
             </tr>
             <tr>
               <td>Other Long Term Debt</td>
-              <td>{this.inputNormalizer(this.props.bData.other_long_term_debt)}</td>
+              <td className="amount-output">{this.inputNormalizer(this.props.bData.other_long_term_debt)}</td>
             </tr>
             <tr>
               <th>Total Long Term Debt</th>
-              <th>{this.inputNormalizer(this.getTotalLongTermDebt())}</th>
+              <th className="amount-output">{this.inputNormalizer(this.getTotalLongTermDebt())}</th>
             </tr>
             <tr>
               <td> </td>
@@ -334,7 +335,7 @@ export default class BalanceSheetSummary extends Component {
             </tr>
             <tr>
               <th>Total Liabilities</th>
-              <th>{this.inputNormalizer(this.getTotalLongTermDebt() + this.getTotalCurrentLiabilities())}</th>
+              <th className="amount-output">{this.inputNormalizer(this.getTotalLongTermDebt() + this.getTotalCurrentLiabilities())}</th>
             </tr>
             <tr>
               <td>
@@ -348,19 +349,19 @@ export default class BalanceSheetSummary extends Component {
             </tr>
             <tr>
               <td>Common Stock</td>
-              <td>{this.inputNormalizer(this.props.bData.common_stock)}</td>
+              <td className="amount-output">{this.inputNormalizer(this.props.bData.common_stock)}</td>
             </tr>
             <tr>
               <td>Paid-In Surplus</td>
-              <td>{this.inputNormalizer(this.props.bData.paid_in_surplus)}</td>
+              <td className="amount-output">{this.inputNormalizer(this.props.bData.paid_in_surplus)}</td>
             </tr>
             <tr>
               <td>Retained Earnings</td>
-              <td>{this.inputNormalizer(this.props.bData.retained_earnings)}</td>
+              <td className="amount-output">{this.inputNormalizer(this.props.bData.retained_earnings)}</td>
             </tr>
             <tr>
               <th>Total Owners Equity</th>
-              <th>{this.inputNormalizer(this.getTotalOwnersEquity())}</th>
+              <th className="amount-output">{this.inputNormalizer(this.getTotalOwnersEquity())}</th>
             </tr>
             <tr>
               <td>       </td>
@@ -368,13 +369,13 @@ export default class BalanceSheetSummary extends Component {
             </tr>
             <tr>
               <th>Total Liabilities and Owner's Equity</th>
-              <th>{this.inputNormalizer(this.getTotalOwnersEquity() + this.getTotalLongTermDebt() + this.getTotalCurrentLiabilities())}</th>
+              <th className="amount-output">{this.inputNormalizer(this.getTotalOwnersEquity() + this.getTotalLongTermDebt() + this.getTotalCurrentLiabilities())}</th>
             </tr>
           </tbody>
           <thead>
             <tr>
               <th>Balance Check</th>
-              <th>{this.balanceCheck(tlaoe, ta)}</th>
+              <th className="amount-output">{this.balanceCheck(tlaoe, ta)}</th>
             </tr>
           </thead>
         </table>
