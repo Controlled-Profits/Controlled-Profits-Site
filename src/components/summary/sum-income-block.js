@@ -83,11 +83,13 @@ export default class IncomeStatementSummary extends Component {
       <div>
         <h1>Income Statement</h1>
         <table className="table table-striped">
-          <tbody>
+          <thead>
             <tr>
-              <td>Total Earned Revenues</td>
-              <td>{this.props.isData.total_revenues}</td>
+              <th>Total Earned Revenues</th>
+              <th>{this.props.isData.total_revenues}</th>
             </tr>
+          </thead>
+            <tbody>
             <tr>
               <th>Cost of Sales (COS)</th>
             </tr>
