@@ -6,6 +6,7 @@ import moment from 'moment';
 import CalcHandler from '../calc/calcHandler';
 import DeltaProspects from './deltaProspects.js';
 import DeltaConversions from './deltaConversions.js';
+import DeltaVolume from './deltaVolume.js';
 import TotalProfitImpact from '../totalProfitImpact/totalProfitImpactContainer.js';
 
 
@@ -478,9 +479,9 @@ export default class ProfitDrivers extends Component {
           </Tab>
           <Tab eventKey={3} title="Volume Impact">
             <DeltaVolume 
-              pctVolume={this.state.pctConversions} 
-              vcVolume={this.state.vcConversions}
-              fcVolume={this.state.fcConversions}
+              pctVolume={this.state.pctVolume} 
+              vcVolume={this.state.vcVolume}
+              fcVolume={this.state.fcVolume}
               calcHandler={this.state.calcHandler}
               dataActual={this.state.dataActual} 
               dataAdjusted={this.state.dataAdjusted}

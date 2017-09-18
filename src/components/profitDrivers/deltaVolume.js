@@ -21,10 +21,10 @@ export default class DeltaProspects extends Component {
       console.log(dataAdjusted);
       
       let periodData = {
-        currentVolume: this.calcHandler.getCurrentVolume(),
-        targetProspects: this.props.calcHandler.getDirectIncrease(this.calcHandler.getCurrentVolume(), pctVolume),
+        currentVolume: this.props.calcHandler.getCurrentVolume(),
+        targetVolume: this.props.calcHandler.getDirectIncrease(this.props.calcHandler.getCurrentVolume(), this.props.pctVolume),
         currentRevenues: parseFloat(dataActual['income_statement']['total_revenues']).toFixed(2),
-        targetRevenues: this.props.calcHandler.getTargetRevenue('volume', this.props.pctVolume),
+        targetRevenues: this.props.calcHandler.getTargetRevenue('volume', this.props.pctVolume).toFixed(2),
         currentIncome: this.props.calcHandler.getCurrentNetIncome()
       }
 
@@ -37,8 +37,8 @@ export default class DeltaProspects extends Component {
 
       let varianceData = {
         volume: {
-          impact: periodData.targetProspects - periodData.currentProspects,
-          pct: ((periodData.targetProspects/periodData.currentProspects-1)*100).toFixed(2)
+          impact: periodData.targetVolume - periodData.currentVolume,
+          pct: ((periodData.targetVolume/periodData.currentVolume-1)*100).toFixed(2)
         },
         revenues: {
           impact: periodData.targetRevenues - periodData.currentRevenues,
@@ -59,10 +59,10 @@ export default class DeltaProspects extends Component {
       trows.push( 
       <tr key="row_prospects">
         <td><strong>Current Volume</strong></td>
-        <td>{periodData.currentProspects}</td>
-        <td>{periodData.targetProspects}</td>
-        <td>{varianceData.prospects.impact}</td>
-        <td>{varianceData.prospects.pct}</td>
+        <td>{periodData.currentVolume}</td>
+        <td>{periodData.targetVolume}</td>
+        <td>{varianceData.volume.impact}</td>
+        <td>{varianceData.volume.pct}</td>
       </tr>);
   
       trows.push(

@@ -158,7 +158,7 @@ export default class CalcHandler {
     let GTU = parseFloat(this.financialData['sales_and_marketing']['number_of_sales']),
         numSales = parseFloat(this.financialData['sales_and_marketing']['number_of_sales']);
 
-    return getVolume(GTU, numSales);
+    return this.getVolume(GTU, numSales);
   }
 
 
@@ -186,6 +186,7 @@ export default class CalcHandler {
       switch(driverName) {
         case 'prospects':
         case 'conversions':
+        case 'volume':
           let targetGTU = parseFloat(this.financialData['sales_and_marketing']['grand_total_units']) * (1+percent);
           let targetCOS = this.getTargetCOS(targetGTU, VPIE);
           let targetFixedExpenses = this.getTargetFixedExpenses(FPIE)
@@ -195,8 +196,6 @@ export default class CalcHandler {
           let netIncome = targetOpProfit - dep_and_amort - taxes;
           console.log(`calculated target net income for ${driverName} = ${netIncome}`);
           return netIncome.toFixed(2);
-        case 'volume':
-          
         case 'price':
         case 'productivity':
         case 'efficiency':
