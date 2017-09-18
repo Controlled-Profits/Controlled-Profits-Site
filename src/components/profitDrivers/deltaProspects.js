@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import superagent from 'superagent';
 
 
 export default class DeltaProspects extends Component {
