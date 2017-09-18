@@ -45,7 +45,7 @@ export default class MemberHomeBox extends Component {
             <hr/>
           </div>
           <div className="options-container">
-            <AddBusiness/>
+            <AddBusiness getUserBusinesses={this.props.getUserBusinesses}/>
             <ActiveBusiness
             handleActiveBusinessChange={this.handleActiveBusinessChange}
             businessHolder={this.props.businessHolder}

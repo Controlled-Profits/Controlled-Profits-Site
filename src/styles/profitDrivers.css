@@ -1,0 +1,41 @@
+#driverTabs .tab-content {
+  padding : 10px 15px;
+  border-left: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  border-radius: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.driver-input-table {
+  width: 100%;
+}
+
+.driver-input-table th {
+  text-align: center;
+}
+
+.driver-input-table td {
+  padding: 5px 10px;
+}
+
+.driver-tip-container {
+  margin-top: 20%;
+  width: 100%;
+  height: 260px;
+  background-color: #5282BA;
+}
+
+#driver-tip-heading {
+  color: #fff;
+  text-align: center;
+  border-bottom: 1px solid #fff;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+#driver-tip-body {
+  color: #fff;
+  text-align: center;
+}

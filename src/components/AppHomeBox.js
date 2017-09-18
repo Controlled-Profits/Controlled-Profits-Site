@@ -1,9 +1,14 @@
 import React, {Component} from 'react';
 import superagent from 'superagent';
 import {Redirect} from 'react-router-dom';
+import DataParser from  './api/dataParser.js';
 
 import FinancialMarketingSalesDataInput from './financial/businessFinancials.js';
 import MemberHomeBox from './memberHome/memberHomeBox.js';
+import ProfitDrivers from './profitDrivers/profitDriversContainer.js';
+import FormInput from './financial/form-input.js';
+import TempForm from './financial/temp-form.js';
+import SummaryBox from './summary/summary-box.js';
 
 import '../styles/memberDesktop.css';
 
@@ -16,19 +21,30 @@ export default class AppHomeBox extends Component {
     this.isAuthenticated = this.isAuthenticated.bind(this);
     this.getCurrentActiveBusiness = this.getCurrentActiveBusiness.bind(this);
     this.setActiveBusiness = this.setActiveBusiness.bind(this);
-
+    this.getActiveBusinessData = this.setActiveBusiness.bind(this);
 
     this.state={
       activeSearch: 'MemberHome',
       memberHome: false,
       financialMarketingSalesDataInput: false,
-      benchmarking: false,
+      summary: false,
       profitDriversAndPlanning: false,
       currentBusinesses: [],
       businessHolder: [],
       activeBusiness: '',
       activeBizId:''
     }
+
+    this.init();
+  }
+
+  init() {
+    let accessToken = localStorage.getItem('Access-Token');
+    let client = localStorage.getItem('Client');
+    let tokenType = localStorage.getItem('Token-Type');
+    let uid = localStorage.getItem('Uid');
+
+    this.dp = new DataParser('http://controlledprofits.herokuapp.com/', accessToken, client, uid);
   }
 
   getUserBusinesses(){
@@ -65,6 +81,7 @@ export default class AppHomeBox extends Component {
     }
   }
 
+
   setActiveBusiness(string){
     let currentBizObject = this.state.businessHolder.find((item) =>{
       if(item.bizName === string){
@@ -80,19 +97,19 @@ export default class AppHomeBox extends Component {
   }
 
   handleMemberHomeChange(event){
-    this.setState({memberHome: true,financialMarketingSalesDataInput: false, benchmarking: false, profitDriversAndPlanning: false, activeSearch: "MemberHome"});
+    this.setState({memberHome: true,financialMarketingSalesDataInput: false, summary: false, profitDriversAndPlanning: false, activeSearch: "MemberHome"});
   }
 
   handleFMSDIChange(event){
-    this.setState({memberHome: false,financialMarketingSalesDataInput: true, benchmarking: false, profitDriversAndPlanning: false, activeSearch: "FinancialMarketingSalesDataInput"});
+    this.setState({memberHome: false,financialMarketingSalesDataInput: true, summary: false, profitDriversAndPlanning: false, activeSearch: "FinancialMarketingSalesDataInput"});
   }
 
-  handleBenchmarkingChange(event){
-    this.setState({memberHome: false,financialMarketingSalesDataInput: false, benchmarking: true, profitDriversAndPlanning: false, activeSearch: "Benchmarking"});
+  handleSummaryChange(event){
+    this.setState({memberHome: false,financialMarketingSalesDataInput: false, benchmarking: true, profitDriversAndPlanning: false, activeSearch: "Summary"});
   }
 
   handlePDPChange(event){
-    this.setState({memberHome: false,financialMarketingSalesDataInput: false, benchmarking: false, profitDriversAndPlanning: true, activeSearch: "ProfitDriversAndPlanning"});
+    this.setState({memberHome: false,financialMarketingSalesDataInput: false, summary: false, profitDriversAndPlanning: true, activeSearch: "ProfitDriversAndPlanning"});
   }
 
   componentDidMount(){
@@ -102,13 +119,21 @@ export default class AppHomeBox extends Component {
   getCurrentComponent(){
 
     if(this.state.activeSearch === "MemberHome"){
-      return(<MemberHomeBox
+      return(
+      <MemberHomeBox
         businessHolder={this.state.businessHolder} currentBusinesses={this.state.currentBusinesses} getUserBusinesses={this.getUserBusinesses}
         setActiveBusiness={this.setActiveBusiness}
       />);
     }
     else if(this.state.activeSearch === 'FinancialMarketingSalesDataInput'){
-      return(<FinancialMarketingSalesDataInput props={this.state}/>);
+      return(<TempForm/>);
+    }
+    else if(this.state.activeSearch === 'Summary'){
+
+      return(<SummaryBox dp={this.dp}/>)
+    }
+    else if (this.state.activeSearch === 'ProfitDriversAndPlanning') {
+      return(<ProfitDrivers businessHolder={this.state.businessHolder}/>);
     }
   }
 
@@ -134,7 +159,7 @@ export default class AppHomeBox extends Component {
           <nav className="button-nav">
             <button className="nav-button btn btn-primary" onClick={this.handleMemberHomeChange.bind(this)}>Member Home</button>
             <button className="nav-button btn btn-primary" onClick={this.handleFMSDIChange.bind(this)}>Financials and Data</button>
-            <button className="nav-button btn btn-primary" onClick={this.handleBenchmarkingChange.bind(this)}>Benchmarking</button>
+            <button className="nav-button btn btn-primary" onClick={this.handleSummaryChange.bind(this)}>Summary</button>
             <button className="nav-button btn btn-primary" onClick={this.handlePDPChange.bind(this)}>Profit Drivers and Planning</button>
 
           </nav>

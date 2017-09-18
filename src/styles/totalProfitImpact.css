@@ -1,0 +1,15 @@
+#tpi-container {
+
+}
+
+#graph-nav-container {
+  text-align: center;
+}
+
+#graph-nav-container .nav-pills {
+  display: inline-block;
+}
+
+.nav-pills li a {
+  padding: 5px 15px;
+}
