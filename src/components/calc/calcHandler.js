@@ -141,6 +141,8 @@ export default class CalcHandler {
     return fixedExpenses / contributionMargin;
   }
 
+  /* Functions for laziness */
+
   getCurrentConversionRate() {
     let numSales = parseFloat(this.financialData['sales_and_marketing']['number_of_sales']);
     let prospects = parseFloat(this.financialData['sales_and_marketing']['prospects']);
@@ -150,6 +152,13 @@ export default class CalcHandler {
 
   getTargetConversionRate(percent) {
     return this.getCurrentConversionRate() * (1+percent);
+  }
+
+  getCurrentVolume() {
+    let GTU = parseFloat(this.financialData['sales_and_marketing']['number_of_sales']),
+        numSales = parseFloat(this.financialData['sales_and_marketing']['number_of_sales']);
+
+    return getVolume(GTU, numSales);
   }
 
 
@@ -187,6 +196,7 @@ export default class CalcHandler {
           console.log(`calculated target net income for ${driverName} = ${netIncome}`);
           return netIncome.toFixed(2);
         case 'volume':
+          
         case 'price':
         case 'productivity':
         case 'efficiency':
@@ -196,7 +206,13 @@ export default class CalcHandler {
       }
   }
 
+  // Just returns a number increased by a given percent
+  getDirectIncrease(oldValue, percent) {
+    if(isNaN(percent) || isNaN(oldValue)) return 0.0;
+    return oldValue + (oldValue*percent);
+  }
 
+  //This function's about useless, probably gonna phase it out
   getTargetIncrease(driverName, percent) {
     if(isNaN(percent)) return 0.00
 
@@ -225,13 +241,15 @@ export default class CalcHandler {
         let gtu = parseFloat(this.financialData['sales_and_marketing']['grand_total_units']);
         return parseFloat((gtu*(1+percent)).toPrecision(7) * (totalRevenues/gtu).toPrecision(7)).toFixed(2);
       case 'conversions':
-
         let targetConvRate = this.getTargetConversionRate(percent);
         let numSales = parseFloat(this.financialData['sales_and_marketing']['number_of_sales']);
         let prospects = parseFloat(this.financialData['sales_and_marketing']['prospects']);
         return targetConvRate * prospects 
                 * this.getAvgDollarPerReceipt(totalRevenues, numSales);
       case 'volume':
+        let oldNumSales = parseFloat(this.financialData['sales_and_marketing']['number_of_sales']);
+        let oldAvgDR = this.getAvgDollarPerReceipt(totalRevenues, oldNumSales);
+        return (oldNumSales * oldAvgDR) * (1+percent);
       case 'price':
       case 'productivity':
       case 'efficiency':
