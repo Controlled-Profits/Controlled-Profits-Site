@@ -7,6 +7,7 @@ import CalcHandler from '../calc/calcHandler';
 import DeltaProspects from './deltaProspects.js';
 import DeltaConversions from './deltaConversions.js';
 import DeltaVolume from './deltaVolume.js';
+import DeltaProductivity from './deltaProductivity.js';
 import TotalProfitImpact from '../totalProfitImpact/totalProfitImpactContainer.js';
 import DeltaPrice from './deltaPrice.js';
 
@@ -35,7 +36,12 @@ export default class ProfitDrivers extends Component {
 
     this.handleVolumePctChange = this.handleVolumePctChange.bind(this);
     this.handleVolumeVarCostChange = this.handleVolumeVarCostChange.bind(this);
-    this.handleVolumeFixedCostChange = this.handleVolumeFixedCostChange.bind(this)
+    this.handleVolumeFixedCostChange = this.handleVolumeFixedCostChange.bind(this);
+
+    this.handleProductivityPctChange = this.handleProductivityPctChange.bind(this);
+    this.handleProductivityVarCostChange = this.handleProductivityVarCostChange.bind(this);
+    this.handleProductivityFixedCostChange = this.handleProductivityFixedCostChange.bind(this);
+
     //Get last day in month, convert to appropriate string format
     let today = new Date();
 
@@ -226,6 +232,33 @@ export default class ProfitDrivers extends Component {
   //Price input handlers
 
   //Productivity input handlers
+  handleProductivityPctChange(event) {
+    let pct = parseFloat(event.target.value);
+    if (!isNaN(pct)) {
+      this.setState({
+        pctProductivity: pct/100
+      });
+    }
+  }
+
+  handleProductivityVarCostChange(event) {
+    let vc = parseFloat(event.target.value);
+    if(!isNaN(vc)) {
+      this.setState({
+        vcProductivity: vc
+      });
+    }
+  }
+
+  handleProductivityFixedCostChange(event) {
+    let fc = parseFloat(event.target.value);
+    if(!isNaN(fc)) {
+      this.setState({
+        fcProductivity: fc
+      });
+    }
+  }
+
 
   //Efficiency input handlers
 
@@ -390,20 +423,26 @@ export default class ProfitDrivers extends Component {
                       <td>
                         {/* This can pretty easily be changed to a slider later */}
                         <div className="input-group input-group-sm">
-                          <input id="pct_productivity" type="number" className="form-control" placeholder="1.0"/>
+                          <input id="pct_productivity" type="number" className="form-control" placeholder="1.0"
+                            onChange={this.handleProductivityPctChange}
+                          />
                           <span className="input-group-addon">%</span>
                         </div>
                       </td>
                       <td>
                         <div className="input-group input-group-sm">
                           <span className="input-group-addon">$</span>
-                          <input id="var_cost_productivity" type="number" className="form-control" placeholder="100.00"/>
+                          <input id="var_cost_productivity" type="number" className="form-control" placeholder="100.00"
+                            onChange={this.handleProductivityVarCostChange}
+                          />
                         </div>
                       </td>
                       <td>
                         <div className="input-group input-group-sm">
                           <span className="input-group-addon">$</span>
-                          <input id="fixed_cost_productivity" type="number" className="form-control" placeholder="100.00"/>
+                          <input id="fixed_cost_productivity" type="number" className="form-control" placeholder="100.00"
+                            onChange={this.handleProductivityFixedCostChange}
+                          />
                         </div>
                       </td>
                     </tr>
@@ -489,17 +528,24 @@ export default class ProfitDrivers extends Component {
             />
           </Tab>
           <Tab eventKey={4} title="Price Impact">
-            <DeltaPrice
+            {/* <DeltaPrice
               pctConversions={this.state.pctConversions}
               vcConversions={this.state.vcConversions}
               fcConversions={this.state.fcConversions}
               calcHandler={this.state.calcHandler}
               dataActual={this.state.dataActual}
               dataAdjusted={this.state.dataAdjusted}
-            />
+            /> */}
           </Tab>
           <Tab eventKey={5} title="Productivity Impact">
-            Tab 1 content
+            <DeltaProductivity
+              pctProductivity={this.state.pctProductivity} 
+              vcProductivity={this.state.vcProductivity}
+              fcProductivity={this.state.fcProductivity}
+              calcHandler={this.state.calcHandler}
+              dataActual={this.state.dataActual} 
+              dataAdjusted={this.state.dataAdjusted}
+            />
           </Tab>
           <Tab eventKey={6} title="Efficiency Impact">
             Tab 2 content

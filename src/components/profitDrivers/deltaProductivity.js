@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 
 
-export default class DeltaVolume extends Component {
+export default class DeltaProductivity extends Component {
   constructor(props){
     super(props);
 
@@ -21,14 +21,14 @@ export default class DeltaVolume extends Component {
       console.log(dataAdjusted);
       
       let periodData = {
-        currentVolume: this.props.calcHandler.getCurrentVolume(),
-        targetVolume: this.props.calcHandler.getDirectIncrease(this.props.calcHandler.getCurrentVolume(), this.props.pctVolume),
+        currentProductivity: dataActual['sales_and_marketing']['prospects'],
+        targetProductivity: this.props.calcHandler.getTargetIncrease('prospects', this.props.pctProspects),
         currentRevenues: parseFloat(dataActual['income_statement']['total_revenues']).toFixed(2),
-        targetRevenues: this.props.calcHandler.getTargetRevenue('volume', this.props.pctVolume).toFixed(2),
+        targetRevenues: parseFloat(dataActual['income_statement']['total_revenues']).toFixed(2),
         currentIncome: this.props.calcHandler.getCurrentNetIncome()
       }
 
-      let targetIncome = this.props.calcHandler.getTargetNetIncome('volume', this.props.pctVolume, periodData.targetRevenues, this.props.vcVolume, this.props.fcVolume)
+      let targetIncome = this.props.calcHandler.getTargetNetIncome('productivity', this.props.pctProductivity, periodData.targetRevenues, this.props.vcProductivity, this.props.fcProductivity);
 
       let annualizedData = {
         currentIncome: (periodData.currentIncome*12).toFixed(2),
@@ -36,9 +36,9 @@ export default class DeltaVolume extends Component {
       }
 
       let varianceData = {
-        volume: {
-          impact: periodData.targetVolume - periodData.currentVolume,
-          pct: ((periodData.targetVolume/periodData.currentVolume-1)*100).toFixed(2)
+        productivity: {
+          impact: periodData.targetProductivity - periodData.currentProductivity,
+          pct: ((periodData.targetProductivity/periodData.currentProductivity-1)*100).toFixed(2)
         },
         revenues: {
           impact: periodData.targetRevenues - periodData.currentRevenues,
@@ -58,11 +58,11 @@ export default class DeltaVolume extends Component {
 
       trows.push( 
       <tr key="row_prospects">
-        <td><strong>Current Volume</strong></td>
-        <td>{periodData.currentVolume}</td>
-        <td>{periodData.targetVolume}</td>
-        <td>{varianceData.volume.impact}</td>
-        <td>{varianceData.volume.pct}</td>
+        <td><strong>Current Productivity</strong></td>
+        <td>{periodData.currentProductivity}</td>
+        <td>{periodData.targetProductivity}</td>
+        <td>{varianceData.productivity.impact}</td>
+        <td>{varianceData.productivity.pct}</td>
       </tr>);
   
       trows.push(
@@ -102,10 +102,10 @@ export default class DeltaVolume extends Component {
           <thead>
             <tr>
               <th>Reporting Summary</th>
-              <th>Current Volume</th>
-              <th>Target Volume Impact</th>
-              <th>Volume Variance Impact</th>
-              <th>Volume Variance Pct</th>
+              <th>Current Productivity</th>
+              <th>Target Prospects Impact</th>
+              <th>Productivity Variance Impact</th>
+              <th>Productivity Variance Pct</th>
             </tr>
           </thead>
           {trows}

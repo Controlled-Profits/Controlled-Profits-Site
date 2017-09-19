@@ -165,53 +165,49 @@ export default class CalcHandler {
   /* Higher level profit driver calculations */
 
   getCurrentNetIncome() {
-    //Assumes donations included in dep and amort entry
     let dep_and_amort = parseFloat(this.financialData['income_statement']['depreciation_and_amortization']);
+    let donations = parseFloat(this.financialData['income_statement']['donations']);
     let opProfit = this.getNetOperatingProfit(this.getCurrentEBITDA());
-
+    let taxableProfit = opProfit - dep_and_amort - donations;
     let taxes = (parseFloat(this.financialData['income_statement']['tax_rate']) 
-                  * opProfit).toPrecision(7);
+                  * taxableProfit)
 
-    let netIncome = opProfit - dep_and_amort - taxes;
+    let netIncome = taxableProfit - taxes;
 
     console.log(`current net income = ${netIncome}`);
     return netIncome.toFixed(2);
   }
 
   getTargetNetIncome(driverName, percent, targetRevenues, VPIE, FPIE) {
-      if(isNaN(percent)) return 0.00
-      //Assumes donations included in dep and amort entry
-      let dep_and_amort = parseFloat(this.financialData['income_statement']['depreciation_and_amortization']);
-      
-      switch(driverName) {
-        case 'prospects':
-        case 'conversions':
-        case 'volume':
-          let targetGTU = parseFloat(this.financialData['sales_and_marketing']['grand_total_units']) * (1+percent);
-          let targetCOS = this.getTargetCOS(targetGTU, VPIE);
-          let targetFixedExpenses = this.getTargetFixedExpenses(FPIE)
-          let targetOpProfit = this.getNetOperatingProfit(this.getTargetEBITDA(targetRevenues, targetCOS, targetFixedExpenses));
-          let taxes = parseFloat(this.financialData['income_statement']['tax_rate']) * targetOpProfit;
+    if(isNaN(percent)) return 0.00
+    //Assumes donations included in dep and amort entry
+    let dep_and_amort = parseFloat(this.financialData['income_statement']['depreciation_and_amortization']);
+    let donations = parseFloat(this.financialData['income_statement']['donations']);
+    let targetGTU = parseFloat(this.financialData['sales_and_marketing']['grand_total_units']) * (1+percent);
+    let targetCOS = this.getTargetCOS(targetGTU, VPIE);
+    let targetFixedExpenses = this.getTargetFixedExpenses(FPIE);
+    let targetOpProfit = this.getNetOperatingProfit(this.getTargetEBITDA(targetRevenues, targetCOS, targetFixedExpenses));
+    let taxableProfit = targetOpProfit - dep_and_amort - donations;
+    let taxes = parseFloat(this.financialData['income_statement']['tax_rate']) * taxableProfit;
 
-          let netIncome = targetOpProfit - dep_and_amort - taxes;
-          console.log(`calculated target net income for ${driverName} = ${netIncome}`);
-          return netIncome.toFixed(2);
-        case 'price':
-        case 'productivity':
-          let targetGTU = parseFloat(this.financialData['sales_and_marketing']['grand_total_units']) * (1-percent);
-          let targetCOS = this.getTargetCOS(targetGTU, VPIE);
-          let targetFixedExpenses = this.getTargetFixedExpenses(FPIE)
-          let targetOpProfit = this.getNetOperatingProfit(this.getTargetEBITDA(targetRevenues, targetCOS, targetFixedExpenses));
-          let taxes = parseFloat(this.financialData['income_statement']['tax_rate']) * targetOpProfit;
+    let netIncome = taxableProfit - taxes;
+    switch(driverName) {
+      case 'prospects':
+      case 'conversions':
+      case 'volume':
 
-          let netIncome = targetOpProfit - dep_and_amort - taxes;
         console.log(`calculated target net income for ${driverName} = ${netIncome}`);
         return netIncome.toFixed(2);
-        case 'efficiency':
-        case 'frequency':
-        default:
-          return 0.00;
-      }
+      case 'price':
+        break;
+      case 'productivity':
+        console.log(`calculated target net income for ${driverName} = ${netIncome}`);
+        return netIncome.toFixed(2);
+      case 'efficiency':
+      case 'frequency':
+      default:
+        return 0.00;
+    }
   }
 
   // Just returns a number increased by a given percent
