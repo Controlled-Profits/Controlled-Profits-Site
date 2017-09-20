@@ -170,6 +170,16 @@ export default class CalcHandler {
     return this.getVolume(GTU, numSales);
   }
 
+  getCurrentPPU() {
+    let GTU = parseFloat(this.financialData['sales_and_marketing']['number_of_sales']),
+        totalRevenues = parseFloat(this.financialData['income_statement']['total_revenues']);
+    return this.getAvgPricePerUnit(totalRevenues, GTU);
+  }
+
+  getTargetPPU(percent) {
+    return this.getCurrentPPU() * (1+percent);
+  }
+
 
   /* Higher level profit driver calculations */
 
@@ -190,10 +200,12 @@ export default class CalcHandler {
   getTargetNetIncome(driverName, percent, targetRevenues, VPIE, FPIE) {
     if(isNaN(percent)) return 0.00
     //Assumes donations included in dep and amort entry
+    //TODO: Holy hell will I need to clean up this mess
     let currentCOS = this.getCurrentCOS();
     let currentCOGs = parseFloat(this.financialData['income_statement']['cogs']);
     let dep_and_amort = parseFloat(this.financialData['income_statement']['depreciation_and_amortization']);
     let donations = parseFloat(this.financialData['income_statement']['donations']);
+    let currentGTU = parseFloat(this.financialData['sales_and_marketing']['grand_total_units']);
     let targetGTU = parseFloat(this.financialData['sales_and_marketing']['grand_total_units']) * (1+percent);
     let targetCOS = this.getTargetCOS(currentCOS, VPIE);
     let targetFixedExpenses = this.getTargetFixedExpenses(FPIE);
@@ -205,7 +217,7 @@ export default class CalcHandler {
     let netIncome = taxableProfit - taxes;
     switch(driverName) {
       case 'prospects':
-        return netIncome;
+        return netIncome.toFixed(2);
       case 'conversions':
         //Recalc COS given GTU and VPIE
         let convCOS = 0;
@@ -239,10 +251,28 @@ export default class CalcHandler {
 
         return (volTaxableProfit - volTaxes).toFixed(2);
       case 'price':
-        break;
+        let priceProfit = this.getNetOperatingProfit(
+          this.getTargetEBITDA(targetRevenues, 
+            this.getCurrentCOS()+VPIE, this.getCurrentFixedExpenses()+FPIE));
+        let priceTaxableProfit = priceProfit - dep_and_amort - donations;
+        let priceTaxes = taxRate * priceTaxableProfit;
+
+        return (priceTaxableProfit - priceTaxes).toFixed(2);
       case 'productivity':
-        console.log(`calculated target net income for ${driverName} = ${netIncome}`);
-        return netIncome.toFixed(2);
+        let prodCOS = 0;
+        prodCOS += this.COSItems.cogs * (1-percent);
+        prodCOS += this.COSItems.marketing * (1-percent);
+        prodCOS += this.COSItems.directLabor * (1-percent);
+        prodCOS += this.COSItems.distribution * (1-percent);
+        prodCOS += VPIE;
+
+        let prodProfit = this.getNetOperatingProfit(
+          this.getTargetEBITDA(targetRevenues, prodCOS, 
+            this.getTargetFixedExpenses(FPIE)));
+        let prodTaxableProfit = prodProfit - dep_and_amort - donations;
+        let prodTaxes = taxRate * prodTaxableProfit;
+
+        return (prodTaxableProfit - prodTaxes).toFixed(2);
       case 'efficiency':
       case 'frequency':
       default:
@@ -278,7 +308,8 @@ export default class CalcHandler {
   getTargetRevenue(driverName, percent) {
     if(isNaN(percent)) return 0.00
 
-    let totalRevenues = parseFloat(this.financialData['income_statement']['total_revenues'])
+    let totalRevenues = parseFloat(this.financialData['income_statement']['total_revenues']);
+    let currentGTU = parseFloat(this.financialData['sales_and_marketing']['grand_total_units']);
 
     switch(driverName) {
       case 'prospects':
@@ -295,7 +326,10 @@ export default class CalcHandler {
         let oldAvgDR = this.getAvgDollarPerReceipt(totalRevenues, oldNumSales);
         return (oldNumSales * oldAvgDR) * (1+percent);
       case 'price':
+        let priceGTU = currentGTU * (1+percent);
+        return priceGTU * totalRevenues/currentGTU;
       case 'productivity':
+        
       case 'efficiency':
       case 'frequency':
       default:

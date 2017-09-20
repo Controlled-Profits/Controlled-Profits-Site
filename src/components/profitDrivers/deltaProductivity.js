@@ -22,7 +22,7 @@ export default class DeltaProductivity extends Component {
       
       let periodData = {
         currentProductivity: dataActual['sales_and_marketing']['prospects'],
-        targetProductivity: this.props.calcHandler.getTargetIncrease('prospects', this.props.pctProspects),
+        targetProductivity: this.props.calcHandler.getTargetIncrease('prospects', this.props.pctProductivity),
         currentRevenues: parseFloat(dataActual['income_statement']['total_revenues']).toFixed(2),
         targetRevenues: parseFloat(dataActual['income_statement']['total_revenues']).toFixed(2),
         currentIncome: this.props.calcHandler.getCurrentNetIncome()
@@ -59,10 +59,10 @@ export default class DeltaProductivity extends Component {
       trows.push( 
       <tr key="row_prospects">
         <td><strong>Current Productivity</strong></td>
-        <td>{periodData.currentProductivity}</td>
-        <td>{periodData.targetProductivity}</td>
-        <td>{varianceData.productivity.impact}</td>
-        <td>{varianceData.productivity.pct}</td>
+        <td>-{/* No idea what to fill this row with */}</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
       </tr>);
   
       trows.push(
@@ -103,7 +103,7 @@ export default class DeltaProductivity extends Component {
             <tr>
               <th>Reporting Summary</th>
               <th>Current Productivity</th>
-              <th>Target Prospects Impact</th>
+              <th>Target Productivity Impact</th>
               <th>Productivity Variance Impact</th>
               <th>Productivity Variance Pct</th>
             </tr>
