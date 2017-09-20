@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 
 
-export default class DeltaProductivity extends Component {
+export default class DeltaEfficiency extends Component {
   constructor(props){
     super(props);
 
@@ -21,14 +21,14 @@ export default class DeltaProductivity extends Component {
       console.log(dataAdjusted);
       
       let periodData = {
-        currentProductivity: dataActual['sales_and_marketing']['prospects'],
-        targetProductivity: this.props.calcHandler.getTargetIncrease('prospects', this.props.pctProductivity),
+        currentFC: this.props.calcHandler.getCurrentFixedExpenses().toFixed(2),
+        targetFC: this.props.calcHandler.getEfficiencyTargetFixedExpenses(this.props.pctEfficiency, this.props.fcEfficiency).toFixed(2),
         currentRevenues: parseFloat(dataActual['income_statement']['total_revenues']).toFixed(2),
-        targetRevenues: parseFloat(dataActual['income_statement']['total_revenues']).toFixed(2),
+        targetRevenues: this.props.calcHandler.getTargetRevenue('efficiency', this.props.pctEfficiency),
         currentIncome: this.props.calcHandler.getCurrentNetIncome()
       }
 
-      let targetIncome = this.props.calcHandler.getTargetNetIncome('productivity', this.props.pctProductivity, periodData.targetRevenues, this.props.vcProductivity, this.props.fcProductivity);
+      let targetIncome = this.props.calcHandler.getTargetNetIncome('efficiency', this.props.pctEfficiency, periodData.targetRevenues, this.props.vcEfficiency, this.props.fcEfficiency);
 
       let annualizedData = {
         currentIncome: (periodData.currentIncome*12).toFixed(2),
@@ -36,9 +36,9 @@ export default class DeltaProductivity extends Component {
       }
 
       let varianceData = {
-        productivity: {
-          impact: periodData.targetProductivity - periodData.currentProductivity,
-          pct: ((periodData.targetProductivity/periodData.currentProductivity-1)*100).toFixed(2)
+        fixedCost: {
+          impact: periodData.targetFC - periodData.currentFC,
+          pct: ((periodData.targetFC/periodData.currentFC-1)*100).toFixed(2)
         },
         revenues: {
           impact: periodData.targetRevenues - periodData.currentRevenues,
@@ -58,11 +58,11 @@ export default class DeltaProductivity extends Component {
 
       trows.push( 
       <tr key="row_prospects">
-        <td><strong>Productivity</strong></td>
-        <td>-{/* No idea what to fill this row with */}</td>
-        <td>-</td>
-        <td>-</td>
-        <td>-</td>
+        <td><strong>Fixed Cost</strong></td>
+        <td>{periodData.currentFC}</td>
+        <td>{periodData.targetFC}</td>
+        <td>{varianceData.fixedCost.impact}</td>
+        <td>{varianceData.fixedCost.pct}</td>
       </tr>);
   
       trows.push(
@@ -102,10 +102,10 @@ export default class DeltaProductivity extends Component {
           <thead>
             <tr>
               <th>Reporting Summary</th>
-              <th>Current Productivity</th>
-              <th>Target Productivity Impact</th>
-              <th>Productivity Variance Impact</th>
-              <th>Productivity Variance Pct</th>
+              <th>Current Fixed Cost</th>
+              <th>Target Fixed Cost Impact</th>
+              <th>Fixed Cost Variance Impact</th>
+              <th>Fixed Cost Variance Pct</th>
             </tr>
           </thead>
           {trows}

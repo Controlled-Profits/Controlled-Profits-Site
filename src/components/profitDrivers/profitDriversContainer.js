@@ -9,6 +9,7 @@ import DeltaConversions from './deltaConversions.js';
 import DeltaVolume from './deltaVolume.js';
 import DeltaPrice from './deltaPrice.js';
 import DeltaProductivity from './deltaProductivity.js';
+import DeltaEfficiency from './deltaEfficiency.js';
 import DeltaFrequency from './deltaFrequency.js';
 import TotalProfitImpact from '../totalProfitImpact/totalProfitImpactContainer.js';
 
@@ -48,6 +49,10 @@ export default class ProfitDrivers extends Component {
     this.handleFrequencyPctChange = this.handleFrequencyPctChange.bind(this);
     this.handleFrequencyVarCostChange = this.handleFrequencyVarCostChange.bind(this);
     this.handleFrequencyFixedCostChange = this.handleFrequencyFixedCostChange.bind(this);
+
+    this.handleEfficiencyPctChange = this.handleEfficiencyPctChange.bind(this);
+    this.handleEfficiencyVarCostChange = this.handleEfficiencyVarCostChange.bind(this);
+    this.handleEfficiencyFixedCostChange = this.handleEfficiencyFixedCostChange.bind(this);
 
     //Get last day in month, convert to appropriate string format
     let today = new Date();
@@ -294,6 +299,32 @@ export default class ProfitDrivers extends Component {
 
 
   //Efficiency input handlers
+  handleEfficiencyPctChange(event) {
+    let pct = parseFloat(event.target.value);
+    if (!isNaN(pct)) {
+      this.setState({
+        pctEfficiency: pct/100
+      });
+    }
+  }
+
+  handleEfficiencyVarCostChange(event) {
+    let vc = parseFloat(event.target.value);
+    if(!isNaN(vc)) {
+      this.setState({
+        vcEfficiency: vc
+      });
+    }
+  }
+
+  handleEfficiencyFixedCostChange(event) {
+    let fc = parseFloat(event.target.value);
+    if(!isNaN(fc)) {
+      this.setState({
+        fcEfficiency: fc
+      });
+    }
+  }
 
   //Frequency input handlers
   handleFrequencyPctChange(event) {
@@ -515,20 +546,26 @@ export default class ProfitDrivers extends Component {
                       <td>
                         {/* This can pretty easily be changed to a slider later */}
                         <div className="input-group input-group-sm">
-                          <input id="pct_efficiency" type="number" className="form-control" placeholder="1.0"/>
+                          <input id="pct_efficiency" type="number" className="form-control" placeholder="1.0"
+                            onChange={this.handleEfficiencyPctChange}
+                          />
                           <span className="input-group-addon">%</span>
                         </div>
                       </td>
                       <td>
                         <div className="input-group input-group-sm">
                           <span className="input-group-addon">$</span>
-                          <input id="var_cost_efficiency" type="number" className="form-control" placeholder="100.00"/>
+                          <input id="var_cost_efficiency" type="number" className="form-control" placeholder="100.00"
+                            onChange={this.handleEfficiencyVarCostChange}
+                          />
                         </div>
                       </td>
                       <td>
                         <div className="input-group input-group-sm">
                           <span className="input-group-addon">$</span>
-                          <input id="fixed_cost_efficiency" type="number" className="form-control" placeholder="100.00"/>
+                          <input id="fixed_cost_efficiency" type="number" className="form-control" placeholder="100.00"
+                            onChange={this.handleEfficiencyFixedCostChange}
+                          />
                         </div>
                       </td>
                     </tr>
@@ -618,7 +655,14 @@ export default class ProfitDrivers extends Component {
             />
           </Tab>
           <Tab eventKey={6} title="Efficiency Impact">
-            Tab 2 content
+            <DeltaEfficiency
+              pctEfficiency={this.state.pctEfficiency} 
+              vcEfficiency={this.state.vcEfficiency}
+              fcEfficiency={this.state.fcEfficiency}
+              calcHandler={this.state.calcHandler}
+              dataActual={this.state.dataActual} 
+              dataAdjusted={this.state.dataAdjusted}
+            />
           </Tab>
           <Tab eventKey={7} title="Frequency Impact">
             <DeltaFrequency

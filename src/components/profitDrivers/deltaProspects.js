@@ -58,7 +58,7 @@ export default class DeltaProspects extends Component {
 
       trows.push( 
       <tr key="row_prospects">
-        <td><strong>Current Prospects/Leads</strong></td>
+        <td><strong>Prospects/Leads</strong></td>
         <td>{periodData.currentProspects}</td>
         <td>{periodData.targetProspects}</td>
         <td>{varianceData.prospects.impact}</td>

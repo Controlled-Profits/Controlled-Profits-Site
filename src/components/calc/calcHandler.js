@@ -80,6 +80,26 @@ export default class CalcHandler {
     return this.getCurrentFixedExpenses() + FPIE;
   }
 
+  getEfficiencyTargetFixedExpenses(percent, FPIE) {
+    let fixedExpenses = 0;
+    fixedExpenses += this.fixedExpensesItems.accountingAndLegal * (1-percent);
+    fixedExpenses += this.fixedExpensesItems.advertising * (1-percent);
+    fixedExpenses += this.fixedExpensesItems.benefitAdmin * (1-percent);
+    fixedExpenses += this.fixedExpensesItems.insurance * (1-percent);
+    fixedExpenses += this.fixedExpensesItems.marketingDevelopment * (1-percent);
+    fixedExpenses += this.fixedExpensesItems.officeLease * (1-percent);
+    fixedExpenses += this.fixedExpensesItems.officeSupplies * (1-percent);
+    fixedExpenses += this.fixedExpensesItems.onlineExpenses * (1-percent);
+    fixedExpenses += this.fixedExpensesItems.other * (1-percent);
+    fixedExpenses += this.fixedExpensesItems.salaries * (1-percent);
+    fixedExpenses += this.fixedExpensesItems.training * (1-percent);
+    fixedExpenses += this.fixedExpensesItems.transportation * (1-percent);
+    fixedExpenses += this.fixedExpensesItems.utilities * (1-percent);
+    fixedExpenses += FPIE;
+
+    return fixedExpenses;
+  }
+
   // Earnings before interest, taxes, depreciation and amortization
   getCurrentEBITDA() {
     let totalRevenues = parseFloat(this.financialData['income_statement']['total_revenues']);
@@ -189,7 +209,7 @@ export default class CalcHandler {
     let opProfit = this.getNetOperatingProfit(this.getCurrentEBITDA());
     let taxableProfit = opProfit - dep_and_amort - donations;
     let taxes = (parseFloat(this.financialData['income_statement']['tax_rate']) 
-                  * taxableProfit)
+                  * taxableProfit);
 
     let netIncome = taxableProfit - taxes;
 
@@ -245,7 +265,6 @@ export default class CalcHandler {
           this.getTargetEBITDA(targetRevenues, volCOS, 
             this.getTargetFixedExpenses(FPIE)));
 
-        console.log(`vol profit::: ${volProfit}`);
         let volTaxableProfit = volProfit - dep_and_amort - donations;
         let volTaxes = taxRate * volTaxableProfit;
 
@@ -276,6 +295,16 @@ export default class CalcHandler {
 
         return (prodTaxableProfit - prodTaxes).toFixed(2);
       case 'efficiency':
+        let fixedExpenses = this.getEfficiencyTargetFixedExpenses(percent, FPIE);
+
+        let effProfit = this.getNetOperatingProfit(
+          this.getTargetEBITDA(targetRevenues, 
+            this.getTargetCOS(this.getCurrentCOS(), VPIE), fixedExpenses));
+
+        let effTaxableProfit = effProfit - dep_and_amort - donations;
+        let effTaxes = taxRate * effTaxableProfit;
+
+        return (effTaxableProfit - effTaxes).toFixed(2);
       case 'frequency':
         let freqCOS = 0;
         freqCOS += this.COSItems.cogs * (1+percent);
@@ -345,8 +374,9 @@ export default class CalcHandler {
         let priceGTU = currentGTU * (1+percent);
         return priceGTU * totalRevenues/currentGTU;
       case 'productivity':
-        return 0.0;
+        return totalRevenues.toFixed(2);
       case 'efficiency':
+        return totalRevenues.toFixed(2);
       case 'frequency':
         let freqGTU = currentGTU * (1+percent);
         return freqGTU * totalRevenues/currentGTU;
