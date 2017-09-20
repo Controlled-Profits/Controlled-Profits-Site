@@ -253,7 +253,9 @@ export default class CalcHandler {
       case 'price':
         let priceProfit = this.getNetOperatingProfit(
           this.getTargetEBITDA(targetRevenues, 
-            this.getCurrentCOS()+VPIE, this.getCurrentFixedExpenses()+FPIE));
+            this.getTargetCOS(this.getCurrentCOS(), VPIE), 
+            this.getTargetFixedExpenses(FPIE)));
+
         let priceTaxableProfit = priceProfit - dep_and_amort - donations;
         let priceTaxes = taxRate * priceTaxableProfit;
 
@@ -275,6 +277,20 @@ export default class CalcHandler {
         return (prodTaxableProfit - prodTaxes).toFixed(2);
       case 'efficiency':
       case 'frequency':
+        let freqCOS = 0;
+        freqCOS += this.COSItems.cogs * (1+percent);
+        freqCOS += this.COSItems.marketing * (1+percent);
+        freqCOS += this.COSItems.directLabor * (1+percent);
+        freqCOS += this.COSItems.distribution * (1+percent);
+        freqCOS += VPIE;
+
+        let freqProfit = this.getNetOperatingProfit(
+          this.getTargetEBITDA(targetRevenues, freqCOS, 
+            this.getTargetFixedExpenses(FPIE)));
+        let freqTaxableProfit = freqProfit - dep_and_amort - donations;
+        let freqTaxes = taxRate * freqTaxableProfit;
+
+        return (freqTaxableProfit - freqTaxes).toFixed(2);
       default:
         return 0.00;
     }
@@ -329,9 +345,11 @@ export default class CalcHandler {
         let priceGTU = currentGTU * (1+percent);
         return priceGTU * totalRevenues/currentGTU;
       case 'productivity':
-        
+        return 0.0;
       case 'efficiency':
       case 'frequency':
+        let freqGTU = currentGTU * (1+percent);
+        return freqGTU * totalRevenues/currentGTU;
       default:
         return 0.00;
     }
