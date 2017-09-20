@@ -9,6 +9,7 @@ import DeltaConversions from './deltaConversions.js';
 import DeltaVolume from './deltaVolume.js';
 import DeltaPrice from './deltaPrice.js';
 import DeltaProductivity from './deltaProductivity.js';
+import DeltaFrequency from './deltaFrequency.js';
 import TotalProfitImpact from '../totalProfitImpact/totalProfitImpactContainer.js';
 
 import 'react-datepicker/dist/react-datepicker.css';
@@ -43,6 +44,10 @@ export default class ProfitDrivers extends Component {
     this.handleProductivityPctChange = this.handleProductivityPctChange.bind(this);
     this.handleProductivityVarCostChange = this.handleProductivityVarCostChange.bind(this);
     this.handleProductivityFixedCostChange = this.handleProductivityFixedCostChange.bind(this);
+
+    this.handleFrequencyPctChange = this.handleFrequencyPctChange.bind(this);
+    this.handleFrequencyVarCostChange = this.handleFrequencyVarCostChange.bind(this);
+    this.handleFrequencyFixedCostChange = this.handleFrequencyFixedCostChange.bind(this);
 
     //Get last day in month, convert to appropriate string format
     let today = new Date();
@@ -291,7 +296,32 @@ export default class ProfitDrivers extends Component {
   //Efficiency input handlers
 
   //Frequency input handlers
+  handleFrequencyPctChange(event) {
+    let pct = parseFloat(event.target.value);
+    if (!isNaN(pct)) {
+      this.setState({
+        pctFrequency : pct/100
+      });
+    }
+  }
 
+  handleFrequencyVarCostChange(event) {
+    let vc = parseFloat(event.target.value);
+    if(!isNaN(vc)) {
+      this.setState({
+        vcFrequency: vc
+      });
+    }
+  }
+
+  handleFrequencyFixedCostChange(event) {
+    let fc = parseFloat(event.target.value);
+    if(!isNaN(fc)) {
+      this.setState({
+        fcFrequency: fc
+      });
+    }
+  }
 
   render() {
     return(
@@ -507,20 +537,26 @@ export default class ProfitDrivers extends Component {
                       <td>
                         {/* This can pretty easily be changed to a slider later */}
                         <div className="input-group input-group-sm">
-                          <input id="pct_frequency" type="number" className="form-control" placeholder="7.0"/>
+                          <input id="pct_frequency" type="number" className="form-control" placeholder="7.0"
+                            onChange={this.handleFrequencyPctChange}
+                          />
                           <span className="input-group-addon">%</span>
                         </div>
                       </td>
                       <td>
                         <div className="input-group input-group-sm">
                           <span className="input-group-addon">$</span>
-                          <input id="var_cost_frequency" type="number" className="form-control" placeholder="100.00"/>
+                          <input id="var_cost_frequency" type="number" className="form-control" placeholder="100.00"
+                            onChange={this.handleFrequencyVarCostChange}
+                          />
                         </div>
                       </td>
                       <td>
                         <div className="input-group input-group-sm">
                           <span className="input-group-addon">$</span>
-                          <input id="fixed_cost_frequency" type="number" className="form-control" placeholder="100.00"/>
+                          <input id="fixed_cost_frequency" type="number" className="form-control" placeholder="100.00"
+                            onChange={this.handleFrequencyFixedCostChange}
+                          />
                         </div>
                       </td>
                     </tr>
@@ -585,7 +621,14 @@ export default class ProfitDrivers extends Component {
             Tab 2 content
           </Tab>
           <Tab eventKey={7} title="Frequency Impact">
-            Tab 3 content
+            <DeltaFrequency
+              pctFrequency={this.state.pctFrequency} 
+              vcFrequency={this.state.vcFrequency}
+              fcFrequency={this.state.fcFrequency}
+              calcHandler={this.state.calcHandler}
+              dataActual={this.state.dataActual} 
+              dataAdjusted={this.state.dataAdjusted}
+            />
           </Tab>
         </Tabs>
       </div>
