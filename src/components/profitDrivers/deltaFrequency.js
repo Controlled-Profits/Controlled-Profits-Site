@@ -58,7 +58,7 @@ export default class DeltaFrequency extends Component {
 
       trows.push( 
       <tr key="row_prospects">
-        <td><strong>Current Frequency</strong></td>
+        <td><strong>Frequency</strong></td>
         <td>-{/* TODO: No idea what goes here */}</td>
         <td>-</td>
         <td>-</td>
