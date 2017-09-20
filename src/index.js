@@ -19,8 +19,8 @@ ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
       <Switch>
-        <Route path='/member/:userId/:lastname' component={AppHomeBox}/>
-        <Route exact path='/' component={App} />
+        <Route path={process.env.PUBLIC_URL + '/member/:userId/:lastname'} component={AppHomeBox}/>
+        <Route path={process.env.PUBLIC_URL + '/'} component={App} />
       </Switch>
     </BrowserRouter>
   </Provider> ,

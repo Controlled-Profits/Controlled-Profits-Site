@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
+import superagent from 'superagent';
 
-export default class DeltaConversions extends Component {
+
+export default class DeltaPrice extends Component {
   constructor(props){
     super(props);
 
@@ -10,7 +12,7 @@ export default class DeltaConversions extends Component {
   //Build table from result, data will be displayed and manipulated by graphs later
   getTableDisplay() {
     let trows = [];
-    
+
     let dataActual = this.props.dataActual,
         dataAdjusted = this.props.dataAdjusted;
 
@@ -18,17 +20,16 @@ export default class DeltaConversions extends Component {
     if(dataActual && dataAdjusted && this.props.calcHandler && Object.keys(dataActual).length) {
       console.log(dataActual);
       console.log(dataAdjusted);
-      
-      let periodData = {
-        currentConvRate: this.props.calcHandler.getCurrentConversionRate().toFixed(2),
-        targetConvRate: this.props.calcHandler.getTargetConversionRate(this.props.pctConversions).toFixed(2),
-        currentRevenues: parseFloat(dataActual['income_statement']['total_revenues']).toFixed(2),
-        targetRevenues: this.props.calcHandler.getTargetRevenue('conversions', this.props.pctConversions).toFixed(2),
-        currentIncome: this.props.calcHandler.getCurrentNetIncome(),
-        
-      } 
 
-      let targetIncome = this.props.calcHandler.getTargetNetIncome('conversions', this.props.pctConversions, periodData.targetRevenues, this.props.vcConversions, this.props.fcConversions);
+      let periodData = {
+        currentPrice: this.props.calcHandler.getCurrentPPU().toFixed(2),
+        targetPrice: this.props.calcHandler.getTargetPPU(this.props.pctPrice).toFixed(2),
+        currentRevenues: parseFloat(dataActual['income_statement']['total_revenues']).toFixed(2),
+        targetRevenues: this.props.calcHandler.getTargetRevenue('price', this.props.pctPrice).toFixed(2),
+        currentIncome: this.props.calcHandler.getCurrentNetIncome()
+      }
+
+      let targetIncome = this.props.calcHandler.getTargetNetIncome('price', this.props.pctPrice, periodData.targetRevenues, this.props.vcPrice, this.props.fcPrice);
 
       let annualizedData = {
         currentIncome: (periodData.currentIncome*12).toFixed(2),
@@ -36,9 +37,9 @@ export default class DeltaConversions extends Component {
       }
 
       let varianceData = {
-        prospects: {
-          impact: periodData.targetConvRate - periodData.currentConvRate,
-          pct: ((periodData.targetConvRate/periodData.currentConvRate-1)*100).toFixed(2)
+        price: {
+          impact: periodData.targetPrice - periodData.currentPrice,
+          pct: ((periodData.targetPrice/periodData.currentPrice-1)*100).toFixed(2)
         },
         revenues: {
           impact: periodData.targetRevenues - periodData.currentRevenues,
@@ -54,15 +55,15 @@ export default class DeltaConversions extends Component {
         }
       }
 
-      trows.push( 
+      trows.push(
       <tr key="row_prospects">
-        <td><strong>Conversion Rate</strong></td>
-        <td>{periodData.currentConvRate}%</td>
-        <td>{periodData.targetConvRate}%</td>
-        <td>{varianceData.prospects.impact}</td>
-        <td>{varianceData.prospects.pct}</td>
+        <td><strong>Price Per Unit</strong></td>
+        <td>${periodData.currentPrice}</td>
+        <td>${periodData.targetPrice}</td>
+        <td>{varianceData.price.impact}</td>
+        <td>{varianceData.price.pct}</td>
       </tr>);
-  
+
       trows.push(
       <tr key="row_revenues">
         <td><strong>Sales Revenues</strong></td>
@@ -71,7 +72,7 @@ export default class DeltaConversions extends Component {
         <td>{varianceData.revenues.impact}</td>
         <td>{varianceData.revenues.pct}</td>
       </tr>);
-  
+
       trows.push(
         <tr key="row_profit">
           <td><strong>Profit (Net Income)</strong></td>
@@ -80,7 +81,7 @@ export default class DeltaConversions extends Component {
           <td>{varianceData.incomes.impact}</td>
           <td>{varianceData.incomes.pct}</td>
         </tr>);
-  
+
       trows.push(
         <tr key="row_annualized">
           <td><strong>Annualized</strong></td>
@@ -100,10 +101,10 @@ export default class DeltaConversions extends Component {
           <thead>
             <tr>
               <th>Reporting Summary</th>
-              <th>Current Conversions</th>
-              <th>Target Conversions Impact</th>
-              <th>Conversions Variance Impact</th>
-              <th>Conversions Variance Pct</th>
+              <th>Current Price Per Unit</th>
+              <th>Target Price Per Unit</th>
+              <th>PPU Variance Impact</th>
+              <th>PPU Variance Pct</th>
             </tr>
           </thead>
           {trows}

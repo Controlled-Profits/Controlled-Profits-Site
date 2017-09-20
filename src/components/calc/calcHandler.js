@@ -4,64 +4,73 @@ export default class CalcHandler {
     if(!financialData) return null;
 
     this.financialData = financialData;
+
+    //Declare section variables to be parsed into float in init function
+    this.COSItems = {
+      cogs: this.financialData['income_statement']['cogs'],
+      marketing: this.financialData['income_statement']['marketing'],
+      directLabor: this.financialData['income_statement']['direct_labor'],
+      distribution: this.financialData['income_statement']['distribution']
+    }
+
+    this.fixedExpensesItems = {
+      salaries: this.financialData['income_statement']['salaries'],
+      benefitAdmin: this.financialData['income_statement']['benefit_admin'],
+      officeLease: this.financialData['income_statement']['office_lease'],
+      officeSupplies: this.financialData['income_statement']['office_supplies'],
+      utilities: this.financialData['income_statement']['utilities'],
+      transportation: this.financialData['income_statement']['transportation'],
+      onlineExpenses: this.financialData['income_statement']['online_expenses'],
+      insurance: this.financialData['income_statement']['insurance'],
+      training: this.financialData['income_statement']['training'],
+      accountingAndLegal: this.financialData['income_statement']['accounting_and_legal'],
+      advertising: this.financialData['income_statement']['advertising'],
+      marketingDevelopment: this.financialData['income_statement']['marketing_development'],
+      other: this.financialData['income_statement']['other']
+    }
+
+    this.init();
+  }
+
+  init() {
+    //Loop through objects and parse all member variables into floats
+    for(var key in this.COSItems)
+      if(this.COSItems.hasOwnProperty(key)) 
+        this.COSItems[key] = parseFloat(this.COSItems[key]);
+
+    for(var key in this.fixedExpensesItems)
+        if(this.fixedExpensesItems.hasOwnProperty(key)) 
+          this.fixedExpensesItems[key] = parseFloat(this.fixedExpensesItems[key]);
+
   }
 
   /* Low level basic financial calculations */
 
   // Cost of sales
   getCurrentCOS() {
-    let subtotalCOSItems = [
-      this.financialData['income_statement']['cogs'],
-      this.financialData['income_statement']['marketing'],
-      this.financialData['income_statement']['direct_labor'],
-      this.financialData['income_statement']['distribution']
-    ]
-
     let subtotalCOS = 0;
 
-    for(var i = 0; i < subtotalCOSItems.length; i++) {
-      subtotalCOS += parseFloat(subtotalCOSItems[i]);
-    }
+    for(var key in this.COSItems)
+      if(this.COSItems.hasOwnProperty(key))
+        subtotalCOS += this.COSItems[key];
 
     console.log(`current subtotal cos = ${subtotalCOS}`);
     return subtotalCOS;
   }
 
-  getTargetCOS(targetGTU, VPIE) {
-    let oldCOGs = parseFloat(this.financialData['income_statement']['cogs']);
-    let subtotalCOS = this.getCurrentCOS() - oldCOGs,
-        currentGTU = parseFloat(this.financialData['sales_and_marketing']['grand_total_units']);
-
-    //This may be wrong but appears to have the same value as original calc, double check w/ actual data
-    let targetCOGs = parseFloat(currentGTU / targetGTU) * oldCOGs;
-
-    subtotalCOS += targetCOGs + VPIE;
+  getTargetCOS(COS, VPIE) {
+    let subtotalCOS = COS + VPIE;
 
     console.log(`target subtotal COS = ${subtotalCOS}`);
     return subtotalCOS;
   }
 
   getCurrentFixedExpenses() {
-    let fixedExpensesItems = [
-      this.financialData['income_statement']['salaries'],
-      this.financialData['income_statement']['benefit_admin'],
-      this.financialData['income_statement']['office_lease'],
-      this.financialData['income_statement']['office_supplies'],
-      this.financialData['income_statement']['utilities'],
-      this.financialData['income_statement']['transportation'],
-      this.financialData['income_statement']['online_expenses'],
-      this.financialData['income_statement']['insurance'],
-      this.financialData['income_statement']['training'],
-      this.financialData['income_statement']['accounting_and_legal'],
-      this.financialData['income_statement']['advertising'],
-      this.financialData['income_statement']['marketing_development'],
-      this.financialData['income_statement']['other']
-    ]
-
     let fixedExpenses = 0;
-    for(var i = 0; i < fixedExpensesItems.length; i++) {
-      fixedExpenses += parseFloat(fixedExpensesItems[i]);
-    }
+
+    for(var key in this.fixedExpensesItems)
+      if(this.fixedExpensesItems.hasOwnProperty(key))
+        fixedExpenses += this.fixedExpensesItems[key];
 
     console.log(`current fixed expenses = ${fixedExpenses}`);
     return fixedExpenses;
@@ -141,6 +150,8 @@ export default class CalcHandler {
     return fixedExpenses / contributionMargin;
   }
 
+  /* Functions for laziness */
+
   getCurrentConversionRate() {
     let numSales = parseFloat(this.financialData['sales_and_marketing']['number_of_sales']);
     let prospects = parseFloat(this.financialData['sales_and_marketing']['prospects']);
@@ -152,51 +163,130 @@ export default class CalcHandler {
     return this.getCurrentConversionRate() * (1+percent);
   }
 
+  getCurrentVolume() {
+    let GTU = parseFloat(this.financialData['sales_and_marketing']['number_of_sales']),
+        numSales = parseFloat(this.financialData['sales_and_marketing']['number_of_sales']);
+
+    return this.getVolume(GTU, numSales);
+  }
+
+  getCurrentPPU() {
+    let GTU = parseFloat(this.financialData['sales_and_marketing']['number_of_sales']),
+        totalRevenues = parseFloat(this.financialData['income_statement']['total_revenues']);
+    return this.getAvgPricePerUnit(totalRevenues, GTU);
+  }
+
+  getTargetPPU(percent) {
+    return this.getCurrentPPU() * (1+percent);
+  }
+
 
   /* Higher level profit driver calculations */
 
   getCurrentNetIncome() {
-    //Assumes donations included in dep and amort entry
     let dep_and_amort = parseFloat(this.financialData['income_statement']['depreciation_and_amortization']);
+    let donations = parseFloat(this.financialData['income_statement']['donations']);
     let opProfit = this.getNetOperatingProfit(this.getCurrentEBITDA());
-
+    let taxableProfit = opProfit - dep_and_amort - donations;
     let taxes = (parseFloat(this.financialData['income_statement']['tax_rate']) 
-                  * opProfit).toPrecision(7);
+                  * taxableProfit)
 
-    let netIncome = opProfit - dep_and_amort - taxes;
+    let netIncome = taxableProfit - taxes;
 
     console.log(`current net income = ${netIncome}`);
     return netIncome.toFixed(2);
   }
 
   getTargetNetIncome(driverName, percent, targetRevenues, VPIE, FPIE) {
-      if(isNaN(percent)) return 0.00
-      //Assumes donations included in dep and amort entry
-      let dep_and_amort = parseFloat(this.financialData['income_statement']['depreciation_and_amortization']);
-      
-      switch(driverName) {
-        case 'prospects':
-        case 'conversions':
-          let targetGTU = parseFloat(this.financialData['sales_and_marketing']['grand_total_units']) * (1+percent);
-          let targetCOS = this.getTargetCOS(targetGTU, VPIE);
-          let targetFixedExpenses = this.getTargetFixedExpenses(FPIE)
-          let targetOpProfit = this.getNetOperatingProfit(this.getTargetEBITDA(targetRevenues, targetCOS, targetFixedExpenses));
-          let taxes = parseFloat(this.financialData['income_statement']['tax_rate']) * targetOpProfit;
+    if(isNaN(percent)) return 0.00
+    //Assumes donations included in dep and amort entry
+    //TODO: Holy hell will I need to clean up this mess
+    let currentCOS = this.getCurrentCOS();
+    let currentCOGs = parseFloat(this.financialData['income_statement']['cogs']);
+    let dep_and_amort = parseFloat(this.financialData['income_statement']['depreciation_and_amortization']);
+    let donations = parseFloat(this.financialData['income_statement']['donations']);
+    let currentGTU = parseFloat(this.financialData['sales_and_marketing']['grand_total_units']);
+    let targetGTU = parseFloat(this.financialData['sales_and_marketing']['grand_total_units']) * (1+percent);
+    let targetCOS = this.getTargetCOS(currentCOS, VPIE);
+    let targetFixedExpenses = this.getTargetFixedExpenses(FPIE);
+    let targetOpProfit = this.getNetOperatingProfit(this.getTargetEBITDA(targetRevenues, targetCOS, targetFixedExpenses));
+    let taxableProfit = targetOpProfit - dep_and_amort - donations;
+    let taxRate = parseFloat(this.financialData['income_statement']['tax_rate']);
+    let taxes = taxRate * taxableProfit;
 
-          let netIncome = targetOpProfit - dep_and_amort - taxes;
-          console.log(`calculated target net income for ${driverName} = ${netIncome}`);
-          return netIncome.toFixed(2);
-        case 'volume':
-        case 'price':
-        case 'productivity':
-        case 'efficiency':
-        case 'frequency':
-        default:
-          return 0.00;
-      }
+    let netIncome = taxableProfit - taxes;
+    switch(driverName) {
+      case 'prospects':
+        return netIncome.toFixed(2);
+      case 'conversions':
+        //Recalc COS given GTU and VPIE
+        let convCOS = 0;
+        convCOS += this.COSItems.cogs * (1+percent);
+        convCOS += this.COSItems.marketing * (1+percent) + VPIE;
+        convCOS += this.COSItems.directLabor * (1+percent) + FPIE;
+        convCOS += this.COSItems.distribution * (1+percent);
+        convCOS += VPIE;
+
+        let convProfit = this.getNetOperatingProfit(
+          this.getTargetEBITDA(targetRevenues, convCOS, 
+            this.getTargetFixedExpenses(FPIE)));
+        let convTaxableProfit = convProfit - dep_and_amort - donations;
+        let convTaxes = taxRate * convTaxableProfit;
+        return (convTaxableProfit - convTaxes).toFixed(2);
+      case 'volume':
+        let volCOS = 0;
+        volCOS += this.COSItems.cogs * (1+percent);
+        volCOS += this.COSItems.marketing * (1+percent);
+        volCOS += this.COSItems.directLabor * (1+percent);
+        volCOS += this.COSItems.distribution * (1+percent);
+        volCOS += VPIE;
+
+        let volProfit = this.getNetOperatingProfit(
+          this.getTargetEBITDA(targetRevenues, volCOS, 
+            this.getTargetFixedExpenses(FPIE)));
+
+        console.log(`vol profit::: ${volProfit}`);
+        let volTaxableProfit = volProfit - dep_and_amort - donations;
+        let volTaxes = taxRate * volTaxableProfit;
+
+        return (volTaxableProfit - volTaxes).toFixed(2);
+      case 'price':
+        let priceProfit = this.getNetOperatingProfit(
+          this.getTargetEBITDA(targetRevenues, 
+            this.getCurrentCOS()+VPIE, this.getCurrentFixedExpenses()+FPIE));
+        let priceTaxableProfit = priceProfit - dep_and_amort - donations;
+        let priceTaxes = taxRate * priceTaxableProfit;
+
+        return (priceTaxableProfit - priceTaxes).toFixed(2);
+      case 'productivity':
+        let prodCOS = 0;
+        prodCOS += this.COSItems.cogs * (1-percent);
+        prodCOS += this.COSItems.marketing * (1-percent);
+        prodCOS += this.COSItems.directLabor * (1-percent);
+        prodCOS += this.COSItems.distribution * (1-percent);
+        prodCOS += VPIE;
+
+        let prodProfit = this.getNetOperatingProfit(
+          this.getTargetEBITDA(targetRevenues, prodCOS, 
+            this.getTargetFixedExpenses(FPIE)));
+        let prodTaxableProfit = prodProfit - dep_and_amort - donations;
+        let prodTaxes = taxRate * prodTaxableProfit;
+
+        return (prodTaxableProfit - prodTaxes).toFixed(2);
+      case 'efficiency':
+      case 'frequency':
+      default:
+        return 0.00;
+    }
   }
 
+  // Just returns a number increased by a given percent
+  getDirectIncrease(oldValue, percent) {
+    if(isNaN(percent) || isNaN(oldValue)) return 0.0;
+    return oldValue + (oldValue*percent);
+  }
 
+  //This function's about useless, probably gonna phase it out
   getTargetIncrease(driverName, percent) {
     if(isNaN(percent)) return 0.00
 
@@ -218,22 +308,28 @@ export default class CalcHandler {
   getTargetRevenue(driverName, percent) {
     if(isNaN(percent)) return 0.00
 
-    let totalRevenues = parseFloat(this.financialData['income_statement']['total_revenues'])
+    let totalRevenues = parseFloat(this.financialData['income_statement']['total_revenues']);
+    let currentGTU = parseFloat(this.financialData['sales_and_marketing']['grand_total_units']);
 
     switch(driverName) {
       case 'prospects':
         let gtu = parseFloat(this.financialData['sales_and_marketing']['grand_total_units']);
         return parseFloat((gtu*(1+percent)).toPrecision(7) * (totalRevenues/gtu).toPrecision(7)).toFixed(2);
       case 'conversions':
-
         let targetConvRate = this.getTargetConversionRate(percent);
         let numSales = parseFloat(this.financialData['sales_and_marketing']['number_of_sales']);
         let prospects = parseFloat(this.financialData['sales_and_marketing']['prospects']);
         return targetConvRate * prospects 
                 * this.getAvgDollarPerReceipt(totalRevenues, numSales);
       case 'volume':
+        let oldNumSales = parseFloat(this.financialData['sales_and_marketing']['number_of_sales']);
+        let oldAvgDR = this.getAvgDollarPerReceipt(totalRevenues, oldNumSales);
+        return (oldNumSales * oldAvgDR) * (1+percent);
       case 'price':
+        let priceGTU = currentGTU * (1+percent);
+        return priceGTU * totalRevenues/currentGTU;
       case 'productivity':
+        
       case 'efficiency':
       case 'frequency':
       default:

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 
-export default class DeltaConversions extends Component {
+
+export default class DeltaProductivity extends Component {
   constructor(props){
     super(props);
 
@@ -20,15 +21,14 @@ export default class DeltaConversions extends Component {
       console.log(dataAdjusted);
       
       let periodData = {
-        currentConvRate: this.props.calcHandler.getCurrentConversionRate().toFixed(2),
-        targetConvRate: this.props.calcHandler.getTargetConversionRate(this.props.pctConversions).toFixed(2),
+        currentProductivity: dataActual['sales_and_marketing']['prospects'],
+        targetProductivity: this.props.calcHandler.getTargetIncrease('prospects', this.props.pctProductivity),
         currentRevenues: parseFloat(dataActual['income_statement']['total_revenues']).toFixed(2),
-        targetRevenues: this.props.calcHandler.getTargetRevenue('conversions', this.props.pctConversions).toFixed(2),
-        currentIncome: this.props.calcHandler.getCurrentNetIncome(),
-        
-      } 
+        targetRevenues: parseFloat(dataActual['income_statement']['total_revenues']).toFixed(2),
+        currentIncome: this.props.calcHandler.getCurrentNetIncome()
+      }
 
-      let targetIncome = this.props.calcHandler.getTargetNetIncome('conversions', this.props.pctConversions, periodData.targetRevenues, this.props.vcConversions, this.props.fcConversions);
+      let targetIncome = this.props.calcHandler.getTargetNetIncome('productivity', this.props.pctProductivity, periodData.targetRevenues, this.props.vcProductivity, this.props.fcProductivity);
 
       let annualizedData = {
         currentIncome: (periodData.currentIncome*12).toFixed(2),
@@ -36,9 +36,9 @@ export default class DeltaConversions extends Component {
       }
 
       let varianceData = {
-        prospects: {
-          impact: periodData.targetConvRate - periodData.currentConvRate,
-          pct: ((periodData.targetConvRate/periodData.currentConvRate-1)*100).toFixed(2)
+        productivity: {
+          impact: periodData.targetProductivity - periodData.currentProductivity,
+          pct: ((periodData.targetProductivity/periodData.currentProductivity-1)*100).toFixed(2)
         },
         revenues: {
           impact: periodData.targetRevenues - periodData.currentRevenues,
@@ -54,13 +54,15 @@ export default class DeltaConversions extends Component {
         }
       }
 
+      
+
       trows.push( 
       <tr key="row_prospects">
-        <td><strong>Conversion Rate</strong></td>
-        <td>{periodData.currentConvRate}%</td>
-        <td>{periodData.targetConvRate}%</td>
-        <td>{varianceData.prospects.impact}</td>
-        <td>{varianceData.prospects.pct}</td>
+        <td><strong>Current Productivity</strong></td>
+        <td>-{/* No idea what to fill this row with */}</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
       </tr>);
   
       trows.push(
@@ -100,10 +102,10 @@ export default class DeltaConversions extends Component {
           <thead>
             <tr>
               <th>Reporting Summary</th>
-              <th>Current Conversions</th>
-              <th>Target Conversions Impact</th>
-              <th>Conversions Variance Impact</th>
-              <th>Conversions Variance Pct</th>
+              <th>Current Productivity</th>
+              <th>Target Productivity Impact</th>
+              <th>Productivity Variance Impact</th>
+              <th>Productivity Variance Pct</th>
             </tr>
           </thead>
           {trows}
