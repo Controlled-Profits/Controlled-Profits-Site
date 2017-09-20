@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-export default class DeltaProspects extends Component {
+export default class DeltaConversions extends Component {
   constructor(props){
     super(props);
 
