@@ -11,46 +11,41 @@ export default class DeltaVolume extends Component {
   //Build table from result, data will be displayed and manipulated by graphs later
   getTableDisplay() {
     let trows = [];
-    
-    let dataActual = this.props.dataActual,
-        dataAdjusted = this.props.dataAdjusted;
 
-
-    if(dataActual && dataAdjusted && this.props.calcHandler && Object.keys(dataActual).length) {
-      console.log(dataActual);
-      console.log(dataAdjusted);
+    if(this.props.financialData) {
+      
+      let calcData = this.props.financialData.calcDriverTargets('volume', this.props.pctVolume, this.props.vcVolume, this.props.fcVolume);
       
       let periodData = {
-        currentVolume: this.props.calcHandler.getCurrentVolume(),
-        targetVolume: this.props.calcHandler.getDirectIncrease(this.props.calcHandler.getCurrentVolume(), this.props.pctVolume),
-        currentRevenues: parseFloat(dataActual['income_statement']['total_revenues']).toFixed(2),
-        targetRevenues: this.props.calcHandler.getTargetRevenue('volume', this.props.pctVolume).toFixed(2),
-        currentIncome: this.props.calcHandler.getCurrentNetIncome()
+        currentGTU: this.props.financialData.salesAndMarketingActual.grandTotalUnits.toFixed(2),
+        targetGTU: (calcData.impact + this.props.financialData.salesAndMarketingActual.grandTotalUnits).toFixed(2),
+        currentRevenues: this.props.financialData.currentRevenues().toFixed(2),
+        targetRevenues: calcData.revenues.toFixed(2),
+        currentProfit: this.props.financialData.currentNetOpProfit().toFixed(2),
+        targetProfit: calcData.profit.toFixed(2)
       }
 
-      let targetIncome = this.props.calcHandler.getTargetNetIncome('volume', this.props.pctVolume, periodData.targetRevenues, this.props.vcVolume, this.props.fcVolume)
-
       let annualizedData = {
-        currentIncome: (periodData.currentIncome*12).toFixed(2),
-        targetIncome: (targetIncome*12).toFixed(2)
+        currentProfit: (periodData.currentProfit*12).toFixed(2),
+        targetProfit: (periodData.targetProfit*12).toFixed(2)
       }
 
       let varianceData = {
-        volume: {
-          impact: periodData.targetVolume - periodData.currentVolume,
-          pct: ((periodData.targetVolume/periodData.currentVolume-1)*100).toFixed(2)
+        prospects: {
+          impact: periodData.targetGTU - periodData.currentGTU,
+          pct: ((periodData.targetGTU/periodData.currentGTU-1)*100).toFixed(2)
         },
         revenues: {
           impact: periodData.targetRevenues - periodData.currentRevenues,
           pct: ((periodData.targetRevenues/periodData.currentRevenues-1)*100).toFixed(2)
         },
         incomes: {
-          impact: targetIncome - periodData.currentIncome,
-          pct: ((targetIncome/periodData.currentIncome-1)*100).toFixed(2)
+          impact: periodData.targetProfit - periodData.currentProfit,
+          pct: ((periodData.targetProfit/periodData.currentProfit-1)*100).toFixed(2)
         },
         annualized: {
-          impact: annualizedData.targetIncome - annualizedData.currentIncome,
-          pct: ((annualizedData.targetIncome/annualizedData.currentIncome-1)*100).toFixed(2)
+          impact: annualizedData.targetProfit - annualizedData.currentProfit,
+          pct: ((annualizedData.targetProfit/annualizedData.currentProfit-1)*100).toFixed(2)
         }
       }
 
@@ -58,11 +53,11 @@ export default class DeltaVolume extends Component {
 
       trows.push( 
       <tr key="row_prospects">
-        <td><strong>Current Volume</strong></td>
-        <td>{periodData.currentVolume}</td>
-        <td>{periodData.targetVolume}</td>
-        <td>{varianceData.volume.impact}</td>
-        <td>{varianceData.volume.pct}</td>
+        <td><strong>Grand Total Units</strong></td>
+        <td>${periodData.currentGTU}</td>
+        <td>${periodData.targetGTU}</td>
+        <td>{varianceData.prospects.impact}</td>
+        <td>{varianceData.prospects.pct}</td>
       </tr>);
   
       trows.push(
@@ -77,8 +72,8 @@ export default class DeltaVolume extends Component {
       trows.push(
         <tr key="row_profit">
           <td><strong>Profit (Net Income)</strong></td>
-          <td>${periodData.currentIncome}</td>
-          <td>${targetIncome}</td>
+          <td>${periodData.currentProfit}</td>
+          <td>${periodData.targetProfit}</td>
           <td>{varianceData.incomes.impact}</td>
           <td>{varianceData.incomes.pct}</td>
         </tr>);
@@ -86,13 +81,12 @@ export default class DeltaVolume extends Component {
       trows.push(
         <tr key="row_annualized">
           <td><strong>Annualized</strong></td>
-          <td>${annualizedData.currentIncome}</td>
-          <td>${annualizedData.targetIncome}</td>
+          <td>${annualizedData.currentProfit}</td>
+          <td>${annualizedData.targetProfit}</td>
           <td>{varianceData.annualized.impact}</td>
           <td>{varianceData.annualized.pct}</td>
         </tr>);
     }
-
 
     trows = <tbody>{trows}</tbody>
 
@@ -101,11 +95,11 @@ export default class DeltaVolume extends Component {
         <table className="table table-striped">
           <thead>
             <tr>
-              <th>Reporting Summary</th>
-              <th>Current Volume</th>
-              <th>Target Volume Impact</th>
-              <th>Volume Variance Impact</th>
-              <th>Volume Variance Pct</th>
+              <th></th>
+              <th>Current GTU</th>
+              <th>Target GTU</th>
+              <th>GTU Variance Impact</th>
+              <th>GTU Variance Pct</th>
             </tr>
           </thead>
           {trows}

@@ -11,46 +11,42 @@ export default class DeltaEfficiency extends Component {
   //Build table from result, data will be displayed and manipulated by graphs later
   getTableDisplay() {
     let trows = [];
-    
-    let dataActual = this.props.dataActual,
-        dataAdjusted = this.props.dataAdjusted;
 
 
-    if(dataActual && dataAdjusted && this.props.calcHandler && Object.keys(dataActual).length) {
-      console.log(dataActual);
-      console.log(dataAdjusted);
+    if(this.props.financialData) {
+      
+      let calcData = this.props.financialData.calcDriverTargets('efficiency', this.props.pctEfficiency, this.props.vcEfficiency, this.props.fcEfficiency);
       
       let periodData = {
-        currentFC: this.props.calcHandler.getCurrentFixedExpenses().toFixed(2),
-        targetFC: this.props.calcHandler.getEfficiencyTargetFixedExpenses(this.props.pctEfficiency, this.props.fcEfficiency).toFixed(2),
-        currentRevenues: parseFloat(dataActual['income_statement']['total_revenues']).toFixed(2),
-        targetRevenues: this.props.calcHandler.getTargetRevenue('efficiency', this.props.pctEfficiency),
-        currentIncome: this.props.calcHandler.getCurrentNetIncome()
+        currentFE: this.props.financialData.currentFixedExpenses().toFixed(2),
+        targetFE: (calcData.impact + this.props.financialData.currentFixedExpenses()).toFixed(2),
+        currentRevenues: this.props.financialData.currentRevenues().toFixed(2),
+        targetRevenues: calcData.revenues.toFixed(2),
+        currentProfit: this.props.financialData.currentNetOpProfit().toFixed(2),
+        targetProfit: calcData.profit.toFixed(2)
       }
 
-      let targetIncome = this.props.calcHandler.getTargetNetIncome('efficiency', this.props.pctEfficiency, periodData.targetRevenues, this.props.vcEfficiency, this.props.fcEfficiency);
-
       let annualizedData = {
-        currentIncome: (periodData.currentIncome*12).toFixed(2),
-        targetIncome: (targetIncome*12).toFixed(2)
+        currentProfit: (periodData.currentProfit*12).toFixed(2),
+        targetProfit: (periodData.targetProfit*12).toFixed(2)
       }
 
       let varianceData = {
-        fixedCost: {
-          impact: periodData.targetFC - periodData.currentFC,
-          pct: ((periodData.targetFC/periodData.currentFC-1)*100).toFixed(2)
+        prospects: {
+          impact: periodData.targetFE - periodData.currentFE,
+          pct: ((periodData.targetFE/periodData.currentFE-1)*100).toFixed(2)
         },
         revenues: {
           impact: periodData.targetRevenues - periodData.currentRevenues,
           pct: ((periodData.targetRevenues/periodData.currentRevenues-1)*100).toFixed(2)
         },
         incomes: {
-          impact: targetIncome - periodData.currentIncome,
-          pct: ((targetIncome/periodData.currentIncome-1)*100).toFixed(2)
+          impact: periodData.targetProfit - periodData.currentProfit,
+          pct: ((periodData.targetProfit/periodData.currentProfit-1)*100).toFixed(2)
         },
         annualized: {
-          impact: annualizedData.targetIncome - annualizedData.currentIncome,
-          pct: ((annualizedData.targetIncome/annualizedData.currentIncome-1)*100).toFixed(2)
+          impact: annualizedData.targetProfit - annualizedData.currentProfit,
+          pct: ((annualizedData.targetProfit/annualizedData.currentProfit-1)*100).toFixed(2)
         }
       }
 
@@ -58,11 +54,11 @@ export default class DeltaEfficiency extends Component {
 
       trows.push( 
       <tr key="row_prospects">
-        <td><strong>Fixed Cost</strong></td>
-        <td>{periodData.currentFC}</td>
-        <td>{periodData.targetFC}</td>
-        <td>{varianceData.fixedCost.impact}</td>
-        <td>{varianceData.fixedCost.pct}</td>
+        <td><strong>Fixed Expenses</strong></td>
+        <td>${periodData.currentFE}</td>
+        <td>${periodData.targetFE}</td>
+        <td>{varianceData.prospects.impact}</td>
+        <td>{varianceData.prospects.pct}</td>
       </tr>);
   
       trows.push(
@@ -77,8 +73,8 @@ export default class DeltaEfficiency extends Component {
       trows.push(
         <tr key="row_profit">
           <td><strong>Profit (Net Income)</strong></td>
-          <td>${periodData.currentIncome}</td>
-          <td>${targetIncome}</td>
+          <td>${periodData.currentProfit}</td>
+          <td>${periodData.targetProfit}</td>
           <td>{varianceData.incomes.impact}</td>
           <td>{varianceData.incomes.pct}</td>
         </tr>);
@@ -86,8 +82,8 @@ export default class DeltaEfficiency extends Component {
       trows.push(
         <tr key="row_annualized">
           <td><strong>Annualized</strong></td>
-          <td>${annualizedData.currentIncome}</td>
-          <td>${annualizedData.targetIncome}</td>
+          <td>${annualizedData.currentProfit}</td>
+          <td>${annualizedData.targetProfit}</td>
           <td>{varianceData.annualized.impact}</td>
           <td>{varianceData.annualized.pct}</td>
         </tr>);
@@ -101,11 +97,11 @@ export default class DeltaEfficiency extends Component {
         <table className="table table-striped">
           <thead>
             <tr>
-              <th>Reporting Summary</th>
-              <th>Current Fixed Cost</th>
-              <th>Target Fixed Cost Impact</th>
-              <th>Fixed Cost Variance Impact</th>
-              <th>Fixed Cost Variance Pct</th>
+              <th></th>
+              <th>Current Fixed Expenses</th>
+              <th>Target Fixed Expenses</th>
+              <th>Fixed Exp. Variance Impact</th>
+              <th>Fixed Exp. Variance Pct</th>
             </tr>
           </thead>
           {trows}

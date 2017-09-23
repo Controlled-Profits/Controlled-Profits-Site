@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import superagent from 'superagent';
 
 
 export default class DeltaPrice extends Component {
@@ -13,57 +12,55 @@ export default class DeltaPrice extends Component {
   getTableDisplay() {
     let trows = [];
 
-    let dataActual = this.props.dataActual,
-        dataAdjusted = this.props.dataAdjusted;
 
-
-    if(dataActual && dataAdjusted && this.props.calcHandler && Object.keys(dataActual).length) {
-      console.log(dataActual);
-      console.log(dataAdjusted);
-
+    if(this.props.financialData) {
+      
+      let calcData = this.props.financialData.calcDriverTargets('price', this.props.pctPrice, this.props.vcPrice, this.props.fcPrice);
+      
       let periodData = {
-        currentPrice: this.props.calcHandler.getCurrentPPU().toFixed(2),
-        targetPrice: this.props.calcHandler.getTargetPPU(this.props.pctPrice).toFixed(2),
-        currentRevenues: parseFloat(dataActual['income_statement']['total_revenues']).toFixed(2),
-        targetRevenues: this.props.calcHandler.getTargetRevenue('price', this.props.pctPrice).toFixed(2),
-        currentIncome: this.props.calcHandler.getCurrentNetIncome()
+        currentPPU: this.props.financialData.currentAvgPPU().toFixed(2),
+        targetPPU: (calcData.impact + this.props.financialData.currentAvgPPU()).toFixed(2),
+        currentRevenues: this.props.financialData.currentRevenues().toFixed(2),
+        targetRevenues: calcData.revenues.toFixed(2),
+        currentProfit: this.props.financialData.currentNetOpProfit().toFixed(2),
+        targetProfit: calcData.profit.toFixed(2)
       }
 
-      let targetIncome = this.props.calcHandler.getTargetNetIncome('price', this.props.pctPrice, periodData.targetRevenues, this.props.vcPrice, this.props.fcPrice);
-
       let annualizedData = {
-        currentIncome: (periodData.currentIncome*12).toFixed(2),
-        targetIncome: (targetIncome*12).toFixed(2)
+        currentProfit: (periodData.currentProfit*12).toFixed(2),
+        targetProfit: (periodData.targetProfit*12).toFixed(2)
       }
 
       let varianceData = {
-        price: {
-          impact: periodData.targetPrice - periodData.currentPrice,
-          pct: ((periodData.targetPrice/periodData.currentPrice-1)*100).toFixed(2)
+        prospects: {
+          impact: periodData.targetPPU - periodData.currentPPU,
+          pct: ((periodData.targetPPU/periodData.currentPPU-1)*100).toFixed(2)
         },
         revenues: {
           impact: periodData.targetRevenues - periodData.currentRevenues,
           pct: ((periodData.targetRevenues/periodData.currentRevenues-1)*100).toFixed(2)
         },
         incomes: {
-          impact: targetIncome - periodData.currentIncome,
-          pct: ((targetIncome/periodData.currentIncome-1)*100).toFixed(2)
+          impact: periodData.targetProfit - periodData.currentProfit,
+          pct: ((periodData.targetProfit/periodData.currentProfit-1)*100).toFixed(2)
         },
         annualized: {
-          impact: annualizedData.targetIncome - annualizedData.currentIncome,
-          pct: ((annualizedData.targetIncome/annualizedData.currentIncome-1)*100).toFixed(2)
+          impact: annualizedData.targetProfit - annualizedData.currentProfit,
+          pct: ((annualizedData.targetProfit/annualizedData.currentProfit-1)*100).toFixed(2)
         }
       }
 
-      trows.push(
-      <tr key="row_prospects">
-        <td><strong>Price Per Unit</strong></td>
-        <td>${periodData.currentPrice}</td>
-        <td>${periodData.targetPrice}</td>
-        <td>{varianceData.price.impact}</td>
-        <td>{varianceData.price.pct}</td>
-      </tr>);
+      
 
+      trows.push( 
+      <tr key="row_prospects">
+        <td><strong>Price per Unit</strong></td>
+        <td>${periodData.currentPPU}</td>
+        <td>${periodData.targetPPU}</td>
+        <td>{varianceData.prospects.impact}</td>
+        <td>{varianceData.prospects.pct}</td>
+      </tr>);
+  
       trows.push(
       <tr key="row_revenues">
         <td><strong>Sales Revenues</strong></td>
@@ -72,21 +69,21 @@ export default class DeltaPrice extends Component {
         <td>{varianceData.revenues.impact}</td>
         <td>{varianceData.revenues.pct}</td>
       </tr>);
-
+  
       trows.push(
         <tr key="row_profit">
           <td><strong>Profit (Net Income)</strong></td>
-          <td>${periodData.currentIncome}</td>
-          <td>${targetIncome}</td>
+          <td>${periodData.currentProfit}</td>
+          <td>${periodData.targetProfit}</td>
           <td>{varianceData.incomes.impact}</td>
           <td>{varianceData.incomes.pct}</td>
         </tr>);
-
+  
       trows.push(
         <tr key="row_annualized">
           <td><strong>Annualized</strong></td>
-          <td>${annualizedData.currentIncome}</td>
-          <td>${annualizedData.targetIncome}</td>
+          <td>${annualizedData.currentProfit}</td>
+          <td>${annualizedData.targetProfit}</td>
           <td>{varianceData.annualized.impact}</td>
           <td>{varianceData.annualized.pct}</td>
         </tr>);
@@ -100,9 +97,9 @@ export default class DeltaPrice extends Component {
         <table className="table table-striped">
           <thead>
             <tr>
-              <th>Reporting Summary</th>
-              <th>Current Price Per Unit</th>
-              <th>Target Price Per Unit</th>
+              <th></th>
+              <th>Current PPU</th>
+              <th>Target PPU</th>
               <th>PPU Variance Impact</th>
               <th>PPU Variance Pct</th>
             </tr>
