@@ -11,28 +11,23 @@ export default class DeltaProspects extends Component {
   //Build table from result, data will be displayed and manipulated by graphs later
   getTableDisplay() {
     let trows = [];
-    
-    let dataActual = this.props.dataActual,
-        dataAdjusted = this.props.dataAdjusted;
 
-
-    if(dataActual && dataAdjusted && this.props.calcHandler && Object.keys(dataActual).length) {
-      console.log(dataActual);
-      console.log(dataAdjusted);
+    if(this.props.financialData) {
+      
+      let calcData = this.props.financialData.calcDriverTargets('prospects', this.props.pctProspects, this.props.vcProspects, this.props.fcProspects);
       
       let periodData = {
-        currentProspects: dataActual['sales_and_marketing']['prospects'],
-        targetProspects: this.props.calcHandler.getTargetIncrease('prospects', this.props.pctProspects),
-        currentRevenues: parseFloat(dataActual['income_statement']['total_revenues']).toFixed(2),
-        targetRevenues: this.props.calcHandler.getTargetRevenue('prospects', this.props.pctProspects),
-        currentIncome: this.props.calcHandler.getCurrentNetIncome()
+        currentProspects: this.props.financialData.salesAndMarketingActual.prospects,
+        targetProspects: calcData.impact + this.props.financialData.salesAndMarketingActual.prospects,
+        currentRevenues: this.props.financialData.incomeStatementActual.totalRevenues.toFixed(2),
+        targetRevenues: calcData.revenues.toFixed(2),
+        currentProfit: this.props.financialData.currentNetOpProfit().toFixed(2),
+        targetProfit: calcData.profit.toFixed(2)
       }
 
-      let targetIncome = this.props.calcHandler.getTargetNetIncome('prospects', this.props.pctProspects, periodData.targetRevenues, this.props.vcProspects, this.props.fcProspects)
-
       let annualizedData = {
-        currentIncome: (periodData.currentIncome*12).toFixed(2),
-        targetIncome: (targetIncome*12).toFixed(2)
+        currentProfit: (periodData.currentProfit*12).toFixed(2),
+        targetProfit: (periodData.targetProfit*12).toFixed(2)
       }
 
       let varianceData = {
@@ -45,12 +40,12 @@ export default class DeltaProspects extends Component {
           pct: ((periodData.targetRevenues/periodData.currentRevenues-1)*100).toFixed(2)
         },
         incomes: {
-          impact: targetIncome - periodData.currentIncome,
-          pct: ((targetIncome/periodData.currentIncome-1)*100).toFixed(2)
+          impact: periodData.targetProfit - periodData.currentProfit,
+          pct: ((periodData.targetProfit/periodData.currentProfit-1)*100).toFixed(2)
         },
         annualized: {
-          impact: annualizedData.targetIncome - annualizedData.currentIncome,
-          pct: ((annualizedData.targetIncome/annualizedData.currentIncome-1)*100).toFixed(2)
+          impact: annualizedData.targetProfit - annualizedData.currentProfit,
+          pct: ((annualizedData.targetProfit/annualizedData.currentProfit-1)*100).toFixed(2)
         }
       }
 
@@ -77,8 +72,8 @@ export default class DeltaProspects extends Component {
       trows.push(
         <tr key="row_profit">
           <td><strong>Profit (Net Income)</strong></td>
-          <td>${periodData.currentIncome}</td>
-          <td>${targetIncome}</td>
+          <td>${periodData.currentProfit}</td>
+          <td>${periodData.targetProfit}</td>
           <td>{varianceData.incomes.impact}</td>
           <td>{varianceData.incomes.pct}</td>
         </tr>);
@@ -86,8 +81,8 @@ export default class DeltaProspects extends Component {
       trows.push(
         <tr key="row_annualized">
           <td><strong>Annualized</strong></td>
-          <td>${annualizedData.currentIncome}</td>
-          <td>${annualizedData.targetIncome}</td>
+          <td>${annualizedData.currentProfit}</td>
+          <td>${annualizedData.targetProfit}</td>
           <td>{varianceData.annualized.impact}</td>
           <td>{varianceData.annualized.pct}</td>
         </tr>);
@@ -101,7 +96,7 @@ export default class DeltaProspects extends Component {
         <table className="table table-striped">
           <thead>
             <tr>
-              <th>Reporting Summary</th>
+              <th></th>
               <th>Current Prospects</th>
               <th>Target Prospects Impact</th>
               <th>Prospects Variance Impact</th>

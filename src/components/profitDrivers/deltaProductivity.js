@@ -11,46 +11,41 @@ export default class DeltaProductivity extends Component {
   //Build table from result, data will be displayed and manipulated by graphs later
   getTableDisplay() {
     let trows = [];
-    
-    let dataActual = this.props.dataActual,
-        dataAdjusted = this.props.dataAdjusted;
 
-
-    if(dataActual && dataAdjusted && this.props.calcHandler && Object.keys(dataActual).length) {
-      console.log(dataActual);
-      console.log(dataAdjusted);
+    if(this.props.financialData) {
+      
+      let calcData = this.props.financialData.calcDriverTargets('productivity', this.props.pctProductivity, this.props.vcProductivity, this.props.fcProductivity);
       
       let periodData = {
-        currentProductivity: dataActual['sales_and_marketing']['prospects'],
-        targetProductivity: this.props.calcHandler.getTargetIncrease('prospects', this.props.pctProductivity),
-        currentRevenues: parseFloat(dataActual['income_statement']['total_revenues']).toFixed(2),
-        targetRevenues: parseFloat(dataActual['income_statement']['total_revenues']).toFixed(2),
-        currentIncome: this.props.calcHandler.getCurrentNetIncome()
+        currentCOS: this.props.financialData.currentSubtotalCOS().toFixed(2),
+        targetCOS: (calcData.impact + this.props.financialData.currentSubtotalCOS()).toFixed(2),
+        currentRevenues: this.props.financialData.currentRevenues().toFixed(2),
+        targetRevenues: calcData.revenues.toFixed(2),
+        currentProfit: this.props.financialData.currentNetOpProfit().toFixed(2),
+        targetProfit: calcData.profit.toFixed(2)
       }
 
-      let targetIncome = this.props.calcHandler.getTargetNetIncome('productivity', this.props.pctProductivity, periodData.targetRevenues, this.props.vcProductivity, this.props.fcProductivity);
-
       let annualizedData = {
-        currentIncome: (periodData.currentIncome*12).toFixed(2),
-        targetIncome: (targetIncome*12).toFixed(2)
+        currentProfit: (periodData.currentProfit*12).toFixed(2),
+        targetProfit: (periodData.targetProfit*12).toFixed(2)
       }
 
       let varianceData = {
-        productivity: {
-          impact: periodData.targetProductivity - periodData.currentProductivity,
-          pct: ((periodData.targetProductivity/periodData.currentProductivity-1)*100).toFixed(2)
+        prospects: {
+          impact: periodData.targetCOS - periodData.currentCOS,
+          pct: ((periodData.targetCOS/periodData.currentCOS-1)*100).toFixed(2)
         },
         revenues: {
           impact: periodData.targetRevenues - periodData.currentRevenues,
           pct: ((periodData.targetRevenues/periodData.currentRevenues-1)*100).toFixed(2)
         },
         incomes: {
-          impact: targetIncome - periodData.currentIncome,
-          pct: ((targetIncome/periodData.currentIncome-1)*100).toFixed(2)
+          impact: periodData.targetProfit - periodData.currentProfit,
+          pct: ((periodData.targetProfit/periodData.currentProfit-1)*100).toFixed(2)
         },
         annualized: {
-          impact: annualizedData.targetIncome - annualizedData.currentIncome,
-          pct: ((annualizedData.targetIncome/annualizedData.currentIncome-1)*100).toFixed(2)
+          impact: annualizedData.targetProfit - annualizedData.currentProfit,
+          pct: ((annualizedData.targetProfit/annualizedData.currentProfit-1)*100).toFixed(2)
         }
       }
 
@@ -58,11 +53,11 @@ export default class DeltaProductivity extends Component {
 
       trows.push( 
       <tr key="row_prospects">
-        <td><strong>Productivity</strong></td>
-        <td>-{/* No idea what to fill this row with */}</td>
-        <td>-</td>
-        <td>-</td>
-        <td>-</td>
+        <td><strong>Cost Of Sales</strong></td>
+        <td>${periodData.currentCOS}</td>
+        <td>${periodData.targetCOS}</td>
+        <td>{varianceData.prospects.impact}</td>
+        <td>{varianceData.prospects.pct}</td>
       </tr>);
   
       trows.push(
@@ -77,8 +72,8 @@ export default class DeltaProductivity extends Component {
       trows.push(
         <tr key="row_profit">
           <td><strong>Profit (Net Income)</strong></td>
-          <td>${periodData.currentIncome}</td>
-          <td>${targetIncome}</td>
+          <td>${periodData.currentProfit}</td>
+          <td>${periodData.targetProfit}</td>
           <td>{varianceData.incomes.impact}</td>
           <td>{varianceData.incomes.pct}</td>
         </tr>);
@@ -86,13 +81,12 @@ export default class DeltaProductivity extends Component {
       trows.push(
         <tr key="row_annualized">
           <td><strong>Annualized</strong></td>
-          <td>${annualizedData.currentIncome}</td>
-          <td>${annualizedData.targetIncome}</td>
+          <td>${annualizedData.currentProfit}</td>
+          <td>${annualizedData.targetProfit}</td>
           <td>{varianceData.annualized.impact}</td>
           <td>{varianceData.annualized.pct}</td>
         </tr>);
     }
-
 
     trows = <tbody>{trows}</tbody>
 
@@ -101,11 +95,11 @@ export default class DeltaProductivity extends Component {
         <table className="table table-striped">
           <thead>
             <tr>
-              <th>Reporting Summary</th>
-              <th>Current Productivity</th>
-              <th>Target Productivity Impact</th>
-              <th>Productivity Variance Impact</th>
-              <th>Productivity Variance Pct</th>
+              <th></th>
+              <th>Current COS</th>
+              <th>Target COS</th>
+              <th>COS Variance Impact</th>
+              <th>COS Variance Pct</th>
             </tr>
           </thead>
           {trows}

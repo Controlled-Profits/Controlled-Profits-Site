@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Nav, NavItem} from 'react-bootstrap';
-import TPIGraph from './tpiGraph.js'
+import TPIGraph from './tpiGraph.js';
+import CalcHandler from '../calc/calcHandler.js';
 
 import '../../styles/totalProfitImpact.css';
 

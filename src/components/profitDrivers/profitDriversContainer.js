@@ -3,7 +3,7 @@ import {Tabs, Tab} from 'react-bootstrap';
 import DataParser from '../api/dataParser.js';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
-import CalcHandler from '../calc/calcHandler';
+import FinancialData from '../calc/financialData.js';
 import DeltaProspects from './deltaProspects.js';
 import DeltaConversions from './deltaConversions.js';
 import DeltaVolume from './deltaVolume.js';
@@ -127,7 +127,7 @@ export default class ProfitDrivers extends Component {
     this.dp.getBusinessDataEntries(businessId, 'actual')
       .then(function(objArray) {
         this.setState({dataActual: objArray[0]});
-        this.state.calcHandler = new CalcHandler(objArray[0])
+        this.state.financialData = new FinancialData(objArray[0]);
       }.bind(this))
 
       .catch((err) => {
@@ -374,7 +374,7 @@ export default class ProfitDrivers extends Component {
               <div className="col-md-10 col-xs-10">
                 <h4 className="text-center">Total Profit Impact</h4>
                 <div className="well tpi-graph-container">
-                  <TotalProfitImpact />
+                  <TotalProfitImpact  />
                 </div>
 
               </div>
@@ -609,9 +609,7 @@ export default class ProfitDrivers extends Component {
               pctProspects={this.state.pctProspects}
               vcProspects={this.state.vcProspects}
               fcProspects={this.state.fcProspects}
-              calcHandler={this.state.calcHandler}
-              dataActual={this.state.dataActual}
-              dataAdjusted={this.state.dataAdjusted}
+              financialData={this.state.financialData}
             />
           </Tab>
           <Tab eventKey={2} title="Conversions Impact">
@@ -619,19 +617,15 @@ export default class ProfitDrivers extends Component {
               pctConversions={this.state.pctConversions}
               vcConversions={this.state.vcConversions}
               fcConversions={this.state.fcConversions}
-              calcHandler={this.state.calcHandler}
-              dataActual={this.state.dataActual}
-              dataAdjusted={this.state.dataAdjusted}
-            />
+              financialData={this.state.financialData}
+            /> 
           </Tab>
           <Tab eventKey={3} title="Volume Impact">
             <DeltaVolume 
               pctVolume={this.state.pctVolume} 
               vcVolume={this.state.vcVolume}
               fcVolume={this.state.fcVolume}
-              calcHandler={this.state.calcHandler}
-              dataActual={this.state.dataActual} 
-              dataAdjusted={this.state.dataAdjusted}
+              financialData={this.state.financialData}
             />
           </Tab>
           <Tab eventKey={4} title="Price Impact">
@@ -639,9 +633,7 @@ export default class ProfitDrivers extends Component {
               pctPrice={this.state.pctPrice}
               vcPrice={this.state.vcPrice}
               fcPrice={this.state.fcPrice}
-              calcHandler={this.state.calcHandler}
-              dataActual={this.state.dataActual}
-              dataAdjusted={this.state.dataAdjusted}
+              financialData={this.state.financialData}
             />
           </Tab>
           <Tab eventKey={5} title="Productivity Impact">
@@ -649,9 +641,7 @@ export default class ProfitDrivers extends Component {
               pctProductivity={this.state.pctProductivity} 
               vcProductivity={this.state.vcProductivity}
               fcProductivity={this.state.fcProductivity}
-              calcHandler={this.state.calcHandler}
-              dataActual={this.state.dataActual} 
-              dataAdjusted={this.state.dataAdjusted}
+              financialData={this.state.financialData}
             />
           </Tab>
           <Tab eventKey={6} title="Efficiency Impact">
@@ -659,9 +649,7 @@ export default class ProfitDrivers extends Component {
               pctEfficiency={this.state.pctEfficiency} 
               vcEfficiency={this.state.vcEfficiency}
               fcEfficiency={this.state.fcEfficiency}
-              calcHandler={this.state.calcHandler}
-              dataActual={this.state.dataActual} 
-              dataAdjusted={this.state.dataAdjusted}
+              financialData={this.state.financialData}
             />
           </Tab>
           <Tab eventKey={7} title="Frequency Impact">
@@ -669,9 +657,7 @@ export default class ProfitDrivers extends Component {
               pctFrequency={this.state.pctFrequency} 
               vcFrequency={this.state.vcFrequency}
               fcFrequency={this.state.fcFrequency}
-              calcHandler={this.state.calcHandler}
-              dataActual={this.state.dataActual} 
-              dataAdjusted={this.state.dataAdjusted}
+              financialData={this.state.financialData}
             />
           </Tab>
         </Tabs>
