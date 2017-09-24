@@ -29,7 +29,9 @@ export default class TotalProfitImpact extends Component {
       padding : 35,
     };
 
-    this.state = { data: randomDataSet() };
+    this.state = { 
+      data: randomDataSet() 
+    };
   }
 
   componentDidMount() {

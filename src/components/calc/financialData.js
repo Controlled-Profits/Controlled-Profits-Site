@@ -48,7 +48,7 @@ export default class FinancialData {
       accumulatedDepreciation: this.financialData['balance_sheet']['accumulated_depreciation'],
       goodwill: this.financialData['balance_sheet']['goodwill'],
       accountsPayable: this.financialData['balance_sheet']['accounts_payable'],
-      interestPayable: this.financialData['balance_sheet']['interest_payable'],
+      interestPayable: this.financialData['balance_sheet']['interests_payable'],
       taxesPayable: this.financialData['balance_sheet']['taxes_payable'],
       deferredRevenue: this.financialData['balance_sheet']['deferred_revenue'],
       shortTermNotes: this.financialData['balance_sheet']['short_term_notes'],

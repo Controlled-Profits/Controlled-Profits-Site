@@ -198,6 +198,50 @@ export default class DataParser {
       });
     }.bind(this));
   }
+
+  // Returns proper json array format given totalProfitImpact financialdata object
+  // * Could be refactored into serializers file
+  serializeFinancialData(dataObj, entryType) {
+    let result = {
+      'data': {
+        'entry_type': entryType,
+      }
+    }
+
+    let sectionKeys = ['incomeStatement', 'balanceSheet', 'salesAndMarketing', 'financialROI'];
+    for(var i = 0; i < sectionKeys.length; i++) {
+      for(var dataKey in dataObj[sectionKeys[i]]) {
+        if(dataObj[sectionKeys[i]].hasOwnProperty(dataKey)) {
+          result[dataKey] = dataObj[sectionKeys[i]][dataKey];
+        }
+      }
+    }
+
+    return result;
+  }
+
+  // POSTs adjusted financial data for business as JSON
+  sendFinancialData(businessId, dataObj, entryType) {
+    return new Promise(function(resolve, reject) {
+      let reqBody = this.serializeFinancialData(dataObj, entryType);
+      superagent
+      .post(this.apiUrl + `v1/businesses/${businessId}/data/`)
+      .set({"Content-Type": "application/json", "Access-Token": this.accessToken, "Client": this.client, "Token-Type": this.tokenType, "Uid": this.uid})
+      .send(reqBody)
+      .end((err, res) => {
+        if(err || !res.ok) { reject(err) }
+        else {
+          let result = {};
+          if(res.body && res.body.data && res.body.data['meta']) 
+            result = {
+              message: res.body.data['meta']['message']
+            }
+
+          resolve(result);
+        }
+      });
+    }.bind(this));
+  }
   
   // Returns proper json array format given profit driver data object
   // * Could be refactored into serializers file
