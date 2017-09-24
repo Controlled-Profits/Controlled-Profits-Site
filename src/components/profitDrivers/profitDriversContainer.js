@@ -127,7 +127,7 @@ export default class ProfitDrivers extends Component {
     this.dp.getBusinessDataEntries(businessId, 'actual')
       .then(function(objArray) {
         this.setState({dataActual: objArray[0]});
-        this.state.financialData = new FinancialData(objArray[0]);
+        this.setState({financialData: new FinancialData(objArray[0]) });
       }.bind(this))
 
       .catch((err) => {
@@ -374,7 +374,10 @@ export default class ProfitDrivers extends Component {
               <div className="col-md-10 col-xs-10">
                 <h4 className="text-center">Total Profit Impact</h4>
                 <div className="well tpi-graph-container">
-                  <TotalProfitImpact  />
+                  <TotalProfitImpact 
+                    {...this.state}
+
+                  />
                 </div>
 
               </div>

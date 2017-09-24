@@ -20,13 +20,13 @@ export default class TPICalc {
 
     // Calc adjusted revenues
     result.incomeStatement.totalRevenues = (this.financialData.avgPricePerUnit(this.financialData.currentRevenues(), this.financialData.salesAndMarketingActual.grandTotalUnits) 
-    * this.financialData.salesAndMarketingActual.grandTotalUnits) * ((1+driverInputs.pctVolume) * (1+driverInputs.pctFrequency));
+    * this.financialData.salesAndMarketingActual.grandTotalUnits) * (1+driverInputs.pctVolume) * (1+driverInputs.pctFrequency);
 
     //Var exp.
     for(var i = 0; i < this.financialData.varExpensesKeys.length; i++) {
       result.incomeStatement[this.financialData.varExpensesKeys[i]] = this.financialData.incomeStatementActual[this.financialData.varExpensesKeys[i]] 
-        * ((1+driverInputs.pctVolume) * (1-driverInputs.pctProductivity)
-        * (1+driverInputs.pctFrequency));
+        * (1+driverInputs.pctVolume) * (1-driverInputs.pctProductivity)
+        * (1+driverInputs.pctFrequency);
     }
     //TODO: Make sure vpie is not overwritten if previous exists when compounding, maybe just +=?
     result.incomeStatement.vpie = driverInputs.vcProspects + driverInputs.vcConversions + driverInputs.vcVolume
@@ -38,7 +38,7 @@ export default class TPICalc {
       result.incomeStatement[this.financialData.fixedExpensesKeys[i]] = this.financialData.incomeStatementActual[this.financialData.fixedExpensesKeys[i]] * (1-driverInputs.pctEfficiency);
     }
     //TODO: Same as var cost
-    result.fpie = driverInputs.fcProspects + driverInputs.fcConversions + driverInputs.fcVolume
+    result.incomeStatement.fpie = driverInputs.fcProspects + driverInputs.fcConversions + driverInputs.fcVolume
     + driverInputs.fcPrice + driverInputs.fcProductivity + driverInputs.fcEfficiency
     + driverInputs.fcFrequency;
 
