@@ -3,10 +3,78 @@ export default class FinancialData {
     //if(!this.financialData) throw 'FinancialData must be initialized with a financial data entry object.';
 
     this.financialData = financialData;
-    this.incomeStatement = this.financialData.incomeStatement;
-    this.balanceSheet = this.financialData.balanceSheet;
-    this.salesAndMarketing = this.financialData.salesAndMarketing;
-    this.financialROI = this.financialData.financialROI;
+
+    // Stores data for total profit impact calculations
+    // TODO: Refactor this and float parsing into original api grab
+    this.incomeStatementActual = {
+      totalRevenues: this.financialData['income_statement']['total_revenues'],
+      cogs: this.financialData['income_statement']['cogs'],
+      marketing: this.financialData['income_statement']['marketing'],
+      directLabor: this.financialData['income_statement']['direct_labor'],
+      distribution: this.financialData['income_statement']['distribution'],
+      vpie: this.financialData['income_statement']['vpie'],
+      salaries: this.financialData['income_statement']['salaries'],
+      benefitAdmin: this.financialData['income_statement']['benefit_admin'],
+      officeLease: this.financialData['income_statement']['office_lease'],
+      officeSupplies: this.financialData['income_statement']['office_supplies'],
+      utilities: this.financialData['income_statement']['utilities'],
+      transportation: this.financialData['income_statement']['transportation'],
+      onlineExpenses: this.financialData['income_statement']['online_expenses'],
+      insurance: this.financialData['income_statement']['insurance'],
+      training: this.financialData['income_statement']['training'],
+      accountingAndLegal: this.financialData['income_statement']['accounting_and_legal'],
+      advertising: this.financialData['income_statement']['advertising'],
+      marketingDevelopment: this.financialData['income_statement']['marketing_development'],
+      other: this.financialData['income_statement']['other'],
+      fpie: this.financialData['income_statement']['fpie'],
+      interestPaid: this.financialData['income_statement']['interest_paid'],
+      depreciationAndAmortization: this.financialData['income_statement']['depreciation_and_amortization'],
+      donations: this.financialData['income_statement']['donations'],
+      taxRate: this.financialData['income_statement']['tax_rate'],
+      dividends: this.financialData['income_statement']['dividends']
+    }
+
+    this.balanceSheetActual = {
+      cash: this.financialData['balance_sheet']['cash'],
+      accountsReceivable: this.financialData['balance_sheet']['accounts_receivable'],
+      inventory: this.financialData['balance_sheet']['inventory'],
+      prepaidExpenses: this.financialData['balance_sheet']['prepaid_expenses'],
+      otherCurrentAssets: this.financialData['balance_sheet']['other_current_assets'],
+      ppe: this.financialData['balance_sheet']['ppe'],
+      furnitureAndFixtures: this.financialData['balance_sheet']['furniture_and_fixtures'],
+      leaseholdImprovements: this.financialData['balance_sheet']['leasehold_improvements'],
+      landAndBuildings: this.financialData['balance_sheet']['land_and_buildings'],
+      otherFixedAssets: this.financialData['balance_sheet']['other_fixed_assets'],
+      accumulatedDepreciation: this.financialData['balance_sheet']['accumulated_depreciation'],
+      goodwill: this.financialData['balance_sheet']['goodwill'],
+      accountsPayable: this.financialData['balance_sheet']['accounts_payable'],
+      interestPayable: this.financialData['balance_sheet']['interests_payable'],
+      taxesPayable: this.financialData['balance_sheet']['taxes_payable'],
+      deferredRevenue: this.financialData['balance_sheet']['deferred_revenue'],
+      shortTermNotes: this.financialData['balance_sheet']['short_term_notes'],
+      currentDebt: this.financialData['balance_sheet']['current_debt'],
+      otherCurrentLiabilities: this.financialData['balance_sheet']['other_current_liabilities'],
+      bankLoansPayable: this.financialData['balance_sheet']['bank_loans_payable'],
+      notesPayableToStockholders: this.financialData['balance_sheet']['notes_payable_to_stockholders'],
+      otherLongTermDebt: this.financialData['balance_sheet']['other_long_term_debt'],
+      commonStock: this.financialData['balance_sheet']['common_stock'],
+      paidInSurplus: this.financialData['balance_sheet']['paid_in_surplus'],
+      retainedEarnings: this.financialData['balance_sheet']['retained_earnings']
+    }
+
+    this.salesAndMarketingActual = {
+      prospects: this.financialData['sales_and_marketing']['prospects'],
+      numberOfSales: this.financialData['sales_and_marketing']['number_of_sales'],
+      marketingSpend: this.financialData['sales_and_marketing']['marketing_spend'],
+      grandTotalUnits: this.financialData['sales_and_marketing']['grand_total_units']
+    }
+
+    this.financialROIActual = {
+      airpDebt: this.financialData['financial_roi']['airp_debt'],
+      airpEquity: this.financialData['financial_roi']['airp_equity'],
+      airpForFinancing: this.financialData['financial_roi']['airp_for_financing'],
+      corpTaxRate: this.financialData['financial_roi']['corp_tax_rate']
+    }
 
     this.varExpensesKeys = ['cogs', 'marketing', 'directLabor', 'distribution', 'vpie'];
 
@@ -14,14 +82,49 @@ export default class FinancialData {
       'utilities', 'transportation', 'onlineExpenses', 'insurance', 'training',
       'accountingAndLegal', 'advertising', 'marketingDevelopment', 'other', 'fpie'];
 
+    this.init();
   }
 
+  init() {
+    //Loop through sections and parse to float, copy to adjusted sections
+    for(var key in this.incomeStatementActual) {
+      if(this.incomeStatementActual.hasOwnProperty(key)) {
+        let val = parseFloat(this.incomeStatementActual[key]);
+        if(isNaN(val)) val = 0;
+        this.incomeStatementActual[key] = val;
+      }
+    }
+
+    for(var key in this.balanceSheetActual) {
+      if(this.balanceSheetActual.hasOwnProperty(key)) {
+        let val = parseFloat(this.balanceSheetActual[key]);
+        if(isNaN(val)) val = 0;
+        this.balanceSheetActual[key] = val;
+      }
+    }
+
+    for(var key in this.salesAndMarketingActual) {
+      if(this.salesAndMarketingActual.hasOwnProperty(key)) {
+        let val = parseFloat(this.salesAndMarketingActual[key]);
+        if(isNaN(val)) val = 0;
+        this.salesAndMarketingActual[key] = val;
+      }
+    }
+
+    for(var key in this.financialROIActual) {
+      if(this.financialROIActual.hasOwnProperty(key)) {
+        let val = parseFloat(this.financialROIActual[key]);
+        if(isNaN(val)) val = 0;
+        this.financialROIActual[key] = val;
+      }
+    }
+  }
 
   // Var Expenses / Cost of Sales (COS)
   currentSubtotalCOS() {
     let result = 0;
     for(var i = 0; i < this.varExpensesKeys.length; i++) {
-      result += this.financialData.incomeStatement[this.varExpensesKeys[i]];
+      result += this.incomeStatementActual[this.varExpensesKeys[i]];
     }
 
     return result;
@@ -31,12 +134,12 @@ export default class FinancialData {
   currentFixedExpenses() {
     let result = 0;
     for(var i = 0; i < this.fixedExpensesKeys.length; i++)
-      result += this.financialData.incomeStatement[this.fixedExpensesKeys[i]];
+      result += this.incomeStatementActual[this.fixedExpensesKeys[i]];
     return result;
   }
 
   currentRevenues() {
-    return this.financialData.incomeStatement.totalRevenues;
+    return this.incomeStatementActual.totalRevenues;
   }
 
   targetRevenues(grandTotalUnits, avgPPU) {
@@ -52,7 +155,7 @@ export default class FinancialData {
   }
 
   currentOpProfit() {
-    return this.currentEBITDA() - this.financialData.incomeStatement.interestPaid;
+    return this.currentEBITDA() - this.incomeStatementActual.interestPaid;
   }
 
   targetOpProfit(EBITDA, interestPaid) {
@@ -60,12 +163,12 @@ export default class FinancialData {
   }
 
   currentTaxableIncome() {
-    return this.currentOpProfit() - this.financialData.incomeStatement.depreciationAndAmortization
-      - this.financialData.incomeStatement.donations;
+    return this.currentOpProfit() - this.incomeStatementActual.depreciationAndAmortization
+      - this.incomeStatementActual.donations;
   }
 
   currentTaxes() {
-    return this.financialData.financialROI.corpTaxRate * this.currentTaxableIncome();
+    return this.financialROIActual.corpTaxRate * this.currentTaxableIncome();
   }
 
   currentNetOpProfit() {
@@ -73,11 +176,10 @@ export default class FinancialData {
   }
 
   targetNetOpProfit(EBITDA) {
-    let opProfit = EBITDA - this.financialData.incomeStatement.interestPaid;
-    let taxableIncome = opProfit - this.financialData.incomeStatement.depreciationAndAmortization
-      - this.financialData.incomeStatement.donations;
-    let taxes = this.financialData.financialROI.corpTaxRate * taxableIncome;
-
+    let opProfit = EBITDA - this.incomeStatementActual.interestPaid;
+    let taxableIncome = opProfit - this.incomeStatementActual.depreciationAndAmortization
+      - this.incomeStatementActual.donations;
+    let taxes = this.financialROIActual.corpTaxRate * taxableIncome;
     return taxableIncome - taxes;
   }
 
@@ -125,11 +227,11 @@ export default class FinancialData {
   }
 
   currentConversionRate() {
-    return this.conversionRate(this.financialData.salesAndMarketing.numberOfSales, this.financialData.salesAndMarketing.prospects);
+    return this.conversionRate(this.salesAndMarketingActual.numberOfSales, this.salesAndMarketingActual.prospects);
   }
   
   currentAvgPPU() {
-    return this.avgPricePerUnit(this.currentRevenues(), this.financialData.salesAndMarketing.grandTotalUnits);
+    return this.avgPricePerUnit(this.currentRevenues(), this.salesAndMarketingActual.grandTotalUnits);
   }
 
   targetSubtotalCOS(driverName, percent, vpie, fpie) {
@@ -140,15 +242,15 @@ export default class FinancialData {
         result = this.currentSubtotalCOS() + vpie;
         break;
       case 'conversions':
-        result += this.financialData.incomeStatement.cogs * (1+percent);
-        result += this.financialData.incomeStatement.marketing * (1+percent) + vpie;
-        result += this.financialData.incomeStatement.directLabor * (1+percent) + fpie;
-        result += this.financialData.incomeStatement.distribution * (1+percent);
+        result += this.incomeStatementActual.cogs * (1+percent);
+        result += this.incomeStatementActual.marketing * (1+percent) + vpie;
+        result += this.incomeStatementActual.directLabor * (1+percent) + fpie;
+        result += this.incomeStatementActual.distribution * (1+percent);
         result += vpie;
         break;
       case 'volume':
         for(var i = 0; i < this.varExpensesKeys.length; i++)
-          result += this.financialData.incomeStatement[this.varExpensesKeys[i]] * (1+percent);
+          result += this.incomeStatementActual[this.varExpensesKeys[i]] * (1+percent);
         result += vpie;
         break;
       case 'price':
@@ -156,7 +258,7 @@ export default class FinancialData {
         break;
       case 'productivity':
         for(var i = 0; i < this.varExpensesKeys.length; i++)
-          result += this.financialData.incomeStatement[this.varExpensesKeys[i]] * (1-percent);
+          result += this.incomeStatementActual[this.varExpensesKeys[i]] * (1-percent);
         result += vpie;
         break;
       case 'efficiency':
@@ -164,7 +266,7 @@ export default class FinancialData {
         break;
       case 'frequency':
         for(var i = 0; i < this.varExpensesKeys.length; i++)
-          result += this.financialData.incomeStatement[this.varExpensesKeys[i]] * (1+percent);
+          result += this.incomeStatementActual[this.varExpensesKeys[i]] * (1+percent);
         result += vpie;
         break;
     }
@@ -185,7 +287,7 @@ export default class FinancialData {
       case 'efficiency':
         result = 0;
         for(var i = 0; i < this.fixedExpensesKeys.length; i++) {
-          result += this.financialData.incomeStatement[this.fixedExpensesKeys[i]] * (1-percent);
+          result += this.incomeStatementActual[this.fixedExpensesKeys[i]] * (1-percent);
         }
         result += fpie;
         break;
@@ -216,19 +318,19 @@ export default class FinancialData {
 
     switch(driverName) {
       case 'prospects':
-        result.impact = this.financialData.salesAndMarketing.prospects * percent;
+        result.impact = this.salesAndMarketingActual.prospects * percent;
         break;
       case 'conversions':
-        let currentConversionRate = this.conversionRate(this.financialData.salesAndMarketing.numberOfSales, this.financialData.salesAndMarketing.prospects);
+        let currentConversionRate = this.conversionRate(this.salesAndMarketingActual.numberOfSales, this.salesAndMarketingActual.prospects);
         let targetConversionRate = currentConversionRate * (1+percent);
         result.impact = targetConversionRate - currentConversionRate;
         break;             
       case 'volume':
-        result.impact = this.financialData.salesAndMarketing.grandTotalUnits * percent
+        result.impact = this.salesAndMarketingActual.grandTotalUnits * percent
         break;
       case 'price':
-        result.impact = this.avgPricePerUnit(this.financialData.incomeStatement.totalRevenues, 
-          this.financialData.salesAndMarketing.grandTotalUnits) * percent;
+        result.impact = this.avgPricePerUnit(this.incomeStatementActual.totalRevenues, 
+          this.salesAndMarketingActual.grandTotalUnits) * percent;
         break;  
       case 'productivity':
         // Return COS amount drop

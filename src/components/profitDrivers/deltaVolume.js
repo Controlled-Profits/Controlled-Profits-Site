@@ -17,8 +17,8 @@ export default class DeltaVolume extends Component {
       let calcData = this.props.financialData.calcDriverTargets('volume', this.props.pctVolume, this.props.vcVolume, this.props.fcVolume);
       
       let periodData = {
-        currentGTU: this.props.financialData.salesAndMarketing.grandTotalUnits.toFixed(2),
-        targetGTU: (calcData.impact + this.props.financialData.salesAndMarketing.grandTotalUnits).toFixed(2),
+        currentGTU: this.props.financialData.salesAndMarketingActual.grandTotalUnits.toFixed(2),
+        targetGTU: (calcData.impact + this.props.financialData.salesAndMarketingActual.grandTotalUnits).toFixed(2),
         currentRevenues: this.props.financialData.currentRevenues().toFixed(2),
         targetRevenues: calcData.revenues.toFixed(2),
         currentProfit: this.props.financialData.currentNetOpProfit().toFixed(2),

@@ -19,12 +19,12 @@ export default class TPICalc {
     }
 
     // Calc adjusted revenues
-    result.incomeStatement.totalRevenues = (this.financialData.avgPricePerUnit(this.financialData.currentRevenues(), this.financialData.financialData.salesAndMarketing.grandTotalUnits) 
-    * this.financialData.financialData.salesAndMarketing.grandTotalUnits) * (1+driverInputs.pctVolume) * (1+driverInputs.pctFrequency);
+    result.incomeStatement.totalRevenues = (this.financialData.avgPricePerUnit(this.financialData.currentRevenues(), this.financialData.salesAndMarketingActual.grandTotalUnits) 
+    * this.financialData.salesAndMarketingActual.grandTotalUnits) * (1+driverInputs.pctVolume) * (1+driverInputs.pctFrequency);
 
     //Var exp.
     for(var i = 0; i < this.financialData.varExpensesKeys.length; i++) {
-      result.incomeStatement[this.financialData.varExpensesKeys[i]] = this.financialData.financialData.incomeStatement[this.financialData.varExpensesKeys[i]] 
+      result.incomeStatement[this.financialData.varExpensesKeys[i]] = this.financialData.incomeStatementActual[this.financialData.varExpensesKeys[i]] 
         * (1+driverInputs.pctVolume) * (1-driverInputs.pctProductivity)
         * (1+driverInputs.pctFrequency);
     }
@@ -35,21 +35,17 @@ export default class TPICalc {
     
     //Fixed exp.
     for(var i = 0; i < this.financialData.fixedExpensesKeys.length; i++) {
-      result.incomeStatement[this.financialData.fixedExpensesKeys[i]] = this.financialData.financialData.incomeStatement[this.financialData.fixedExpensesKeys[i]] * (1-driverInputs.pctEfficiency);
+      result.incomeStatement[this.financialData.fixedExpensesKeys[i]] = this.financialData.incomeStatementActual[this.financialData.fixedExpensesKeys[i]] * (1-driverInputs.pctEfficiency);
     }
     //TODO: Same as var cost
     result.incomeStatement.fpie = driverInputs.fcProspects + driverInputs.fcConversions + driverInputs.fcVolume
     + driverInputs.fcPrice + driverInputs.fcProductivity + driverInputs.fcEfficiency
     + driverInputs.fcFrequency;
 
-    result.balanceSheet = this.financialData.financialData.balanceSheet;
-    result.salesAndMarketing = this.financialData.financialData.salesAndMarketing;
-    result.financialROI = this.financialData.financialData.financialROI;
+    result.balanceSheet = this.financialData.balanceSheetActual;
+    result.salesAndMarketing = this.financialData.salesAndMarketingActual;
+    result.financialROI = this.financialData.financialROI;
 
     return result;
-  }
-
-  predictedPeriodData({driverPcts}, targetDate) {
-
   }
 }

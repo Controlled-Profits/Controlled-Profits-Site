@@ -20,7 +20,7 @@ export default class DeltaConversions extends Component {
       let periodData = {
         currentConvRate: this.props.financialData.currentConversionRate().toFixed(2),
         targetConvRate: (calcData.impact + this.props.financialData.currentConversionRate()).toFixed(2),
-        currentRevenues: this.props.financialData.incomeStatement.totalRevenues.toFixed(2),
+        currentRevenues: this.props.financialData.incomeStatementActual.totalRevenues.toFixed(2),
         targetRevenues: calcData.revenues.toFixed(2),
         currentProfit: this.props.financialData.currentNetOpProfit().toFixed(2),
         targetProfit: calcData.profit.toFixed(2)
