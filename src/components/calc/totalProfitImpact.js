@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 export default class TPICalc {
   constructor(parsedFinancialData) {
     //Must be initialized FinancialData object
@@ -49,7 +51,38 @@ export default class TPICalc {
     return result;
   }
 
-  predictedPeriodData({driverPcts}, targetDate) {
+  projectedPeriodData(financialData, driverInputs = {}, targetDate) {
+    let startDate = moment().add('months', 1).date(0);
+    let endDate = moment(targetDate);
 
+    // Get number of periods (currently assumed end of one month to another)
+    let periodCt = Math.ceil(endDate.diff(startDate, 'months', true));
+
+    // Start result at current period target financial data as copy
+    let resultData = this.targetFinancialData(financialData, driverInputs);
+
+    // Incrementally calculate financial data for each following period
+    for(var i = 1; i < periodCt; i++) {
+
+      console.log(resultData, 'period_count: ', i);
+
+      let oldAvgPPU = resultData.incomeStatement.totalRevenues / resultData.salesAndMarketing.grandTotalUnits;
+      let oldConvRate = resultData.salesAndMarketing.numberOfSales / resultData.salesAndMarketing.prospects;
+      
+      resultData = this.periodAdjustedFinancialData(resultData, driverInputs);
+
+      // Factor in adjustments of sales and marketing data by previous month's driver percent improvement
+      resultData.salesAndMarketing.prospects *= (1+driverInputs.pctProspects);
+      resultData.salesAndMarketing.numberOfSales = oldConvRate * (1+driverInputs.pctConversions) 
+        * resultData.salesAndMarketing.prospects;
+      resultData.salesAndMarketing.grandTotalUnits *= (1+driverInputs.pctVolume);
+      resultData.salesAndMarketing.marketingSpend = resultData.incomeStatement.marketing;
+
+      //New revenues based on avg ppu * new GTU
+      resultData.incomeStatement.totalRevenues = oldAvgPPU * resultData.salesAndMarketing.grandTotalUnits 
+        * (1+driverInputs.pctFrequency);
+    }
+
+    return resultData;
   }
 }
