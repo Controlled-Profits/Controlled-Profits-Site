@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Nav, NavItem} from 'react-bootstrap';
 import TPICalc from '../calc/totalProfitImpact.js';
 import TPIGraph from './tpiGraph.js';
+import moment from 'moment';
 
 import '../../styles/totalProfitImpact.css';
 
@@ -70,17 +71,25 @@ export default class TotalProfitImpact extends Component {
           fcFrequency = this.props.fcFrequency;
       
 
-
-      content = tpiCalc.adjustedPeriodData({
+      let driverInputs = {
         pctProspects, vcProspects, fcProspects,
         pctConversions, vcConversions, fcConversions,
         pctVolume, vcVolume, fcVolume,
         pctPrice, vcPrice, fcPrice, 
         pctProductivity, vcProductivity, fcProductivity,
         pctEfficiency, vcEfficiency, fcEfficiency,
-        pctFrequency, vcFrequency, fcFrequency});
+        pctFrequency, vcFrequency, fcFrequency
+      };
+
+
+      content = tpiCalc.projectedPeriodData(this.props.financialData, driverInputs, moment().add('months', 2).date(0));
+
+
+      console.log('Calculating projected data for target date: ', this.props.targetDate);
+      let othercont = tpiCalc.projectedPeriodData(this.props.financialData, driverInputs, this.props.targetDate);
 
       console.log('TPI Adjusted Period data: ', content);
+      console.log(`TPI projected period data for target date ${this.props.targetDate}: `, othercont);
 
       content = content.incomeStatement.totalRevenues;
     }

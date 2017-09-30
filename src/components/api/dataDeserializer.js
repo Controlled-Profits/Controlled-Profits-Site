@@ -112,8 +112,6 @@ const deserializeFinancialData = (financialData) => {
       financialROI: financialROI
     }
 
-    console.log('DESERIALIZED FD = ', result);
-
     return result;
 }
 

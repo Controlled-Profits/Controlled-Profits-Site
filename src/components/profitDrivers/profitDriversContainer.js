@@ -66,7 +66,7 @@ export default class ProfitDrivers extends Component {
       dataActual: {},
       dataAdjusted: {},
       startDate: moment(endOfMonthStr),
-      targetDate: moment(nextMonthStr),
+      targetDate: moment().add('months', 2).date(0),
       //Driver percent change, var cost, fixed cost:
       pctProspects: 0.00,
       vcProspects: 0.00,
@@ -156,6 +156,8 @@ export default class ProfitDrivers extends Component {
     this.setState({
       targetDate: date.add('months', 1).date(0)
     });
+
+    console.log(`Target date changed to: ${this.state.targetDate}`);
   }
 
   // Prospects input handlers

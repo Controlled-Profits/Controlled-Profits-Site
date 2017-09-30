@@ -1,3 +1,4 @@
+import FinancialData from './financialData.js';
 import moment from 'moment';
 
 export default class TPICalc {
@@ -12,7 +13,7 @@ export default class TPICalc {
   // { prospects: {pct: 1, vc: 100.0, fc: 100.0}, ...}
   // Ex. output obj:
   // { incomeStatement: {...}, balanceSheet: {...}, ...}
-  adjustedPeriodData(driverInputs) {
+  adjustedPeriodData(financialData, driverInputs) {
     let result = {
       incomeStatement: {},
       balanceSheet: {},
@@ -21,12 +22,12 @@ export default class TPICalc {
     }
 
     // Calc adjusted revenues
-    result.incomeStatement.totalRevenues = (this.financialData.avgPricePerUnit(this.financialData.currentRevenues(), this.financialData.financialData.salesAndMarketing.grandTotalUnits) 
-    * this.financialData.financialData.salesAndMarketing.grandTotalUnits) * (1+driverInputs.pctVolume) * (1+driverInputs.pctFrequency);
+    result.incomeStatement.totalRevenues = ((financialData.avgPricePerUnit(financialData.currentRevenues(), financialData.salesAndMarketing.grandTotalUnits) * (1+driverInputs.pctPrice))
+    * (financialData.salesAndMarketing.grandTotalUnits * (1+driverInputs.pctVolume))) * (1+driverInputs.pctFrequency);
 
     //Var exp.
-    for(var i = 0; i < this.financialData.varExpensesKeys.length; i++) {
-      result.incomeStatement[this.financialData.varExpensesKeys[i]] = this.financialData.financialData.incomeStatement[this.financialData.varExpensesKeys[i]] 
+    for(var i = 0; i < financialData.varExpensesKeys.length; i++) {
+      result.incomeStatement[financialData.varExpensesKeys[i]] = financialData.financialData.incomeStatement[financialData.varExpensesKeys[i]] 
         * (1+driverInputs.pctVolume) * (1-driverInputs.pctProductivity)
         * (1+driverInputs.pctFrequency);
     }
@@ -36,19 +37,25 @@ export default class TPICalc {
       + driverInputs.vcFrequency;
     
     //Fixed exp.
-    for(var i = 0; i < this.financialData.fixedExpensesKeys.length; i++) {
-      result.incomeStatement[this.financialData.fixedExpensesKeys[i]] = this.financialData.financialData.incomeStatement[this.financialData.fixedExpensesKeys[i]] * (1-driverInputs.pctEfficiency);
+    for(var i = 0; i < financialData.fixedExpensesKeys.length; i++) {
+      result.incomeStatement[financialData.fixedExpensesKeys[i]] = financialData.financialData.incomeStatement[financialData.fixedExpensesKeys[i]] * (1-driverInputs.pctEfficiency);
     }
     //TODO: Same as var cost
     result.incomeStatement.fpie = driverInputs.fcProspects + driverInputs.fcConversions + driverInputs.fcVolume
     + driverInputs.fcPrice + driverInputs.fcProductivity + driverInputs.fcEfficiency
     + driverInputs.fcFrequency;
 
-    result.balanceSheet = this.financialData.financialData.balanceSheet;
-    result.salesAndMarketing = this.financialData.financialData.salesAndMarketing;
-    result.financialROI = this.financialData.financialData.financialROI;
+    //Make sales and marketing adjustments
+    result.salesAndMarketing.prospects = financialData.salesAndMarketing.prospects * (1+driverInputs.pctProspects);
+    result.salesAndMarketing.numberOfSales = financialData.currentConversionRate() * (1+driverInputs.pctConversions) * result.salesAndMarketing.prospects;
+    result.salesAndMarketing.marketingSpend = result.incomeStatement.marketing;
+    result.salesAndMarketing.grandTotalUnits = financialData.salesAndMarketing.grandTotalUnits * (1+driverInputs.pctVolume);
 
-    return result;
+    result.balanceSheet = financialData.financialData.balanceSheet;
+    //result.salesAndMarketing = financialData.financialData.salesAndMarketing;
+    result.financialROI = financialData.financialData.financialROI;
+
+    return new FinancialData(result);
   }
 
   projectedPeriodData(financialData, driverInputs = {}, targetDate) {
@@ -59,28 +66,35 @@ export default class TPICalc {
     let periodCt = Math.ceil(endDate.diff(startDate, 'months', true));
 
     // Start result at current period target financial data as copy
-    let resultData = this.targetFinancialData(financialData, driverInputs);
+    let resultData = this.adjustedPeriodData(financialData, driverInputs);
+
+    //Calc initial revenue adjustment
+    resultData.incomeStatement.totalRevenues = (financialData.avgPricePerUnit(financialData.currentRevenues(), financialData.financialData.salesAndMarketing.grandTotalUnits) 
+    * financialData.financialData.salesAndMarketing.grandTotalUnits) * (1+driverInputs.pctVolume) * (1+driverInputs.pctFrequency);
 
     // Incrementally calculate financial data for each following period
     for(var i = 1; i < periodCt; i++) {
 
       console.log(resultData, 'period_count: ', i);
 
-      let oldAvgPPU = resultData.incomeStatement.totalRevenues / resultData.salesAndMarketing.grandTotalUnits;
-      let oldConvRate = resultData.salesAndMarketing.numberOfSales / resultData.salesAndMarketing.prospects;
+      resultData = this.adjustedPeriodData(resultData, driverInputs);
+
+
+      // let oldAvgPPU = resultData.incomeStatement.totalRevenues / resultData.salesAndMarketing.grandTotalUnits;
+      // let oldConvRate = resultData.salesAndMarketing.numberOfSales / resultData.salesAndMarketing.prospects;
       
-      resultData = this.periodAdjustedFinancialData(resultData, driverInputs);
+      // resultData = this.periodAdjustedFinancialData(resultData, driverInputs);
 
-      // Factor in adjustments of sales and marketing data by previous month's driver percent improvement
-      resultData.salesAndMarketing.prospects *= (1+driverInputs.pctProspects);
-      resultData.salesAndMarketing.numberOfSales = oldConvRate * (1+driverInputs.pctConversions) 
-        * resultData.salesAndMarketing.prospects;
-      resultData.salesAndMarketing.grandTotalUnits *= (1+driverInputs.pctVolume);
-      resultData.salesAndMarketing.marketingSpend = resultData.incomeStatement.marketing;
+      // // Factor in adjustments of sales and marketing data by previous month's driver percent improvement
+      // resultData.salesAndMarketing.prospects *= (1+driverInputs.pctProspects);
+      // resultData.salesAndMarketing.numberOfSales = oldConvRate * (1+driverInputs.pctConversions) 
+      //   * resultData.salesAndMarketing.prospects;
+      // resultData.salesAndMarketing.grandTotalUnits *= (1+driverInputs.pctVolume);
+      // resultData.salesAndMarketing.marketingSpend = resultData.incomeStatement.marketing;
 
-      //New revenues based on avg ppu * new GTU
-      resultData.incomeStatement.totalRevenues = oldAvgPPU * resultData.salesAndMarketing.grandTotalUnits 
-        * (1+driverInputs.pctFrequency);
+      // //New revenues based on avg ppu * new GTU
+      // resultData.incomeStatement.totalRevenues = oldAvgPPU * resultData.salesAndMarketing.grandTotalUnits 
+      //   * (1+driverInputs.pctFrequency);
     }
 
     return resultData;
