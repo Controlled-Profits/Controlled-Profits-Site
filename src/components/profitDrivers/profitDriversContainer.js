@@ -3,6 +3,7 @@ import {Tabs, Tab} from 'react-bootstrap';
 import DataParser from '../api/dataParser.js';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
+import {deserializeFinancialData} from '../api/dataDeserializer.js'; 
 import FinancialData from '../calc/financialData.js';
 import DeltaProspects from './deltaProspects.js';
 import DeltaConversions from './deltaConversions.js';
@@ -65,7 +66,7 @@ export default class ProfitDrivers extends Component {
       dataActual: {},
       dataAdjusted: {},
       startDate: moment(endOfMonthStr),
-      targetDate: moment(nextMonthStr),
+      targetDate: moment().add('months', 2).date(0),
       //Driver percent change, var cost, fixed cost:
       pctProspects: 0.00,
       vcProspects: 0.00,
@@ -127,7 +128,7 @@ export default class ProfitDrivers extends Component {
     this.dp.getBusinessDataEntries(businessId, 'actual')
       .then(function(objArray) {
         this.setState({dataActual: objArray[0]});
-        this.state.financialData = new FinancialData(objArray[0]);
+        this.setState({financialData: new FinancialData(deserializeFinancialData(objArray[0])) });
       }.bind(this))
 
       .catch((err) => {
@@ -155,6 +156,8 @@ export default class ProfitDrivers extends Component {
     this.setState({
       targetDate: date.add('months', 1).date(0)
     });
+
+    console.log(`Target date changed to: ${this.state.targetDate}`);
   }
 
   // Prospects input handlers
@@ -374,7 +377,10 @@ export default class ProfitDrivers extends Component {
               <div className="col-md-10 col-xs-10">
                 <h4 className="text-center">Total Profit Impact</h4>
                 <div className="well tpi-graph-container">
-                  <TotalProfitImpact  />
+                  <TotalProfitImpact 
+                    {...this.state}
+
+                  />
                 </div>
 
               </div>

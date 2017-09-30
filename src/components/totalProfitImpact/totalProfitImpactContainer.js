@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {Nav, NavItem} from 'react-bootstrap';
+import TPICalc from '../calc/totalProfitImpact.js';
 import TPIGraph from './tpiGraph.js';
-import CalcHandler from '../calc/calcHandler.js';
+import moment from 'moment';
 
 import '../../styles/totalProfitImpact.css';
 
@@ -22,6 +23,7 @@ export default class TotalProfitImpact extends Component {
 
     this.randomizeData = this.randomizeData.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
+    this.getTestOutput = this.getTestOutput.bind(this);
 
     this.styles = {
       width   : 900,
@@ -29,19 +31,75 @@ export default class TotalProfitImpact extends Component {
       padding : 35,
     };
 
-    this.state = { data: randomDataSet() };
+    this.state = { 
+      data: randomDataSet()
+    };
   }
 
   componentDidMount() {
-    /*this.styles = {
-      width: this.refs.tpicontainer.offsetWidth,
-      height: this.refs.tpicontainer.offsetHeight,
-      padding: 30
-    }*/
+    
   }
 
   randomizeData() {
     this.setState({ data: randomDataSet() });
+  }
+
+  getTestOutput() {
+    let content = "Nothing to see.";
+    if(this.props.financialData) {
+      let tpiCalc = new TPICalc(this.props.financialData);
+      let pctProspects = this.props.pctProspects,
+          vcProspects = this.props.vcProspects,
+          fcProspects = this.props.fcProspects;
+      let pctConversions = this.props.pctConversions,
+          vcConversions = this.props.vcConversions,
+          fcConversions = this.props.fcConversions;
+      let pctVolume = this.props.pctVolume,
+          vcVolume = this.props.vcVolume,
+          fcVolume = this.props.fcVolume;
+      let pctPrice = this.props.pctPrice,
+          vcPrice = this.props.vcPrice,
+          fcPrice = this.props.fcPrice;
+      let pctProductivity = this.props.pctProductivity,
+          vcProductivity = this.props.vcProductivity,
+          fcProductivity = this.props.fcProductivity;
+      let pctEfficiency = this.props.pctEfficiency,
+          vcEfficiency = this.props.vcEfficiency,
+          fcEfficiency = this.props.fcEfficiency;
+      let pctFrequency = this.props.pctFrequency,
+          vcFrequency = this.props.vcFrequency,
+          fcFrequency = this.props.fcFrequency;
+      
+
+      let driverInputs = {
+        pctProspects, vcProspects, fcProspects,
+        pctConversions, vcConversions, fcConversions,
+        pctVolume, vcVolume, fcVolume,
+        pctPrice, vcPrice, fcPrice, 
+        pctProductivity, vcProductivity, fcProductivity,
+        pctEfficiency, vcEfficiency, fcEfficiency,
+        pctFrequency, vcFrequency, fcFrequency
+      };
+
+
+      content = tpiCalc.projectedPeriodData(this.props.financialData, driverInputs, moment().add('months', 2).date(0));
+
+
+      console.log('Calculating projected data for target date: ', this.props.targetDate);
+      let othercont = tpiCalc.projectedPeriodData(this.props.financialData, driverInputs, this.props.targetDate);
+
+      console.log('TPI Adjusted Period data: ', content);
+      console.log(`TPI projected period data for target date ${this.props.targetDate}: `, othercont);
+
+      content = content.incomeStatement.totalRevenues;
+    }
+
+    return (
+      <p>
+        <span>Total Revenues:</span>
+        {content}
+      </p>
+    );
   }
 
   // Handle nav pill click and change graph type
@@ -59,6 +117,7 @@ export default class TotalProfitImpact extends Component {
             <NavItem eventKey={2} title="Item">Annualized</NavItem>
           </Nav>
         </div>
+        {this.getTestOutput()}
         <TPIGraph {...this.state} {...this.styles}/>
       </div>
     )

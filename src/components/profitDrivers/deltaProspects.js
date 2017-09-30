@@ -17,9 +17,9 @@ export default class DeltaProspects extends Component {
       let calcData = this.props.financialData.calcDriverTargets('prospects', this.props.pctProspects, this.props.vcProspects, this.props.fcProspects);
       
       let periodData = {
-        currentProspects: this.props.financialData.salesAndMarketingActual.prospects,
-        targetProspects: calcData.impact + this.props.financialData.salesAndMarketingActual.prospects,
-        currentRevenues: this.props.financialData.incomeStatementActual.totalRevenues.toFixed(2),
+        currentProspects: this.props.financialData.salesAndMarketing.prospects,
+        targetProspects: calcData.impact + this.props.financialData.salesAndMarketing.prospects,
+        currentRevenues: this.props.financialData.incomeStatement.totalRevenues.toFixed(2),
         targetRevenues: calcData.revenues.toFixed(2),
         currentProfit: this.props.financialData.currentNetOpProfit().toFixed(2),
         targetProfit: calcData.profit.toFixed(2)
