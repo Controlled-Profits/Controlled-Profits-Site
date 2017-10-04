@@ -23,7 +23,10 @@ export default class TotalProfitImpact extends Component {
 
     this.randomizeData = this.randomizeData.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
-    this.getTestOutput = this.getTestOutput.bind(this);
+    this.getMonthlyBarData = this.getMonthlyBarData.bind(this);
+    this.getTPIData = this.getTPIData.bind(this);
+
+    this.tpiCalc = null;
 
     this.styles = {
       width   : 900,
@@ -32,22 +35,48 @@ export default class TotalProfitImpact extends Component {
     };
 
     this.state = { 
-      data: randomDataSet()
+      data: []
     };
   }
 
-  componentDidMount() {
+  //Once financial data is loaded, instantiate tpicalc if it hasn't already been
+  componentDidUpdate() {
+    if(!this.tpiCalc && this.props.financialData) { 
+      this.tpiCalc = new TPICalc(this.props.financialData);
+    } 
     
+    if(this.tpiCalc && this.props.financialData) {
+      this.state.adjustedFinancialData = this.getTPIData();
+      this.state.data = this.getMonthlyBarData();
+    }
+  }
+
+  getMonthlyBarData() {
+    //net op profit, fe, ve, revenues
+    if(this.state.adjustedFinancialData) {
+      let totalRevenues = this.state.adjustedFinancialData.incomeStatement.totalRevenues;
+      let totalNOP = this.state.adjustedFinancialData.currentNetOpProfit();
+      let totalFE = this.state.adjustedFinancialData.currentFixedExpenses();
+      let totalVC = this.state.adjustedFinancialData.currentSubtotalCOS();
+      let data = [
+        {name: "Net Operating Profit", value: 330000},
+        {name: "Fixed Expenses", value: totalFE},
+        {name: "Variable Expenses", value: totalVC},
+        {name: "Total Revenues", value: totalRevenues}
+      ];
+
+      return data;
+    }
+
   }
 
   randomizeData() {
     this.setState({ data: randomDataSet() });
   }
 
-  getTestOutput() {
-    let content = "Nothing to see.";
-    if(this.props.financialData) {
-      let tpiCalc = new TPICalc(this.props.financialData);
+  //Get entire calculated adjusted financial data
+  getTPIData() {
+    if(this.props.financialData && this.tpiCalc) {
       let pctProspects = this.props.pctProspects,
           vcProspects = this.props.vcProspects,
           fcProspects = this.props.fcProspects;
@@ -82,24 +111,28 @@ export default class TotalProfitImpact extends Component {
       };
 
 
-      content = tpiCalc.projectedPeriodData(this.props.financialData, driverInputs, moment().add('months', 2).date(0));
+      //TODO: Calc til target date
+      let singleMoProjCalc = this.tpiCalc.projectedPeriodData(this.props.financialData, driverInputs, moment().add('months', 2).date(0));
+
+      return singleMoProjCalc;
 
 
-      console.log('Calculating projected data for target date: ', this.props.targetDate);
-      let othercont = tpiCalc.projectedPeriodData(this.props.financialData, driverInputs, this.props.targetDate);
 
-      console.log('TPI Adjusted Period data: ', content);
-      console.log(`TPI projected period data for target date ${this.props.targetDate}: `, othercont);
+      // console.log('Calculating projected data for target date: ', this.props.targetDate);
+      // let othercont = tpiCalc.projectedPeriodData(this.props.financialData, driverInputs, this.props.targetDate);
 
-      content = content.incomeStatement.totalRevenues;
+      // console.log('TPI Adjusted Period data: ', content);
+      // console.log(`TPI projected period data for target date ${this.props.targetDate}: `, othercont);
+
+      // content = content.incomeStatement.totalRevenues;
     }
 
-    return (
-      <p>
-        <span>Total Revenues:</span>
-        {content}
-      </p>
-    );
+    // return (
+    //   <p>
+    //     <span>Total Revenues:</span>
+    //     {content}
+    //   </p>
+    // );
   }
 
   // Handle nav pill click and change graph type
@@ -117,7 +150,6 @@ export default class TotalProfitImpact extends Component {
             <NavItem eventKey={2} title="Item">Annualized</NavItem>
           </Nav>
         </div>
-        {this.getTestOutput()}
         <TPIGraph {...this.state} {...this.styles}/>
       </div>
     )

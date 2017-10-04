@@ -31,6 +31,7 @@ export default class TPICalc {
         * (1+driverInputs.pctVolume) * (1-driverInputs.pctProductivity)
         * (1+driverInputs.pctFrequency);
     }
+
     //TODO: Make sure vpie is not overwritten if previous exists when compounding, maybe just +=?
     result.incomeStatement.vpie = driverInputs.vcProspects + driverInputs.vcConversions + driverInputs.vcVolume
       + driverInputs.vcPrice + driverInputs.vcProductivity + driverInputs.vcEfficiency
@@ -52,6 +53,8 @@ export default class TPICalc {
     return new FinancialData(result);
   }
 
+  
+
   projectedPeriodData(financialData, driverInputs = {}, targetDate) {
     let startDate = moment().add('months', 1).date(0);
     let endDate = moment(targetDate);
@@ -70,13 +73,15 @@ export default class TPICalc {
     for(var i = 1; i < periodCt; i++) {
 
       console.log(resultData, 'period_count: ', i);
-
-      console.log('Result data that is apparently coming back as Nan when operated on:', resultData)
       
       //Make sales and marketing adjustments
       let oldConvRate = resultData.currentConversionRate();
+
+      console.log('old conv rate', oldConvRate);
+      console.log('new conversion rate', oldConvRate*(1+driverInputs.pctConversions/10));
+
       resultData.salesAndMarketing.prospects = resultData.salesAndMarketing.prospects * (1+driverInputs.pctProspects);
-      resultData.salesAndMarketing.numberOfSales = oldConvRate * (1+driverInputs.pctConversions) * resultData.salesAndMarketing.prospects;
+      resultData.salesAndMarketing.numberOfSales = oldConvRate * (1+driverInputs.pctConversions/10) * resultData.salesAndMarketing.prospects;
       resultData.salesAndMarketing.marketingSpend = resultData.incomeStatement.marketing;
       resultData.salesAndMarketing.grandTotalUnits = resultData.salesAndMarketing.grandTotalUnits * (1+driverInputs.pctVolume);
 

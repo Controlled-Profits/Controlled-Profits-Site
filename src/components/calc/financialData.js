@@ -2,10 +2,11 @@ export default class FinancialData {
   constructor(financialData) {
     //if(!this.financialData) throw 'FinancialData must be initialized with a financial data entry object.';
 
-    this.incomeStatement = financialData.incomeStatement;
-    this.balanceSheet = financialData.balanceSheet;
-    this.salesAndMarketing = financialData.salesAndMarketing;
-    this.financialROI = financialData.financialROI;
+    // Object.assign ensures we get a new copy instead of a reference
+    this.incomeStatement = Object.assign({}, financialData.incomeStatement);
+    this.balanceSheet = Object.assign({}, financialData.balanceSheet);
+    this.salesAndMarketing = Object.assign({}, financialData.salesAndMarketing);
+    this.financialROI = Object.assign({}, financialData.financialROI);
 
     this.varExpensesKeys = ['cogs', 'marketing', 'directLabor', 'distribution', 'vpie'];
 
