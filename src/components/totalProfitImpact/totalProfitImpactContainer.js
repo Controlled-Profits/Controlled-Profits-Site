@@ -141,7 +141,6 @@ export default class TotalProfitImpact extends Component {
   }
 
   render() {
-    console.log('dataSet: ', this.state.data);
     return(
       <div ref="tpicontainer" id="tpi-container">
         <div id="graph-nav-container">

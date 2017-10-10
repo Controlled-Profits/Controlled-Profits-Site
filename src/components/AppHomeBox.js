@@ -9,6 +9,7 @@ import ProfitDrivers from './profitDrivers/profitDriversContainer.js';
 import FormInput from './financial/form-input.js';
 import TempForm from './financial/temp-form.js';
 import SummaryBox from './summary/summary-box.js';
+import AssessmentReport from './assessment/assessmentReport.js';
 
 import '../styles/memberDesktop.css';
 
@@ -130,7 +131,7 @@ export default class AppHomeBox extends Component {
     }
     else if(this.state.activeSearch === 'Summary'){
 
-      return(<SummaryBox dp={this.dp}/>)
+      return(<AssessmentReport dp={this.dp}/>)
     }
     else if (this.state.activeSearch === 'ProfitDriversAndPlanning') {
       return(<ProfitDrivers businessHolder={this.state.businessHolder}/>);
