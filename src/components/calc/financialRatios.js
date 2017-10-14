@@ -90,6 +90,11 @@ export const QuickRatio = {
   description: 'The Quick Ratio is also called the ‘acid test’ and is designed to measure the relationship between assets that can be QUICKLY converted into cash to meet current liabilities. It is the common sense form of the Current Ratio, because businesses are run on cash, not on paper. The difference in the ratios is that the quick ratio does not include inventories in the numerator for measuring liquidity. This is because inventory cannot be converted into cash immediately. However, short term securities can be sold for cash and accounts receivable can be called in, borrowed against, or sold in the marketplace.',
   fn: (currentAssets, inventory, currentLiabilities) => {
     return (currentAssets - inventory) / currentLiabilities;
+  },
+  colorCode: (val) => {
+    if(val < 1) return 'red';
+    else if (val < 2) return 'yellow';
+    else return 'green';
   }
 }
 
@@ -99,6 +104,11 @@ export const CashRatio = {
   description: 'The Cash Ratio measures how much CASH you have divided by your short term debt.',
   fn: (cash, currentLiabilities) => {
     return cash / currentLiabilities;
+  },
+  colorCode: (val) => {
+    if(val < 0.25) return 'red';
+    else if (val < 0.75) return 'yellow';
+    else return 'green';
   }
 }
 
@@ -119,6 +129,11 @@ export const TotalDebtRatio = {
   description: 'The Debt Ratio shows the proportion of the company\'s investment is supported through debt financing.',
   fn: (totalAssets, totalEquity) => {
     return (totalAssets - totalAssets) / totalAssets;
+  },
+  colorCode: (val) => {
+    if(val <= 0.33) return 'green';
+    else if (val <= 0.66) return 'yellow';
+    else return 'red';
   }
 }
 
@@ -126,14 +141,20 @@ export const TotalEquityRatio = {
   equation: '1 - Total Debt',
   insight: 'The higher the equity ratio, the less dependent on outside financing is required.',
   description: 'The Total Equity Ratio shows the proportion of the company\'s investment is supported by equity investment.',
-  fn: (totalDebt) => { return 1-totalDebt; }
+  fn: (totalDebt) => { return 1-totalDebt; },
+  colorCode: (val) => {
+    if(val < 0.33) return 'red';
+    else if (val < 0.66) return 'yellow';
+    else return 'green';
+  }
 }
 
 export const DebtEquityRatio = {
   equation: 'Total Debt / Total Equity',
   insight: 'The D/E ratio indicates how much debt a company is using to finance its assets relative to the amount of value represented in shareholders\' equity.',
   description: 'The Debt/Equity Ratio is a debt ratio used to measure a company\'s financial leverage, calculated by dividing a company\'s total liabilities by its stockholders\' equity.',
-  fn: (totalDebt, totalEquity) => { return totalDebt / totalEquity; }
+  fn: (totalDebt, totalEquity) => { return totalDebt / totalEquity; },
+  colorCode: (val) => { return 'yellow'; /* TODO: Could change in future */}
 }
 
 export const EquityMultiplier = {
@@ -199,7 +220,8 @@ export const InventoryTurnover = {
   equation: 'Cost of Goods Sold / Inventory',
   insight: 'An inventory turnover that is out of proportion to industry norms may suggest losses due to shortages.',
   description: 'The Inventory Turnover ratio shows the number of times a firm\'s investment in inventory is recouped during an accounting period. Normally a high number indicates a greater sales efficiency and a lower risk of loss through un-saleable stock.',
-  fn: (COGs, inventory) => { return COGs / inventory; }
+  fn: (COGs, inventory) => { return COGs / inventory; },
+  colorCode: (val) => { return 'yellow' /* TODO: could change in future */ }
 }
 
 export const InventoryPeriod = {
@@ -313,7 +335,12 @@ export const ProfitMargin = {
   equation: 'Earnings After Tax (Net Income) / Revenues',
   insight: 'Profit Margin measures how much of every dollar of sales a company keeps in earnings – after taxes.',
   description: 'Profit Margin measures how much of every dollar of sales a company keeps in earnings – after taxes.',
-  fn: (netIncome, revenues) => { return netIncome / revenues; }
+  fn: (netIncome, revenues) => { return netIncome / revenues; },
+  colorCode: (val) => {
+    if(val < 0) return 'red';
+    else if (val < 0.1) return 'yellow';
+    else return 'green';
+  }
 }
 
 export const EBITDAMargin = {
@@ -323,18 +350,29 @@ export const EBITDAMargin = {
   fn: (EBITDA, revenues) => { return EBITDA / revenues; }
 }
 
+//TODO: Ask micheal about possible typo in color code ranges
 export const ReturnOnAssets = {
   equation: 'Earnings After Tax / Total Assets',
   insight: 'Return on Assets (Investment) tells you how well you are employing your assets to make money. Quite simply, the ROI ratio indicates that if you can make more money on fewer assets, then you need less capital investment for a certain level of return. The larger this ratio, the more intelligently you are using assets for profit.',
   description: 'Return on Investment (or Return on Assets) is the ratio of earnings after tax divided by Total Assets. Total Assets represents the total amount of assets the company owns and is represented on their Balance sheet.',
-  fn: (earningsAfterTax, totalAssets) => { return earningsAfterTax / totalAssets; }
+  fn: (earningsAfterTax, totalAssets) => { return earningsAfterTax / totalAssets; },
+  colorCode: (val) => {
+    if(val < 0.1) return 'red';
+    else if (val < 0.2) return 'yellow';
+    else return 'green';
+  }
 }
 
 export const ReturnOnEquity = {
   equation: 'Earnings After Tax / Stockholders\' Equity',
   insight: 'ROE is often considered to be the one of the most important of the profitability ratios. If you can increase and control this ratio, the more money you earn. You would use this number to compare to other uses of your money for greatest return and performance over time. A general rule maintains that a ROE of at least 15% is a reasonable objective to provide dividends to shareholders as well as fund for future growth.',
   description: 'Return on Equity is the ratio of earnings after tax divided by Stockholders Equity. Stockholders’ Equity is the dollar amount of money recognized on the Balance Sheet as invested capital. It tells you what percentage of your ownership dollars are being returned to you for your investment, on an after tax basis.',
-  fn: (earningsAfterTax, stockholdersEquity) => { return earningsAfterTax / stockholdersEquity; }
+  fn: (earningsAfterTax, stockholdersEquity) => { return earningsAfterTax / stockholdersEquity; },
+  colorCode: (val) => {
+    if(val < 0) return 'red';
+    else if (val < 0.24) return 'yellow';
+    else return 'green';
+  }
 }
 
 export const ReturnOnSales = {

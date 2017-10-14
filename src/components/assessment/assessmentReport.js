@@ -5,6 +5,7 @@ import {deserializeFinancialData} from '../api/dataDeserializer.js'
 import ProfitAssessmentRating from '../graphs/profitAssessmentRating.js';
 import FinancialPerformanceSnapshot from '../graphs/financialPerformanceSnapshot.js';
 import ProfitMetrics from '../graphs/profitMetrics.js';
+import LiquidityRatios from '../graphs/liquidityRatios';
 
 
 export default class AssessmentReport extends Component {
@@ -73,6 +74,44 @@ export default class AssessmentReport extends Component {
           <div className="pm-container">
             <ProfitMetrics financialData={this.state.financialData} />
           </div>  
+        </div>
+      </div>
+      <div className="row">
+        <div className="col-md-6 col-xs-6">
+          <div className="revBreakContainer">
+
+          </div>
+        </div>
+        <div className="col-md-6 col-xs-6">
+          <div className="cosVarExpContainer">
+
+          </div>
+        </div>
+      </div>
+      
+      <div className="row">
+        <div className="col-md-6 col-xs-6">
+          <div className="ratioGraphContainer">
+            <LiquidityRatios financialData={this.state.financialData} />
+          </div>
+        </div>
+        <div className="col-md-6 col-xs-6">
+          <div className="ratioTextContainer">
+            <p>Some text describing the information shown in liquidity ratios chart.</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="col-md-6 col-xs-6">
+          <div className="ratioGraphContainer">
+            <LiquidityRatios financialData={this.state.financialData} />
+          </div>
+        </div>
+        <div className="col-md-6 col-xs-6">
+          <div className="ratioTextContainer">
+            <p>Some text describing the information shown in liquidity ratios chart.</p>
+          </div>
         </div>
       </div>
     </div>);

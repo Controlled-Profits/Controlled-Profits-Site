@@ -1,12 +1,9 @@
-// Bar graph showing proportions of all revenue streams
-//TODO: Divide up revenue stream input
-
 import React, {Component} from 'react';
-import Axis from '../totalProfitImpact/axis';
 import * as d3 from 'd3';
+import * as ratios from '../calc/financialRatios';
 
 
-export default class FinancialPerformanceSnapshot extends Component {
+export default class LiquidityRatios extends Component {
   constructor(props) {
     super(props);
 
@@ -47,15 +44,22 @@ export default class FinancialPerformanceSnapshot extends Component {
 
   getData() {
     if(this.props.financialData) {
-      let totalRevenues = this.props.financialData.incomeStatement.totalRevenues;
-      let totalNOP = this.props.financialData.currentNetOpProfit();
-      let totalFE = this.props.financialData.currentFixedExpenses();
-      let totalVC = this.props.financialData.currentSubtotalCOS();
+      let earningsAfterTax = this.props.financialData.currentNetOpProfit();
+
+      let cashRatio = ratios.CashRatio.fn(this.props.financialData.balanceSheet.cash, 
+        this.props.financialData.currentLiabilities()) * 100;
+
+      let quickRatio = ratios.QuickRatio.fn(this.props.financialData.currentAssets(),
+        this.props.financialData.balanceSheet.assets, 
+        this.props.financialData.currentLiabilities());
+
+      let currentRatio = ratios.CurrentRatio.fn(this.props.financialData.currentAssets(),
+        this.props.financialData.currentLiabilities());
+
       let data = [
-        {name: "Net Operating Profit", value: totalNOP, color: 'green'},
-        {name: "Fixed Expenses", value: totalFE, color: 'blue'},
-        {name: "Variable Expenses", value: totalVC, color: 'blue'},
-        {name: "Total Revenues", value: totalRevenues, color: 'blue'}
+        {name: "Cash Ratio", value: cashRatio, color: ratios.CashRatio.colorCode(cashRatio)},
+        {name: "Quick Ratio (Acid Test)", value: quickRatio, color: ratios.QuickRatio.colorCode(quickRatio)},
+        {name: "Current Ratio", value: currentRatio, color: ratios.CurrentRatio.colorCode(currentRatio)}
       ];
 
       return data;
@@ -67,17 +71,17 @@ export default class FinancialPerformanceSnapshot extends Component {
     if(this.state.graphData.length) {
       let data = this.getData();
 
-      let rectWidth = 20;
+      let rectHeight = 20;
 
       //Make rect and data values
       for(var i = 0; i < data.length; i++) {
-        let transformAttr = `translate(${this.styles.padding}, ${35+((rectWidth*2)*i)})`;
-        let rectHeight = this.xScale()(data[i].value);
+        let transformAttr = `translate(${this.styles.padding}, ${35+((rectHeight*2)*i)})`;
+        let rectWidth = this.xScale()(data[i].value);
         
         gNodes.push(
           <g transform={transformAttr} key={data[i].value}>
-            <rect width={rectWidth} height={rectHeight/1.5} stroke={data[i].color} fill={data[i].color}></rect>
-            <text x={rectWidth} y={rectHeight+5} dy=".35em">${data[i].value.toFixed(2)}</text>
+            <rect width={rectWidth/1.5} height={rectHeight} stroke={data[i].color} fill={data[i].color}></rect>
+            <text x={rectWidth/1.5+5} y="9.5" dy=".35em">{data[i].value.toFixed(2)}%</text>
           </g>
         );
       }
@@ -102,8 +106,8 @@ export default class FinancialPerformanceSnapshot extends Component {
 
   render() {
     return(
-    <div className="rbd-graph">
-      <h4 className="pp-header text-center">Revenue Breakdown</h4>
+    <div className="lr-graph">
+      <h4 className="pp-header text-center">Liquidity Ratios</h4>
       
       <div className="row">
         <div className="col-md-12 col-xs-12">
