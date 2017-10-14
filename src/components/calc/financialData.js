@@ -14,6 +14,30 @@ export default class FinancialData {
       'utilities', 'transportation', 'onlineExpenses', 'insurance', 'training',
       'accountingAndLegal', 'advertising', 'marketingDevelopment', 'other', 'fpie'];
 
+    this.currentAssetsKeys = ['cash', 'accountsReceivable', 'inventory', 'prepaidExpenses',
+      'otherCurrentAssets'];
+
+    this.liabilitiesKeys = ['accountsPayable', 'interestPayable', 'taxesPayable', 
+      'deferredRevenue', 'shortTermNotes', 'currentDebt', 'otherCurrentLiabilities'];
+
+  }
+
+  currentAssets() {
+    let result = 0;
+    for(var i = 0; i < this.currentAssetsKeys.length; i++) {
+      result += this.balanceSheet[this.currentAssetsKeys[i]];
+    }
+
+    return result;
+  }
+
+  currentLiabilities() {
+    let result = 0;
+    for(var i = 0; i < this.liabilitiesKeys.length; i++) {
+      result += this.balanceSheet[this.liabilitiesKeys[i]];
+    }
+
+    return result;
   }
 
 

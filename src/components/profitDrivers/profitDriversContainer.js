@@ -366,307 +366,502 @@ export default class ProfitDrivers extends Component {
           </div>
           <div className="panel-body">
             <div className="row">
-              <div className="col-md-2 col-xs-2">
+              <div className="col-md-6 col-xs-6">
                 <strong>Start Date:</strong><br />
                 <input value={this.state.startDate.format("MM[/]DD[/]YYYY")} disabled/><br /><br />
+              </div>
+              <div className="col-md-6 col-xs-6">
                 <strong>Target Date:</strong><DatePicker
                   selected={this.state.targetDate}
                   onChange={this.handleTargetDateChange}
                 />
               </div>
-              <div className="col-md-10 col-xs-10">
+            </div>
+            <div className="row">
+              <div className="col-md-12 col-xs-12">
                 <h4 className="text-center">Total Profit Impact</h4>
                 <div className="well tpi-graph-container">
                   <TotalProfitImpact 
                     {...this.state}
-
                   />
                 </div>
-
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-md-2 col-xs-2">
-                {/* TODO: convert to component updated on label hover */}
-                <div className="well driver-tip-container">
-                  <h4 id="driver-tip-heading">Hint</h4>
-                  <p id="driver-tip-body">
-                    Hover over any of the field titles on the right to
-                    read about their usage.
-                  </p>
-                </div>
-              </div>
-              <div className="col-md-10 col-xs-10">
-              <table className="driver-input-table">
-                  <thead>
-                    <tr>
-                      <th></th>
-                      <th>Percent Improvement</th>
-                      <th>Variable Cost</th>
-                      <th>Fixed Cost</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Prospects</td>
-                      <td>
-                        {/* This can pretty easily be changed to a slider later */}
-                        <div className="input-group input-group-sm">
-                          <input id="pct_prospects" type="number" className="form-control" placeholder="1.0"
-                            onChange={this.handleProspectsPercentChange}
-                          />
-                          <span className="input-group-addon">%</span>
+                <br />
+                <Tabs defaultActiveKey={1} id="driverTabs">
+                  <Tab eventKey={1} title="Prospects">
+                    <div className="row">
+                      <div className="col-md-4 col-xs-4">
+                      <table className="driver-input-table">
+                        <tbody>
+                          <tr>
+                            <td>
+                              <strong>Percent Improvement</strong>
+                            </td>
+                            <td>
+                              {/* This can pretty easily be changed to a slider later */}
+                              <div className="input-group input-group-sm">
+                                <input id="pct_prospects" type="number" className="form-control" placeholder="1.0"
+                                  onChange={this.handleProspectsPercentChange}
+                                />
+                                <span className="input-group-addon">%</span>
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <strong>Variable Cost</strong>
+                            </td>
+                            <td>
+                              <div className="input-group input-group-sm">
+                                <span className="input-group-addon">$</span>
+                                <input id="var_cost_prospects" type="number" className="form-control" placeholder="100.00"
+                                  onChange={this.handleProspectsVarCostChange}
+                                />
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <strong>Fixed Cost</strong>
+                            </td>
+                            <td>
+                              <div className="input-group input-group-sm">
+                                <span className="input-group-addon">$</span>
+                                <input id="fixed_cost_prospects" type="number" className="form-control" placeholder="100.00"
+                                  onChange={this.handleProspectsFixedCostChange}
+                                />
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      </div>
+                      <div className="col-md-8 col-xs-8">
+                        <div className="well driver-tip-container">
+                          <p className="driver-tip-body">
+                            Some content describing prospects.
+                          </p>
                         </div>
-                      </td>
-                      <td>
-                        <div className="input-group input-group-sm">
-                          <span className="input-group-addon">$</span>
-                          <input id="var_cost_prospects" type="number" className="form-control" placeholder="100.00"
-                            onChange={this.handleProspectsVarCostChange}
-                          />
+                      </div>
+                    </div>
+                    <br />
+                    <div className="row">
+                      <div className="col-md-12">
+                        <DeltaProspects
+                          pctProspects={this.state.pctProspects}
+                          vcProspects={this.state.vcProspects}
+                          fcProspects={this.state.fcProspects}
+                          financialData={this.state.financialData}
+                        />
+                      </div>
+                    </div>
+                  </Tab>
+                  <Tab eventKey={2} title="Conversions">
+                    <div className="row">
+                      <div className="col-md-4 col-xs-4">
+                        <table className="driver-input-table">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <strong>Percent Improvement</strong>
+                              </td>
+                              <td>
+                                {/* This can pretty easily be changed to a slider later */}
+                                <div className="input-group input-group-sm">
+                                  <input id="pct_conversions" type="number" className="form-control" placeholder="1.0"
+                                    onChange={this.handleConversionsPctChange}
+                                  />
+                                  <span className="input-group-addon">%</span>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <strong>Variable Cost</strong>
+                              </td>
+                              <td>
+                                <div className="input-group input-group-sm">
+                                  <span className="input-group-addon">$</span>
+                                  <input id="var_cost_conversions" type="number" className="form-control" placeholder="100.00"
+                                    onChange={this.handleConversionsVarCostChange}
+                                  />
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <strong>Fixed Cost</strong>
+                              </td>
+                              <td>
+                                <div className="input-group input-group-sm">
+                                  <span className="input-group-addon">$</span>
+                                  <input id="fixed_cost_conversions" type="number" className="form-control" placeholder="100.00"
+                                    onChange={this.handleConversionsFixedCostChange}
+                                  />
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                         </div>
-                      </td>
-                      <td>
-                        <div className="input-group input-group-sm">
-                          <span className="input-group-addon">$</span>
-                          <input id="fixed_cost_prospects" type="number" className="form-control" placeholder="100.00"
-                            onChange={this.handleProspectsFixedCostChange}
-                          />
+                        <div className="col-md-8 col-xs-8">
+                          <div className="well driver-tip-container">
+                            <p className="driver-tip-body">
+                              Some content describing conversions.
+                            </p>
+                          </div>
                         </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Conversions</td>
-                      <td>
-                        {/* This can pretty easily be changed to a slider later */}
-                        <div className="input-group input-group-sm">
-                          <input id="pct_conversions" type="number" className="form-control" placeholder="15.0"
-                            onChange={this.handleConversionsPctChange}
-                          />
-                          <span className="input-group-addon">%</span>
+                      </div>
+                      <div className="row">
+                        <div className="col-md-12">
+                          <DeltaConversions
+                            pctConversions={this.state.pctConversions}
+                            vcConversions={this.state.vcConversions}
+                            fcConversions={this.state.fcConversions}
+                            financialData={this.state.financialData}
+                          /> 
                         </div>
-                      </td>
-                      <td>
-                        <div className="input-group input-group-sm">
-                          <span className="input-group-addon">$</span>
-                          <input id="var_cost_conversions" type="number" className="form-control" placeholder="100.00"
-                            onChange={this.handleConversionsVarCostChange}
-                          />
+                      </div>
+                  </Tab>
+                  <Tab eventKey={3} title="Volume">
+                  <div className="row">
+                      <div className="col-md-4 col-xs-4">
+                        <table className="driver-input-table">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <strong>Percent Improvement</strong>
+                              </td>
+                              <td>
+                                {/* This can pretty easily be changed to a slider later */}
+                                <div className="input-group input-group-sm">
+                                  <input id="pct_volume" type="number" className="form-control" placeholder="1.0"
+                                    onChange={this.handleVolumePctChange}
+                                  />
+                                  <span className="input-group-addon">%</span>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <strong>Variable Cost</strong>
+                              </td>
+                              <td>
+                                <div className="input-group input-group-sm">
+                                  <span className="input-group-addon">$</span>
+                                  <input id="var_cost_volume" type="number" className="form-control" placeholder="100.00"
+                                    onChange={this.handleVolumeVarCostChange}
+                                  />
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <strong>Fixed Cost</strong>
+                              </td>
+                              <td>
+                                <div className="input-group input-group-sm">
+                                  <span className="input-group-addon">$</span>
+                                  <input id="fixed_cost_volume" type="number" className="form-control" placeholder="100.00"
+                                    onChange={this.handleVolumeFixedCostChange}
+                                  />
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                         </div>
-                      </td>
-                      <td>
-                        <div className="input-group input-group-sm">
-                          <span className="input-group-addon">$</span>
-                          <input id="fixed_cost_conversions" type="number" className="form-control" placeholder="100.00"
-                            onChange={this.handleConversionsFixedCostChange}
-                          />
+                        <div className="col-md-8 col-xs-8">
+                          <div className="well driver-tip-container">
+                            <p className="driver-tip-body">
+                              Some content describing volume.
+                            </p>
+                          </div>
                         </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Volume</td>
-                      <td>
-                        {/* This can pretty easily be changed to a slider later */}
-                        <div className="input-group input-group-sm">
-                          <input id="pct_volume" type="number" className="form-control" placeholder="5.0"
-                            onChange={this.handleVolumePctChange}
-                          />
-                          <span className="input-group-addon">%</span>
-                        </div>
-                      </td>
-                      <td>
-                        <div className="input-group input-group-sm">
-                          <span className="input-group-addon">$</span>
-                          <input id="var_cost_volume" type="number" className="form-control" placeholder="100.00"
-                            onChange={this.handleVolumeVarCostChange}
-                          />
-                        </div>
-                      </td>
-                      <td>
-                        <div className="input-group input-group-sm">
-                          <span className="input-group-addon">$</span>
-                          <input id="fixed_cost_volume" type="number" className="form-control" placeholder="100.00"
-                            onChange={this.handleVolumeFixedCostChange}
-                          />
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Price</td>
-                      <td>
-                        {/* This can pretty easily be changed to a slider later */}
-                        <div className="input-group input-group-sm">
-                          <input id="pct_price" type="number" className="form-control" placeholder="3.0"
-                            onChange={this.handlePricePctChange}
-                          />
-                          <span className="input-group-addon">%</span>
-                        </div>
-                      </td>
-                      <td>
-                        <div className="input-group input-group-sm">
-                          <span className="input-group-addon">$</span>
-                          <input id="var_cost_price" type="number" className="form-control" placeholder="100.00"
-                            onChange={this.handlePriceVarCostChange}
-                          />
-                        </div>
-                      </td>
-                      <td>
-                        <div className="input-group input-group-sm">
-                          <span className="input-group-addon">$</span>
-                          <input id="fixed_cost_price" type="number" className="form-control" placeholder="100.00"
-                            onChange={this.handlePriceFixedCostChange}
-                          />
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Productivity</td>
-                      <td>
-                        {/* This can pretty easily be changed to a slider later */}
-                        <div className="input-group input-group-sm">
-                          <input id="pct_productivity" type="number" className="form-control" placeholder="1.0"
-                            onChange={this.handleProductivityPctChange}
-                          />
-                          <span className="input-group-addon">%</span>
-                        </div>
-                      </td>
-                      <td>
-                        <div className="input-group input-group-sm">
-                          <span className="input-group-addon">$</span>
-                          <input id="var_cost_productivity" type="number" className="form-control" placeholder="100.00"
-                            onChange={this.handleProductivityVarCostChange}
-                          />
-                        </div>
-                      </td>
-                      <td>
-                        <div className="input-group input-group-sm">
-                          <span className="input-group-addon">$</span>
-                          <input id="fixed_cost_productivity" type="number" className="form-control" placeholder="100.00"
-                            onChange={this.handleProductivityFixedCostChange}
-                          />
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Efficiency</td>
-                      <td>
-                        {/* This can pretty easily be changed to a slider later */}
-                        <div className="input-group input-group-sm">
-                          <input id="pct_efficiency" type="number" className="form-control" placeholder="1.0"
-                            onChange={this.handleEfficiencyPctChange}
-                          />
-                          <span className="input-group-addon">%</span>
-                        </div>
-                      </td>
-                      <td>
-                        <div className="input-group input-group-sm">
-                          <span className="input-group-addon">$</span>
-                          <input id="var_cost_efficiency" type="number" className="form-control" placeholder="100.00"
-                            onChange={this.handleEfficiencyVarCostChange}
-                          />
-                        </div>
-                      </td>
-                      <td>
-                        <div className="input-group input-group-sm">
-                          <span className="input-group-addon">$</span>
-                          <input id="fixed_cost_efficiency" type="number" className="form-control" placeholder="100.00"
-                            onChange={this.handleEfficiencyFixedCostChange}
-                          />
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Frequency</td>
-                      <td>
-                        {/* This can pretty easily be changed to a slider later */}
-                        <div className="input-group input-group-sm">
-                          <input id="pct_frequency" type="number" className="form-control" placeholder="7.0"
-                            onChange={this.handleFrequencyPctChange}
-                          />
-                          <span className="input-group-addon">%</span>
-                        </div>
-                      </td>
-                      <td>
-                        <div className="input-group input-group-sm">
-                          <span className="input-group-addon">$</span>
-                          <input id="var_cost_frequency" type="number" className="form-control" placeholder="100.00"
-                            onChange={this.handleFrequencyVarCostChange}
+                      </div>
+                      <div className="row">
+                        <div className="col-md-12">
+                          <DeltaVolume 
+                            pctVolume={this.state.pctVolume} 
+                            vcVolume={this.state.vcVolume}
+                            fcVolume={this.state.fcVolume}
+                            financialData={this.state.financialData}
                           />
                         </div>
-                      </td>
-                      <td>
-                        <div className="input-group input-group-sm">
-                          <span className="input-group-addon">$</span>
-                          <input id="fixed_cost_frequency" type="number" className="form-control" placeholder="100.00"
-                            onChange={this.handleFrequencyFixedCostChange}
-                          />
+                      </div>
+                  </Tab>
+                  <Tab eventKey={4} title="Price">
+                    <div className="row">
+                        <div className="col-md-4 col-xs-4">
+                          <table className="driver-input-table">
+                            <tbody>
+                              <tr>
+                                <td>
+                                  <strong>Percent Improvement</strong>
+                                </td>
+                                <td>
+                                  {/* This can pretty easily be changed to a slider later */}
+                                  <div className="input-group input-group-sm">
+                                    <input id="pct_price" type="number" className="form-control" placeholder="1.0"
+                                      onChange={this.handlePricePctChange}
+                                    />
+                                    <span className="input-group-addon">%</span>
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <strong>Variable Cost</strong>
+                                </td>
+                                <td>
+                                  <div className="input-group input-group-sm">
+                                    <span className="input-group-addon">$</span>
+                                    <input id="var_cost_price" type="number" className="form-control" placeholder="100.00"
+                                      onChange={this.handlePriceVarCostChange}
+                                    />
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <strong>Fixed Cost</strong>
+                                </td>
+                                <td>
+                                  <div className="input-group input-group-sm">
+                                    <span className="input-group-addon">$</span>
+                                    <input id="fixed_cost_price" type="number" className="form-control" placeholder="100.00"
+                                      onChange={this.handlePriceFixedCostChange}
+                                    />
+                                  </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          </div>
+                          <div className="col-md-8 col-xs-8">
+                            <div className="well driver-tip-container">
+                              <p className="driver-tip-body">
+                                Some content describing the price driver.
+                              </p>
+                            </div>
+                          </div>
                         </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+                        <div className="row">
+                          <div className="col-md-12">
+                            <DeltaPrice
+                              pctPrice={this.state.pctPrice}
+                              vcPrice={this.state.vcPrice}
+                              fcPrice={this.state.fcPrice}
+                              financialData={this.state.financialData}
+                            />
+                          </div>
+                        </div>
+                  </Tab>
+                  <Tab eventKey={5} title="Productivity">
+                    <div className="row">
+                        <div className="col-md-4 col-xs-4">
+                          <table className="driver-input-table">
+                            <tbody>
+                              <tr>
+                                <td>
+                                  <strong>Percent Improvement</strong>
+                                </td>
+                                <td>
+                                  {/* This can pretty easily be changed to a slider later */}
+                                  <div className="input-group input-group-sm">
+                                    <input id="pct_productivity" type="number" className="form-control" placeholder="1.0"
+                                      onChange={this.handleProductivityPctChange}
+                                    />
+                                    <span className="input-group-addon">%</span>
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <strong>Variable Cost</strong>
+                                </td>
+                                <td>
+                                  <div className="input-group input-group-sm">
+                                    <span className="input-group-addon">$</span>
+                                    <input id="var_cost_productivity" type="number" className="form-control" placeholder="100.00"
+                                      onChange={this.handleProductivityVarCostChange}
+                                    />
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <strong>Fixed Cost</strong>
+                                </td>
+                                <td>
+                                  <div className="input-group input-group-sm">
+                                    <span className="input-group-addon">$</span>
+                                    <input id="fixed_cost_productivity" type="number" className="form-control" placeholder="100.00"
+                                      onChange={this.handleProductivityFixedCostChange}
+                                    />
+                                  </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          </div>
+                          <div className="col-md-8 col-xs-8">
+                            <div className="well driver-tip-container">
+                              <p className="driver-tip-body">
+                                Some content describing the productivity driver.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="col-md-12">
+                            <DeltaProductivity
+                              pctProductivity={this.state.pctProductivity} 
+                              vcProductivity={this.state.vcProductivity}
+                              fcProductivity={this.state.fcProductivity}
+                              financialData={this.state.financialData}
+                            />
+                          </div>
+                        </div>
+                  </Tab>
+                  <Tab eventKey={6} title="Efficiency">
+                    <div className="row">
+                        <div className="col-md-4 col-xs-4">
+                          <table className="driver-input-table">
+                            <tbody>
+                              <tr>
+                                <td>
+                                  <strong>Percent Improvement</strong>
+                                </td>
+                                <td>
+                                  {/* This can pretty easily be changed to a slider later */}
+                                  <div className="input-group input-group-sm">
+                                    <input id="pct_efficiency" type="number" className="form-control" placeholder="1.0"
+                                      onChange={this.handleEfficiencyPctChange}
+                                    />
+                                    <span className="input-group-addon">%</span>
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <strong>Variable Cost</strong>
+                                </td>
+                                <td>
+                                  <div className="input-group input-group-sm">
+                                    <span className="input-group-addon">$</span>
+                                    <input id="var_cost_efficiency" type="number" className="form-control" placeholder="100.00"
+                                      onChange={this.handleEfficiencyVarCostChange}
+                                    />
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <strong>Fixed Cost</strong>
+                                </td>
+                                <td>
+                                  <div className="input-group input-group-sm">
+                                    <span className="input-group-addon">$</span>
+                                    <input id="fixed_cost_efficiency" type="number" className="form-control" placeholder="100.00"
+                                      onChange={this.handleEfficiencyFixedCostChange}
+                                    />
+                                  </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          </div>
+                          <div className="col-md-8 col-xs-8">
+                            <div className="well driver-tip-container">
+                              <p className="driver-tip-body">
+                                Some content describing the efficiency driver.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="col-md-12">
+                            <DeltaEfficiency
+                              pctEfficiency={this.state.pctEfficiency} 
+                              vcEfficiency={this.state.vcEfficiency}
+                              fcEfficiency={this.state.fcEfficiency}
+                              financialData={this.state.financialData}
+                            />
+                          </div>
+                        </div>
+                  </Tab>
+                  <Tab eventKey={7} title="Frequency">
+                    <div className="row">
+                        <div className="col-md-4 col-xs-4">
+                          <table className="driver-input-table">
+                            <tbody>
+                              <tr>
+                                <td>
+                                  <strong>Percent Improvement</strong>
+                                </td>
+                                <td>
+                                  {/* This can pretty easily be changed to a slider later */}
+                                  <div className="input-group input-group-sm">
+                                    <input id="pct_frequency" type="number" className="form-control" placeholder="1.0"
+                                      onChange={this.handleFrequencyPctChange}
+                                    />
+                                    <span className="input-group-addon">%</span>
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <strong>Variable Cost</strong>
+                                </td>
+                                <td>
+                                  <div className="input-group input-group-sm">
+                                    <span className="input-group-addon">$</span>
+                                    <input id="var_cost_frequency" type="number" className="form-control" placeholder="100.00"
+                                      onChange={this.handleFrequencyVarCostChange}
+                                    />
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <strong>Fixed Cost</strong>
+                                </td>
+                                <td>
+                                  <div className="input-group input-group-sm">
+                                    <span className="input-group-addon">$</span>
+                                    <input id="fixed_cost_frequency" type="number" className="form-control" placeholder="100.00"
+                                      onChange={this.handleFrequencyFixedCostChange}
+                                    />
+                                  </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          </div>
+                          <div className="col-md-8 col-xs-8">
+                            <div className="well driver-tip-container">
+                              <p className="driver-tip-body">
+                                Some content describing the frequency driver.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="col-md-12">
+                            <DeltaFrequency
+                              pctFrequency={this.state.pctFrequency} 
+                              vcFrequency={this.state.vcFrequency}
+                              fcFrequency={this.state.fcFrequency}
+                              financialData={this.state.financialData}
+                            />
+                          </div>
+                        </div>
+                  </Tab>
+                </Tabs>
               </div>
             </div>
           </div>
         </div>
-        <Tabs defaultActiveKey={1} id="driverTabs">
-          <Tab eventKey={1} title="Prospects Impact">
-            <DeltaProspects
-              pctProspects={this.state.pctProspects}
-              vcProspects={this.state.vcProspects}
-              fcProspects={this.state.fcProspects}
-              financialData={this.state.financialData}
-            />
-          </Tab>
-          <Tab eventKey={2} title="Conversions Impact">
-            <DeltaConversions
-              pctConversions={this.state.pctConversions}
-              vcConversions={this.state.vcConversions}
-              fcConversions={this.state.fcConversions}
-              financialData={this.state.financialData}
-            /> 
-          </Tab>
-          <Tab eventKey={3} title="Volume Impact">
-            <DeltaVolume 
-              pctVolume={this.state.pctVolume} 
-              vcVolume={this.state.vcVolume}
-              fcVolume={this.state.fcVolume}
-              financialData={this.state.financialData}
-            />
-          </Tab>
-          <Tab eventKey={4} title="Price Impact">
-            <DeltaPrice
-              pctPrice={this.state.pctPrice}
-              vcPrice={this.state.vcPrice}
-              fcPrice={this.state.fcPrice}
-              financialData={this.state.financialData}
-            />
-          </Tab>
-          <Tab eventKey={5} title="Productivity Impact">
-            <DeltaProductivity
-              pctProductivity={this.state.pctProductivity} 
-              vcProductivity={this.state.vcProductivity}
-              fcProductivity={this.state.fcProductivity}
-              financialData={this.state.financialData}
-            />
-          </Tab>
-          <Tab eventKey={6} title="Efficiency Impact">
-            <DeltaEfficiency
-              pctEfficiency={this.state.pctEfficiency} 
-              vcEfficiency={this.state.vcEfficiency}
-              fcEfficiency={this.state.fcEfficiency}
-              financialData={this.state.financialData}
-            />
-          </Tab>
-          <Tab eventKey={7} title="Frequency Impact">
-            <DeltaFrequency
-              pctFrequency={this.state.pctFrequency} 
-              vcFrequency={this.state.vcFrequency}
-              fcFrequency={this.state.fcFrequency}
-              financialData={this.state.financialData}
-            />
-          </Tab>
-        </Tabs>
       </div>
     );
   }

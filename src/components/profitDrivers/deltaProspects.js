@@ -92,7 +92,6 @@ export default class DeltaProspects extends Component {
     trows = <tbody>{trows}</tbody>
 
     return(
-      <div>
         <table className="table table-striped">
           <thead>
             <tr>
@@ -105,21 +104,13 @@ export default class DeltaProspects extends Component {
           </thead>
           {trows}
         </table>
-      </div>
     )
   }
 
   render(){
     return(
-      <div className="delta-prospects-container">
-        <div className="panel panel-default">
-          <div className="panel-heading">
-            <h3 className="panel-title">Driver Impact Summary</h3>
-          </div>
-          <div className="panel-body">
-            {this.getTableDisplay()}
-          </div>
-        </div>
+      <div className="driver-impact-table">
+        {this.getTableDisplay()}
       </div>
     )
   }

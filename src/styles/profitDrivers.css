@@ -18,12 +18,17 @@
 
 .driver-input-table td {
   padding: 5px 10px;
+  width: 30%;
+}
+
+.driver-input-table td:first-child {
+  text-align: right;
+  width: 40%;
 }
 
 .driver-tip-container {
-  margin-top: 20%;
+  margin-top: 0%;
   width: 100%;
-  height: 260px;
   background-color: #5282BA;
 }
 
@@ -35,7 +40,7 @@
   margin-bottom: 10px;
 }
 
-#driver-tip-body {
+.driver-tip-body {
   color: #fff;
-  text-align: center;
+  text-align: justify;
 }

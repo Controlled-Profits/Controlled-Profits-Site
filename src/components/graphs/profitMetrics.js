@@ -4,6 +4,7 @@
 import React, {Component} from 'react';
 import Axis from '../totalProfitImpact/axis';
 import * as d3 from 'd3';
+import * as ratios from '../calc/financialRatios';
 
 
 export default class FinancialPerformanceSnapshot extends Component {
@@ -47,15 +48,16 @@ export default class FinancialPerformanceSnapshot extends Component {
 
   getData() {
     if(this.props.financialData) {
-      let totalRevenues = this.props.financialData.incomeStatement.totalRevenues;
-      let totalNOP = this.props.financialData.currentNetOpProfit();
-      let totalFE = this.props.financialData.currentFixedExpenses();
-      let totalVC = this.props.financialData.currentSubtotalCOS();
+      let cashRatio = ratios.CashRatio.fn(this.props.financialData.balanceSheet.cash, 
+        this.props.financialData.currentLiabilities()) * 100;
+      let returnOnEquity = null; //TODO
+      let returnOnAssets = this.props.financialData.currentFixedExpenses();
+      let profitMargin = this.props.financialData.currentSubtotalCOS();
       let data = [
-        {name: "Cash Ratio", value: totalNOP, color: 'green'},
-        {name: "Return on Equity", value: totalFE, color: 'brown'},
-        {name: "Return on Assets", value: totalVC, color: 'brown'},
-        {name: "Profit Margin", value: totalRevenues, color: 'blue'}
+        {name: "Cash Ratio", value: cashRatio, color: 'green'},
+        {name: "Return on Equity", value: returnOnEquity, color: 'brown'},
+        {name: "Return on Assets", value: returnOnAssets, color: 'brown'},
+        {name: "Profit Margin", value: profitMargin, color: 'blue'}
       ];
 
       return data;
@@ -77,7 +79,7 @@ export default class FinancialPerformanceSnapshot extends Component {
         gNodes.push(
           <g transform={transformAttr} key={data[i].value}>
             <rect width={rectWidth/1.5} height={rectHeight} stroke={data[i].color} fill={data[i].color}></rect>
-            <text x={rectWidth/1.5+5} y="9.5" dy=".35em">${data[i].value.toFixed(2)}</text>
+            <text x={rectWidth/1.5+5} y="9.5" dy=".35em">{data[i].value.toFixed(2)}%</text>
           </g>
         );
       }
