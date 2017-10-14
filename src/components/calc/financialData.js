@@ -20,6 +20,8 @@ export default class FinancialData {
     this.liabilitiesKeys = ['accountsPayable', 'interestPayable', 'taxesPayable', 
       'deferredRevenue', 'shortTermNotes', 'currentDebt', 'otherCurrentLiabilities'];
 
+    this.ownersEquityKeys = ['commonStock', 'paidInSurplus', 'retainedEarnings'];
+
   }
 
   currentAssets() {
@@ -35,6 +37,15 @@ export default class FinancialData {
     let result = 0;
     for(var i = 0; i < this.liabilitiesKeys.length; i++) {
       result += this.balanceSheet[this.liabilitiesKeys[i]];
+    }
+
+    return result;
+  }
+
+  currentTotalOwnersEquity() {
+    let result = 0;
+    for(var i = 0; i < this.ownersEquityKeys.length; i++) {
+      result += this.balanceSheet[this.ownersEquityKeys[i]];
     }
 
     return result;

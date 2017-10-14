@@ -244,9 +244,120 @@ export const OperatingCycle = {
   fn: (inventoryPeriod, receivablesPeriod) => { return inventoryPeriod + receivablesPeriod; }
 }
 
-export const cashCycle = {
+export const CashCycle = {
   equation: 'Operating Cycle - Payables Period',
   insight: 'Shorter the number of days in this cycle, more the amount of available cash, and lesser the need to borrow.',
   description: 'The Cash Cycle is the day measure of cashflow beginning with payment for raw materials and ends with receipt of cash on goods sold.',
   fn: (operatingCycle, payablesPeriod) => { return operatingCycle - payablesPeriod; }
+}
+
+export const AverageDailySales = {
+  equation: 'Operating Profit / 365 (days)',
+  insight: 'For reporting and comparison purposes, dividing your Net Sales by 365 days gives you an apples to apples basis for improvement purposes. Basically, it tells you how much revenue you are bringing in for each day of operation, or for each day of the year.',
+  description: 'The Average Daily Sales Ratio is used to measure the SPEED of your Sales on a daily basis, given the number of days in a year.',
+  fn: (operatingProfit) => { return operatingProfit / 365; }
+}
+
+export const TotalAssetTurnover = {
+  equation: 'Sales / Total Assets',
+  insight: 'A high ratio is considered desirable as compared to peer group.',
+  description: 'The Total Asset Turnover Ratio indicates how successful a firm is in utilizing its assets in generation of sales revenue.',
+  fn: (sales, totalAssets) => { return sales / totalAssets; }
+}
+
+export const SalesToInventory = {
+  equation: 'Sales / Inventory',
+  insight: 'An increasing number indicates higher efficiency in use of resources; a decreasing number suggests potential cash flow problems due to greater sums tied up in inventory.',
+  description: 'The Sales to Inventory Ratio is the percentage of cost of sales attributable to average inventory.',
+  fn: (sales, inventory) => { return sales / inventory; }
+}
+
+export const SalesToAssets = {
+  equation: 'Assets / Sales',
+  insight: 'The higher this ratio, the smaller the investment required to generate sales revenue and, therefore, the higher the profitability of the company.',
+  description: 'Called the Fixed Asset Ratio. A measure of a company\'s efficiency in managing its assets in relation to the revenue generated.',
+  fn: (assets, sales) => { return assets / sales; }
+}
+
+export const SalesToNetWorkingCapital = {
+  equation: 'Sales / Net Working Capital',
+  insight: 'Because working capital is current assets minus current liabilities, a high turnover ratio shows that management is being very efficient in using a company’s short-term assets and liabilities for supporting sales. In contrast, a low ratio shows a business is investing in too many accounts receivable (AR) and inventory assets for supporting its sales. This may lead to an excessive amount of bad debts and obsolete inventory.',
+  description: 'Called Working Capital Turnover. Shows how well a company is using its working capital to support a given level of sales.',
+  fn: (sales, netWorkingCapital) => { return sales / netWorkingCapital; }
+}
+
+export const AccountsPayableToSales = {
+  equation: 'Accounts Payable / Sales',
+  insight: 'If the turnover ratio is falling from one period to another, this is a sign that the company is taking longer to pay off its suppliers than it was in previous time periods. The opposite is true when the turnover ratio is increasing, which means that the company is paying off suppliers at a faster rate.',
+  description: 'Called Accounts Payable Turnover ratio is a liquidity measure to quantify the rate which a company pays off its suppliers.',
+  fn: (accountsPayable, sales) => { return accountsPayable / sales; }
+}
+
+export const AssetTurnover = {
+  equation: 'Sales / Total Assets',
+  insight: 'The higher the asset turnover ratio, the better the company is performing, since higher ratios imply that the company is generating more revenue per dollar of assets.',
+  description: 'The Asset Turnover ratio is used as an indicator of the efficiency with which a company is using its assets in generating revenue.',
+  fn: (sales, totalAssets) => { return sales / totalAssets; }
+}
+
+// Profitability Ratios
+
+export const ContributionMargin = {
+  equation: 'Cost of Sales (COS) / Revenues',
+  insight: 'Contribution Margin measures how much of every sales dollar a company keeps in earnings after paying all direct costs of sales. This closely compares with Gross Margin. The main difference is that Contribution Margin makes a specific effort to allocate all variable costs associated with the sale of a product. This includes direct marketing costs as well as the costs for fulfillment (distribution).',
+  description: 'Contribution Margin measures how much of every sales dollar a company keeps in earnings after paying all direct costs of sales. This closely compares with Gross Margin. The main difference is that Contribution Margin makes a specific effort to allocate all variable costs associated with the sale of a product. This includes direct marketing costs as well as the costs for fulfillment (distribution). ',
+  fn: (COS, revenues) => { return COS / revenues; }
+}
+
+export const ProfitMargin = {
+  equation: 'Earnings After Tax (Net Income) / Revenues',
+  insight: 'Profit Margin measures how much of every dollar of sales a company keeps in earnings – after taxes.',
+  description: 'Profit Margin measures how much of every dollar of sales a company keeps in earnings – after taxes.',
+  fn: (netIncome, revenues) => { return netIncome / revenues; }
+}
+
+export const EBITDAMargin = {
+  equation: 'Earnings Before Interest Taxes, Depreciation & Amortization / Revenues',
+  insight: 'Profit is cash, and this ratio tells you how much cash profit you are generating as a percentage of revenues.',
+  description: 'EBITDA Margin tells you how profitable your company is with regard to operations. The EBITDA measure is pure cash not adjusted for non-cash items, and it doesn’t take into account tax shields,or tax benefits of any kind. In this sense, the EBITDA margin is a ‘clean’ way of looking at your true cash profit margin.',
+  fn: (EBITDA, revenues) => { return EBITDA / revenues; }
+}
+
+export const ReturnOnAssets = {
+  equation: 'Earnings After Tax / Total Assets',
+  insight: 'Return on Assets (Investment) tells you how well you are employing your assets to make money. Quite simply, the ROI ratio indicates that if you can make more money on fewer assets, then you need less capital investment for a certain level of return. The larger this ratio, the more intelligently you are using assets for profit.',
+  description: 'Return on Investment (or Return on Assets) is the ratio of earnings after tax divided by Total Assets. Total Assets represents the total amount of assets the company owns and is represented on their Balance sheet.',
+  fn: (earningsAfterTax, totalAssets) => { return earningsAfterTax / totalAssets; }
+}
+
+export const ReturnOnEquity = {
+  equation: 'Earnings After Tax / Stockholders\' Equity',
+  insight: 'ROE is often considered to be the one of the most important of the profitability ratios. If you can increase and control this ratio, the more money you earn. You would use this number to compare to other uses of your money for greatest return and performance over time. A general rule maintains that a ROE of at least 15% is a reasonable objective to provide dividends to shareholders as well as fund for future growth.',
+  description: 'Return on Equity is the ratio of earnings after tax divided by Stockholders Equity. Stockholders’ Equity is the dollar amount of money recognized on the Balance Sheet as invested capital. It tells you what percentage of your ownership dollars are being returned to you for your investment, on an after tax basis.',
+  fn: (earningsAfterTax, stockholdersEquity) => { return earningsAfterTax / stockholdersEquity; }
+}
+
+export const ReturnOnSales = {
+  equation: 'Earnings After Tax / Net Sales',
+  insight: 'Quite simply, if you can increase and control this ratio, the more money you earn.',
+  description: 'Return on Sales is the ratio of earnings after tax divided by NET sales. Net Sales is the dollar volume of sales less any returns, allowances, and cash discounts. In other words, Net sales is the actual realized dollars that stays in the business. It tells you what percentage of your sales is operating profit that ‘sticks’, after taxes.',
+  fn: (earningsAfterTax, netSales) => { return earningsAfterTax / netSales; }
+}
+
+
+//TODO: b?
+export const b = {
+  equation: 'Addition to retained earnings / Net income',
+  insight: 'Companies can decide how much is required to reinvest in the business as retained earnings based on business needs. If not retained, then it is distributed as profits in the form of dividends.',
+  description: 'Percent of after tax income allocated for reinvestment.',
+  fn: (additionToRetainedEarnings, netIncome) => { return additionToRetainedEarnings / netIncome; }
+}
+
+export const InternalGrowthRate = {
+  equation: '(ROA*b)/(1-ROA*b)',
+  insight: 'The higher the rate indicates a more self reliant business.',
+  description: 'An internal growth rate is the highest level of growth achievable for a business without obtaining outside financing, and a firm\'s maximum internal growth rateis the level of business operations that can continue to fund and grow the company.',
+  fn: (ROA, b) => {
+    return (ROA*b) / (1-ROA*b);
+  }
 }

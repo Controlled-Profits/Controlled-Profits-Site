@@ -48,11 +48,20 @@ export default class FinancialPerformanceSnapshot extends Component {
 
   getData() {
     if(this.props.financialData) {
+      let earningsAfterTax = this.props.financialData.currentNetOpProfit();
+
       let cashRatio = ratios.CashRatio.fn(this.props.financialData.balanceSheet.cash, 
         this.props.financialData.currentLiabilities()) * 100;
-      let returnOnEquity = null; //TODO
-      let returnOnAssets = this.props.financialData.currentFixedExpenses();
-      let profitMargin = this.props.financialData.currentSubtotalCOS();
+
+      let returnOnEquity = ratios.ReturnOnAssets.fn(earningsAfterTax, 
+        this.props.financialData.currentAssets());
+
+      let returnOnAssets = ratios.ReturnOnEquity.fn(earningsAfterTax, 
+        this.props.financialData.currentTotalOwnersEquity());
+
+      let profitMargin = ratios.ProfitMargin.fn(earningsAfterTax, 
+        this.props.financialData.incomeStatement.totalRevenues);
+
       let data = [
         {name: "Cash Ratio", value: cashRatio, color: 'green'},
         {name: "Return on Equity", value: returnOnEquity, color: 'brown'},
